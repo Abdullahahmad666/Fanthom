@@ -139,3 +139,13 @@ export function formatDuration(totalSeconds: number): string {
 export function participantById(meeting: Meeting, id: string) {
   return meeting.participants.find((p) => p.id === id);
 }
+
+/**
+ * Clip lengths are short enough that rounding to whole minutes erases them --
+ * formatDuration turns a 40-second clip into "1 min".
+ */
+export function formatClipLength(totalSeconds: number): string {
+  const s = Math.round(totalSeconds);
+  if (s < 60) return `${s} sec${s === 1 ? "" : "s"}`;
+  return formatDuration(s);
+}
