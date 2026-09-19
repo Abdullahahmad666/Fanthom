@@ -57,13 +57,13 @@ export function FeatureCarousel() {
 
   return (
     <section
-      className="relative overflow-hidden px-6 pt-24 pb-16"
+      className="relative overflow-hidden px-10 pt-28 pb-20"
       style={{
         background:
           "linear-gradient(180deg, #000 0%, #1a2c3c 22%, #264055 50%, #385D7C 88%, #0d1620 100%)",
       }}
     >
-      <div className="mx-auto max-w-[1240px]">
+      <div className="mx-auto max-w-[1560px]">
         <p className="mb-12 text-center text-[24px] leading-snug text-fg">{slide.caption}</p>
 
         <div className="flex justify-center">
@@ -112,7 +112,7 @@ export function FeatureCarousel() {
 /** Small in-markup mocks so the carousel ships without screenshots. */
 function SlideArt({ kind }: { kind: "call" | "summary" | "actions" | "ask" }) {
   return (
-    <div className="w-full max-w-[860px] overflow-hidden rounded-2xl bg-[#0b0b0d] ring-1 ring-white/10">
+    <div className="w-full max-w-[1000px] overflow-hidden rounded-2xl bg-[#0b0b0d] ring-1 ring-white/10">
       <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
         <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />

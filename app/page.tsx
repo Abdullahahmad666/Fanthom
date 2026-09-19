@@ -1,19 +1,13 @@
 import Link from "next/link";
-import { ChevronDown, Lock, X } from "lucide-react";
-import { FathomMark, FathomWordmark } from "@/components/brand/FathomMark";
+import { Lock, X } from "lucide-react";
+import { FathomMark } from "@/components/brand/FathomMark";
 import { Starfield } from "@/components/marketing/Starfield";
 import { HeroBubbles } from "@/components/marketing/HeroBubbles";
 import { FeatureCarousel } from "@/components/marketing/FeatureCarousel";
 import { TeamTabs } from "@/components/marketing/TeamTabs";
 import { PillarAccordion } from "@/components/marketing/PillarAccordion";
-
-const NAV = [
-  { label: "Overview", caret: false },
-  { label: "Solutions", caret: true },
-  { label: "Integrations", caret: true },
-  { label: "Resources", caret: true },
-  { label: "Pricing", caret: false },
-];
+import { MarketingHeader } from "@/components/marketing/MarketingHeader";
+import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
 const LOGOS = ["HubSpot", "Adobe", "zapier", "GRUBHUB", "EA", "Calendly"];
 
@@ -53,45 +47,12 @@ export default function MarketingHomePage() {
         <X className="absolute right-5 h-4 w-4 text-neutral-500" />
       </div>
 
-      {/* Nav */}
-      <header className="relative z-20 mx-auto flex max-w-[1240px] items-center gap-8 px-8 py-6">
-        <Link href="/" aria-label="Fathom">
-          <FathomWordmark />
-        </Link>
-
-        <nav className="hidden items-center gap-8 rounded-full px-8 py-3.5 ring-1 ring-white/20 xl:flex">
-          {NAV.map(({ label, caret }) => (
-            <span
-              key={label}
-              className="flex cursor-pointer items-center gap-1.5 text-[16px] text-fg transition-colors hover:text-fg-muted"
-            >
-              {label}
-              {caret && <ChevronDown className="h-4 w-4" />}
-            </span>
-          ))}
-        </nav>
-
-        <div className="ml-auto flex items-center gap-7">
-          <span className="hidden max-w-[70px] cursor-pointer text-[15px] leading-tight text-fg sm:block">
-            Book a Demo
-          </span>
-          <Link href="/calls" className="max-w-[44px] text-[15px] leading-tight text-fg hover:text-brand">
-            Log In
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-full border border-brand px-6 py-2.5 text-center text-[14px] leading-tight font-bold tracking-wide text-fg uppercase transition-colors hover:bg-brand/10"
-          >
-            Sign up
-            <br className="hidden sm:block" /> free
-          </Link>
-        </div>
-      </header>
+      <MarketingHeader />
 
       {/* Hero */}
-      <section className="relative overflow-hidden px-8 pt-16 pb-24">
+      <section className="relative overflow-hidden px-10 pt-10 pb-32">
         <Starfield />
-        <div className="relative mx-auto grid max-w-[1240px] gap-8 lg:grid-cols-[1fr_0.95fr]">
+        <div className="relative mx-auto grid max-w-[1560px] gap-8 lg:grid-cols-[1fr_0.95fr]">
           <div>
             <h1 className="max-w-[720px] text-[clamp(44px,6.2vw,82px)] leading-[1.02] font-light tracking-tight">
               AI notetaking that is out of this world
@@ -119,9 +80,9 @@ export default function MarketingHomePage() {
       </section>
 
       {/* Social proof */}
-      <section className="relative overflow-hidden px-8 pb-24">
+      <section className="relative overflow-hidden px-10 pb-28">
         <Starfield />
-        <div className="relative mx-auto flex max-w-[1240px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
+        <div className="relative mx-auto flex max-w-[1560px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ff492c] text-[15px] font-bold text-white">
               G2
@@ -173,7 +134,7 @@ export default function MarketingHomePage() {
       </section>
 
       {/* Teams */}
-      <section className="relative overflow-hidden px-8 py-24">
+      <section className="relative overflow-hidden px-10 py-28">
         <Starfield />
         <div
           aria-hidden="true"
@@ -183,7 +144,7 @@ export default function MarketingHomePage() {
               "radial-gradient(circle at 35% 35%, #e9b8d8 0%, #a855f7 45%, #6d28d9 100%)",
           }}
         />
-        <div className="relative mx-auto max-w-[1240px]">
+        <div className="relative mx-auto max-w-[1560px]">
           <h2 className="mx-auto max-w-[900px] text-center text-[clamp(32px,4.6vw,58px)] leading-tight font-light">
             Whether you&apos;re a team of 1 or 1,000, Fathom&apos;s got your back
           </h2>
@@ -194,20 +155,20 @@ export default function MarketingHomePage() {
       </section>
 
       {/* Pillars */}
-      <section className="relative overflow-hidden px-8 py-24">
+      <section className="relative overflow-hidden px-10 py-28">
         <Starfield />
         <div
           aria-hidden="true"
           className="absolute top-1/2 -right-40 hidden h-[620px] w-[760px] -translate-y-1/2 rounded-[320px] lg:block"
           style={{ background: "linear-gradient(180deg, #f0b6d0 0%, #c084fc 45%, #8b2ff5 100%)" }}
         />
-        <div className="relative mx-auto max-w-[1240px]">
+        <div className="relative mx-auto max-w-[1560px]">
           <PillarAccordion />
         </div>
       </section>
 
       {/* Light stats section */}
-      <section className="bg-[#f8f5f5] px-8 py-28 text-neutral-900">
+      <section className="bg-[#f8f5f5] px-10 py-32 text-neutral-900">
         <h2 className="text-center text-[clamp(34px,5vw,62px)] leading-tight font-light">
           Fathom teams
           <br />
@@ -235,7 +196,7 @@ export default function MarketingHomePage() {
       </section>
 
       {/* Closing */}
-      <section className="relative overflow-hidden px-8 py-32 text-center">
+      <section className="relative overflow-hidden px-10 py-36 text-center">
         <Starfield />
         <div className="relative">
           <p className="text-[18px] text-[#73bfff]">
@@ -250,17 +211,7 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-white/10 px-8 py-10">
-        <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-5">
-          <FathomWordmark />
-          <p className="text-[14px] text-fg-dim">
-            Frontend prototype built for an assignment. Not affiliated with Fathom.
-          </p>
-          <Link href="/calls" className="ml-auto text-[16px] text-brand hover:underline">
-            Skip to the app →
-          </Link>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }
