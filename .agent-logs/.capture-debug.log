@@ -23,3 +23,15 @@
 2026-09-19T10:30:56.717Z [response] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,effort,hook_event_name,stop_hook_active,last_assistant_message,background_tasks,session_crons
 2026-09-19T10:30:57.032Z [response] model resolved after 1 retry
 2026-09-19T10:30:57.034Z [response] wrote RESPONSE num=1 (89 chars) -> 2026-09-19_10-30-55_7b1eb9be-de44-4577-955c-b99ed357e00b.md
+2026-09-19T10:31:51.134Z [response] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,effort,hook_event_name,stop_hook_active,last_assistant_message,background_tasks,session_crons
+2026-09-19T10:31:51.141Z [response] Stop fired with no session file; nothing to pair
+2026-09-19T10:36:27.936Z [prompt] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,hook_event_name,prompt
+2026-09-19T10:36:27.946Z [prompt] wrote PROMPT num=1 -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
+2026-09-19T10:45:07.883Z [response] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,effort,hook_event_name,stop_hook_active,last_assistant_message,background_tasks,session_crons
+2026-09-19T10:45:07.918Z [response] wrote RESPONSE num=1 (2953 chars) -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
+2026-09-19T10:52:28.392Z [prompt] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,hook_event_name,prompt
+2026-09-19T10:52:28.423Z [prompt] wrote PROMPT num=2 -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
+2026-09-19T10:58:52.721Z [response] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,effort,hook_event_name,stop_hook_active,last_assistant_message,background_tasks,session_crons
+2026-09-19T10:58:52.763Z [response] wrote RESPONSE num=2 (2667 chars) -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
+2026-09-19T10:59:54.658Z [prompt] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,hook_event_name,prompt
+2026-09-19T10:59:54.705Z [prompt] wrote PROMPT num=3 -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
