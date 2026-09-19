@@ -23,7 +23,10 @@ function AddMenu({ turn }: { turn: TranscriptTurn }) {
   return (
     <Popover
       align="left"
-      className="min-w-[300px] overflow-hidden bg-[#1d1e1f] py-0"
+      className="min-w-[300px] overflow-hidden"
+      /* Inline: a bg/padding class here loses to the panel's own defaults
+         depending on stylesheet order. */
+      panelStyle={{ background: "#1d1e1f", paddingTop: 0, paddingBottom: 0 }}
       trigger={({ toggle, open }) => (
         <button
           type="button"

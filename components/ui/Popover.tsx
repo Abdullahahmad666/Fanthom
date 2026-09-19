@@ -1,6 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback, useEffect, useLayoutEffect, useRef, useState,
+  type CSSProperties, type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 
 type Coords = { top: number; left?: number; right?: number };
@@ -22,12 +25,25 @@ export function Popover({
   children,
   align = "right",
   className = "",
+  panelStyle,
   openOnHover = false,
 }: {
   trigger: (props: { open: boolean; toggle: (e: React.MouseEvent) => void }) => ReactNode;
   children: (close: () => void) => ReactNode;
   align?: "left" | "right";
   className?: string;
+  /**
+   * Inline overrides for the panel's own surface -- background, padding,
+   * radius, shadow.
+   *
+   * These cannot go through `className`: the panel already carries
+   * `bg-popover`, `py-2` and `ring-1`, and which of two conflicting utilities
+   * wins depends on their order in the generated stylesheet, not on the order
+   * they appear in the attribute. A caller passing `bg-[#F0C62E]` silently
+   * lost to `bg-popover`. Inline style always wins, so it is the honest place
+   * for a surface that differs.
+   */
+  panelStyle?: CSSProperties;
   /**
    * Open on hover as well as on click. For panels that are information rather
    * than a menu of commands -- the referral card, say -- where hovering is how
@@ -134,6 +150,7 @@ export function Popover({
               left: coords?.left,
               right: coords?.right,
               visibility: coords ? "visible" : "hidden",
+              ...panelStyle,
             }}
             className={`z-[100] min-w-[240px] rounded-lg bg-popover py-2 ring-1 ring-line ${className}`}
           >

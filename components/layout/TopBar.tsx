@@ -24,6 +24,25 @@ const ACTIONS: { label: string; Icon: typeof Gift; href?: string }[] = [
   { label: "Settings", Icon: Settings, href: "/settings" },
 ];
 
+/**
+ * Panel surfaces, inline rather than as classes.
+ *
+ * The popover already sets bg-popover, py-2 and ring-1, and a competing
+ * utility in className only wins if the stylesheet happens to order it later
+ * -- which is how the amber points card ended up rendering black text on the
+ * default near-black panel.
+ */
+const SHADOW = "0 24px 60px -20px rgba(0,0,0,0.8)";
+
+const PANEL = {
+  /** The grey menus: account, and anything else with rows. */
+  menu: { background: "#343435", paddingTop: 0, paddingBottom: 0, boxShadow: SHADOW },
+  /** The referral card. */
+  card: { background: "#2c2c30", padding: 0, borderRadius: 14, boxShadow: SHADOW },
+  /** The points card, which takes the counter's own colour. */
+  amber: { background: "#F0C62E", padding: 0, borderRadius: 14, boxShadow: SHADOW },
+} as const;
+
 type MenuRow = { label: string; Icon?: typeof Gift; href?: string; note?: string };
 
 const ACCOUNT_EMAIL = "abdullahahmad5618@gmail.com";
@@ -115,7 +134,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         <div className="hidden lg:block">
           <Popover
             openOnHover
-            className="bg-[#2c2c30] p-0"
+            panelStyle={PANEL.card}
             trigger={({ toggle, open }) => (
               <button
                 type="button"
@@ -169,7 +188,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         {/* Streak counter. Amber star + count, opening the points card. */}
         <Popover
           openOnHover
-          className="rounded-xl bg-[#F0C62E] p-0 ring-[#F0C62E]"
+          panelStyle={PANEL.amber}
           trigger={({ toggle, open }) => (
             <button
               type="button"
@@ -189,7 +208,8 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         </Popover>
 
         <Popover
-          className="min-w-[300px] bg-[#343435] py-0"
+          className="min-w-[300px]"
+          panelStyle={PANEL.menu}
           trigger={({ toggle, open }) => (
             <button
               type="button"
