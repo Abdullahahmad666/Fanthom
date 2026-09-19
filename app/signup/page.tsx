@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FathomWordmark } from "@/components/brand/FathomMark";
+import { SignInButtons } from "@/components/auth/SignInButtons";
 
 const LOGOS = ["HubSpot", "Adobe", "zapier", "GRUBHUB", "EA", "Calendly"];
 
@@ -22,21 +23,7 @@ export default function SignUpPage() {
             Connect your work email to get started in minutes
           </p>
 
-          <div className="mt-10 space-y-4">
-            {[
-              { label: "Continue with Google", mark: <GoogleMark /> },
-              { label: "Continue with Microsoft", mark: <MicrosoftMark /> },
-            ].map(({ label, mark }) => (
-              <Link
-                key={label}
-                href="/signup/questionnaire"
-                className="flex h-[58px] items-center justify-center gap-3 rounded-xl bg-white text-[15px] font-semibold text-neutral-900 transition-opacity hover:opacity-90"
-              >
-                {mark}
-                {label}
-              </Link>
-            ))}
-          </div>
+          <SignInButtons />
 
           <p className="mt-9 text-center text-[14px] text-fg">
             Already have a Fathom account?{" "}
@@ -83,24 +70,3 @@ export default function SignUpPage() {
   );
 }
 
-function GoogleMark() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.700c2.2-2 3.4-5 3.4-8.6Z" />
-      <path fill="#34A853" d="M12 24c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.3 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3A11.5 11.5 0 0 0 12 24Z" />
-      <path fill="#FBBC05" d="M5.6 14.7a6.9 6.9 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4l3.8-3Z" />
-      <path fill="#EA4335" d="M12 4.7c1.7 0 3.2.6 4.4 1.7l3.3-3.3A11.5 11.5 0 0 0 1.8 7.3l3.8 3c.9-2.7 3.4-4.6 6.4-4.6Z" />
-    </svg>
-  );
-}
-
-function MicrosoftMark() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-      <path fill="#F25022" d="M2 2h9.5v9.5H2z" />
-      <path fill="#7FBA00" d="M12.5 2H22v9.5h-9.5z" />
-      <path fill="#00A4EF" d="M2 12.5h9.5V22H2z" />
-      <path fill="#FFB900" d="M12.5 12.5H22V22h-9.5z" />
-    </svg>
-  );
-}
