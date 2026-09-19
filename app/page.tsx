@@ -6,16 +6,11 @@ import { HeroBubbles } from "@/components/marketing/HeroBubbles";
 import { FeatureCarousel } from "@/components/marketing/FeatureCarousel";
 import { TeamTabs } from "@/components/marketing/TeamTabs";
 import { PillarSection } from "@/components/marketing/PillarSection";
+import { StatsSection } from "@/components/marketing/StatsSection";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
 const LOGOS = ["HubSpot", "Adobe", "zapier", "GRUBHUB", "EA", "Calendly"];
-
-const STATS = [
-  { value: "95% of users", body: "say Fathom helps them stay fully present in meetings", circle: "#D25000", column: "rgba(210,80,0,0.16)", text: "text-black" },
-  { value: "6+ hours saved", body: "per team member every week on follow-up work", circle: "#EFA9B8", column: "rgba(239,169,184,0.22)", text: "text-black" },
-  { value: "3X Faster", body: "from meeting insights to actionable next steps", circle: "#73BFFF", column: "rgba(115,191,255,0.20)", text: "text-black" },
-];
 
 export const metadata = {
   title: "Fathom — AI notetaking that is out of this world",
@@ -156,33 +151,7 @@ export default function MarketingHomePage() {
 
       <PillarSection />
 
-      {/* Light stats section */}
-      <section className="bg-[#f8f5f5] px-10 py-32 text-neutral-900">
-        <h2 className="text-center text-[clamp(34px,5vw,62px)] leading-tight font-light">
-          Fathom teams
-          <br />
-          work smarter
-        </h2>
-
-        <div className="mx-auto mt-20 grid max-w-[1000px] gap-8 sm:grid-cols-3">
-          {STATS.map((s) => (
-            <div key={s.value} className="relative flex flex-col items-center">
-              <div
-                className="absolute top-20 h-[280px] w-[210px] rounded-b-xl"
-                style={{ background: `linear-gradient(180deg, ${s.column} 0%, transparent 100%)` }}
-                aria-hidden="true"
-              />
-              <div
-                className={`relative flex h-[230px] w-[230px] flex-col items-center justify-center rounded-full px-8 text-center ${s.text}`}
-                style={{ background: s.circle }}
-              >
-                <p className="text-[24px] font-semibold">{s.value}</p>
-                <p className="mt-1 text-[16px] leading-snug">{s.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <StatsSection />
 
       {/* Closing */}
       <section className="relative overflow-hidden px-10 py-36 text-center">
