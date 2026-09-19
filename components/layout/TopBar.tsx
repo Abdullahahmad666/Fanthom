@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { Gift, LifeBuoy, Search, Settings, Star } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
 
@@ -21,26 +23,50 @@ const ACTIONS = [
  * x=243 (docs/UI-SPEC.md 2.1). Present on both layouts, unlike the tab nav.
  */
 export function TopBar({ query, onQueryChange }: TopBarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const onList = onQueryChange !== undefined;
+  const [local, setLocal] = useState("");
+
+  const value = onList ? (query ?? "") : local;
+
+  /**
+   * On the list page the field filters live. Everywhere else -- notably the
+   * meeting detail page, which has no list to filter -- submitting navigates
+   * to My Calls carrying the query, so the control is never dead.
+   */
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onList) return;
+    const q = local.trim();
+    if (q) router.push(`/?q=${encodeURIComponent(q)}`);
+  };
+
   return (
-    <header className="sticky top-0 z-40 flex h-[var(--topbar-h)] shrink-0 items-center bg-surface px-6">
+    <header className="sticky top-0 z-40 flex h-[var(--topbar-h)] shrink-0 items-center bg-surface px-4 sm:px-6">
       <Link href="/" className="shrink-0" aria-label="Fathom home">
         <FathomWordmark />
       </Link>
 
-      <div className="relative ml-7 hidden sm:block">
+      <form onSubmit={submit} className="relative ml-4 hidden sm:block lg:ml-7">
         <Search
           className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-fg-muted"
           strokeWidth={2.5}
         />
         <input
           type="search"
-          value={query}
-          onChange={(e) => onQueryChange?.(e.target.value)}
+          value={value}
+          onChange={(e) => (onList ? onQueryChange(e.target.value) : setLocal(e.target.value))}
           placeholder="Search Call Recordings"
           aria-label="Search call recordings"
-          className="h-[38px] w-[400px] max-w-[42vw] rounded-lg bg-field pr-3 pl-9 text-[15px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
+          className="h-[38px] w-[400px] max-w-[34vw] rounded-lg bg-field pr-3 pl-9 text-[15px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
         />
-      </div>
+        {!onList && local.trim() && (
+          <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[12px] text-fg-dim">
+            {pathname === "/" ? "" : "↵ search"}
+          </span>
+        )}
+      </form>
 
       <div className="ml-auto flex items-center gap-6">
         {ACTIONS.map(({ label, Icon }) => (

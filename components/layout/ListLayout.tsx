@@ -19,8 +19,15 @@ export function useSearchQuery() {
  * The detail page deliberately does NOT use this -- it has no tab nav and no
  * rail. See docs/UI-SPEC.md 2.
  */
-export function ListLayout({ children }: { children: ReactNode }) {
-  const [query, setQuery] = useState("");
+export function ListLayout({
+  children,
+  initialQuery = "",
+}: {
+  children: ReactNode;
+  /** Seeded from ?q= so searches from other pages land filtered. */
+  initialQuery?: string;
+}) {
+  const [query, setQuery] = useState(initialQuery);
 
   return (
     <SearchContext.Provider value={query}>

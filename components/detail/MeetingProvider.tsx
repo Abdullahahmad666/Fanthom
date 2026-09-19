@@ -127,6 +127,31 @@ export function MeetingProvider({
     [],
   );
 
+  /**
+   * Player keyboard control. Skipped while typing, so the transcript search
+   * and Ask Fathom composer keep their space bar.
+   */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) {
+        return;
+      }
+      if (e.key === " ") {
+        e.preventDefault();
+        togglePlay();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setCurrentTime((t) => Math.min(t + 5, meeting.durationSec));
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setCurrentTime((t) => Math.max(t - 5, 0));
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [meeting.durationSec, togglePlay]);
+
   const addActionItem = useCallback((turn: TranscriptTurn, text: string) => {
     setActionItems((items) => [
       ...items,
