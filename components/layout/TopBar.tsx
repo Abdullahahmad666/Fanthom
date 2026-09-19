@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
 import { Popover } from "@/components/ui/Popover";
+import { ReferCard } from "./ReferCard";
 import { pushToast } from "@/lib/toast";
 
 type TopBarProps = {
@@ -18,7 +19,6 @@ type TopBarProps = {
 };
 
 const ACTIONS: { label: string; Icon: typeof Gift; href?: string }[] = [
-  { label: "Refer", Icon: Gift },
   { label: "Settings", Icon: Settings, href: "/settings" },
 ];
 
@@ -116,6 +116,30 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
       </form>
 
       <div className="ml-auto flex items-center gap-4 lg:gap-6">
+        {/* Refer is a hover card rather than a link -- the referral code lives
+            in the bar, not on a page of its own. */}
+        <div className="hidden lg:block">
+          <Popover
+            openOnHover
+            className="bg-[#2c2c30] p-0"
+            trigger={({ toggle, open }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                aria-expanded={open}
+                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 ${
+                  open ? "bg-field text-fg" : "text-fg hover:text-brand"
+                }`}
+              >
+                <Gift className="h-[18px] w-[18px]" strokeWidth={2} />
+                Refer
+              </button>
+            )}
+          >
+            {() => <ReferCard />}
+          </Popover>
+        </div>
+
         {ACTIONS.map(({ label, Icon, href }) => {
           const active = href && pathname === href;
           const classes = `hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 lg:flex ${

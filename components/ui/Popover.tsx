@@ -22,16 +22,46 @@ export function Popover({
   children,
   align = "right",
   className = "",
+  openOnHover = false,
 }: {
   trigger: (props: { open: boolean; toggle: (e: React.MouseEvent) => void }) => ReactNode;
   children: (close: () => void) => ReactNode;
   align?: "left" | "right";
   className?: string;
+  /**
+   * Open on hover as well as on click. For panels that are information rather
+   * than a menu of commands -- the referral card, say -- where hovering is how
+   * the product surfaces them. Click and focus still work, so it stays
+   * reachable from a keyboard.
+   */
+  openOnHover?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState<Coords | null>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* A grace period so crossing the gap between trigger and panel does not
+     close it. */
+  const cancelClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = null;
+  };
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => setOpen(false), 220);
+  };
+
+  const hoverProps = openOnHover
+    ? {
+        onMouseEnter: () => {
+          cancelClose();
+          setOpen(true);
+        },
+        onMouseLeave: scheduleClose,
+      }
+    : {};
 
   const place = useCallback(() => {
     const el = anchorRef.current;
@@ -75,10 +105,12 @@ export function Popover({
     };
   }, [open, place]);
 
+  useEffect(() => cancelClose, []);
+
   const close = () => setOpen(false);
 
   return (
-    <div ref={anchorRef} className="relative">
+    <div ref={anchorRef} className="relative" {...hoverProps}>
       {trigger({
         open,
         toggle: (e) => {
@@ -95,6 +127,7 @@ export function Popover({
             ref={panelRef}
             role="menu"
             onClick={(e) => e.stopPropagation()}
+            {...hoverProps}
             style={{
               position: "fixed",
               top: coords?.top ?? -9999,
