@@ -9,6 +9,7 @@ import {
   usePlaylists,
   type PlaylistItem,
 } from "@/lib/playlists";
+import { pushToast } from "@/lib/toast";
 
 /**
  * Picker for "Add to Playlist". Portalled for the same reason as the share
@@ -35,6 +36,11 @@ export function AddToPlaylistDialog({
   const add = (playlistId: string) => {
     addToPlaylist(playlistId, item);
     setAddedTo(playlistId);
+    pushToast({
+      status: "success",
+      title: "Added to playlist",
+      description: playlists.find((p) => p.id === playlistId)?.name ?? "Playlist",
+    });
     setTimeout(onClose, 700);
   };
 

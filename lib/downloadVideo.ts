@@ -27,6 +27,8 @@ export type RenderTarget = {
   endSec?: number;
   /** Shown as the frame's caption. */
   caption?: string;
+  /** 0-1 render progress, for a toast. */
+  onProgress?: (p: number) => void;
 };
 
 export function canRenderVideo() {
@@ -207,6 +209,7 @@ export function downloadMeetingVideo(target: RenderTarget): Promise<void> {
       const elapsed = (performance.now() - start) / 1000;
       const progress = Math.min(elapsed / RENDER_SECONDS, 1);
       drawFrame(ctx, target, progress);
+      target.onProgress?.(progress);
       if (progress < 1) requestAnimationFrame(tick);
       else recorder.stop();
     };

@@ -9,6 +9,7 @@ import { ShareModal } from "./ShareModal";
 import { AddToPlaylistDialog } from "./AddToPlaylistDialog";
 import { canRenderVideo, downloadMeetingVideo } from "@/lib/downloadVideo";
 import type { PlaylistItem } from "@/lib/playlists";
+import { pushToast, updateToast } from "@/lib/toast";
 import { EmptyBox } from "@/components/ui/EmptyState";
 import { Avatar } from "@/components/ui/Avatar";
 import { MenuItem, Popover } from "@/components/ui/Popover";
@@ -24,15 +25,51 @@ export function RightRail() {
   const [playlistItem, setPlaylistItem] =
     useState<Omit<PlaylistItem, "id" | "addedAt"> | null>(null);
 
-  /** Renders and downloads a real file; see lib/downloadVideo for the caveat. */
-  const download = async (key: string, range?: { startSec: number; endSec: number; caption: string }) => {
+  /**
+   * Renders and downloads a real file, reporting progress in a toast --
+   * encoding takes a few seconds, so silence would read as a dead click.
+   * See lib/downloadVideo for what the file actually contains.
+   */
+  const download = async (
+    key: string,
+    range?: { startSec: number; endSec: number; caption: string },
+  ) => {
+    const what = range ? "clip" : "recording";
+
     if (!canRenderVideo()) {
-      window.alert("This browser cannot record video. Try Chrome or Edge.");
+      pushToast({
+        status: "error",
+        title: "Cannot render video here",
+        description: "This browser does not support canvas recording. Try Chrome or Edge.",
+      });
       return;
     }
+
+    const toastId = pushToast({
+      status: "loading",
+      title: `Preparing ${what}…`,
+      description: range ? range.caption : meeting.title,
+      progress: 0,
+    });
+
     setRendering(key);
     try {
-      await downloadMeetingVideo({ meeting, ...range });
+      await downloadMeetingVideo({
+        meeting,
+        ...range,
+        onProgress: (p) => updateToast(toastId, { progress: p }),
+      });
+      updateToast(toastId, {
+        status: "success",
+        title: `${what === "clip" ? "Clip" : "Recording"} downloaded`,
+        description: "Check your downloads folder.",
+      });
+    } catch {
+      updateToast(toastId, {
+        status: "error",
+        title: "Download failed",
+        description: "The video could not be rendered.",
+      });
     } finally {
       setRendering(null);
     }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/Toaster";
 
 /* The product uses a licensed neo-grotesque; Inter is the closest free match.
    See docs/UI-SPEC.md 1.3. */
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       */}
       <body className="min-h-full" suppressHydrationWarning>
         {children}
+        <Toaster />
       </body>
     </html>
   );
