@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Lock, X } from "lucide-react";
 import { FathomMark } from "@/components/brand/FathomMark";
 import { Starfield } from "@/components/marketing/Starfield";
+import { AnimatedHeadline } from "@/components/marketing/AnimatedHeadline";
 import { HeroBubbles } from "@/components/marketing/HeroBubbles";
 import { FeatureCarousel } from "@/components/marketing/FeatureCarousel";
 import { TeamTabs } from "@/components/marketing/TeamTabs";
@@ -51,20 +52,31 @@ export default function MarketingHomePage() {
         <Starfield />
         <div className="relative mx-auto grid max-w-[1560px] gap-8 lg:grid-cols-[1fr_0.95fr]">
           <div>
-            <h1 className="max-w-[720px] text-[clamp(44px,6.2vw,82px)] leading-[1.02] font-light tracking-tight">
-              AI notetaking that is out of this world
-            </h1>
+            <AnimatedHeadline
+              text="AI notetaking that is out of this world"
+              className="max-w-[720px] text-[clamp(44px,6.2vw,82px)] leading-[1.02] font-light tracking-tight"
+            />
 
-            <p className="mt-10 max-w-[520px] text-[19px] leading-relaxed text-fg">
+            {/* The rest of the column arrives behind the headline, so the hero
+                assembles in reading order instead of all at once. */}
+            <p
+              style={{ animation: "fade-rise 620ms ease-out 900ms both" }}
+              className="mt-10 max-w-[520px] text-[19px] leading-relaxed text-fg"
+            >
               Fathom summarizes your meetings so you can focus on the conversation.{" "}
               <strong className="font-bold">Now available bot-free.</strong>
             </p>
 
-            <Link href="/signup" className={`${CTA} mt-10 px-9 py-4`}>
-              Get started - free forever
-            </Link>
+            <div style={{ animation: "fade-rise 620ms ease-out 1060ms both" }}>
+              <Link href="/signup" className={`${CTA} mt-10 px-9 py-4`}>
+                Get started - free forever
+              </Link>
+            </div>
 
-            <p className="mt-9 flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] text-fg">
+            <p
+              style={{ animation: "fade-rise 620ms ease-out 1200ms both" }}
+              className="mt-9 flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] text-fg"
+            >
               <Lock className="h-4 w-4" />
               SOC 2 Type II <span className="text-fg-dim">|</span> GDPR
               <span className="text-fg-dim">|</span> HIPAA Compliant
@@ -95,7 +107,7 @@ export default function MarketingHomePage() {
           </div>
 
           <p className="max-w-[130px] text-[17px] leading-snug text-fg">
-            Used at over 300K+ companies
+            Used at over 290K+ companies
           </p>
 
           {LOGOS.map((l) => (

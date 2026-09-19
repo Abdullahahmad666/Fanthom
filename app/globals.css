@@ -154,3 +154,37 @@ body {
   50%  { margin-left: 45%; width: 40%; }
   100% { margin-left: 100%; width: 20%; }
 }
+
+/* Hero headline, revealed a word at a time so it reads as being written
+   rather than pasted in. Pure CSS, so it costs no JS and the global
+   prefers-reduced-motion rule already collapses it. */
+@keyframes word-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(0.18em);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+/* Blinks while the words land, then retires. The second animation is listed
+   after the blink so it wins the opacity once its delay has elapsed. */
+@keyframes caret-blink {
+  0%, 45% { opacity: 1; }
+  55%, 100% { opacity: 0; }
+}
+
+@keyframes caret-retire {
+  to { opacity: 0; }
+}
+
+/* Idle float for the hero capsules. --bob sets each one's travel so they
+   never move as a block. */
+@keyframes float-bob {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, var(--bob, -10px), 0); }
+}

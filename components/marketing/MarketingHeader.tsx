@@ -37,7 +37,7 @@ export function MarketingHeader() {
     >
       <div className="mx-auto flex max-w-[1560px] items-center gap-6 px-10 py-5">
         <Link href="/" aria-label="Fathom" className="shrink-0">
-          <FathomWordmark />
+          <FathomWordmark size={26} />
         </Link>
 
         <nav className="mx-auto hidden items-center gap-9 rounded-full px-9 py-3.5 ring-1 ring-white/25 xl:flex">
