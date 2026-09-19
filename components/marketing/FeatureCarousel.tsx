@@ -1,9 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Starfield } from "./Starfield";
+import {
+  ActionItemsSlide,
+  AskSlide,
+  LiveCallSlide,
+  SummarySlide,
+} from "./FeatureSlides";
 
-const SLIDES = [
+/** Slide box, and the distance between two slides' centres. */
+const SLIDE_W = 520;
+const GAP = 150;
+const STEP = SLIDE_W + GAP;
+
+const SLIDES: { caption: ReactNode; Art: () => ReactNode }[] = [
   {
     caption: (
       <>
@@ -12,7 +24,7 @@ const SLIDES = [
         so you can stay focused on the meeting
       </>
     ),
-    kind: "call" as const,
+    Art: LiveCallSlide,
   },
   {
     caption: (
@@ -22,7 +34,7 @@ const SLIDES = [
         available after your call
       </>
     ),
-    kind: "summary" as const,
+    Art: SummarySlide,
   },
   {
     caption: (
@@ -32,7 +44,7 @@ const SLIDES = [
         with an owner and a timestamp
       </>
     ),
-    kind: "actions" as const,
+    Art: ActionItemsSlide,
   },
   {
     caption: (
@@ -42,42 +54,75 @@ const SLIDES = [
         every meeting you have had
       </>
     ),
-    kind: "ask" as const,
+    Art: AskSlide,
   },
 ];
 
 /**
- * The product carousel. Sits on the blue gradient band measured from the
- * source page (#264055 -> #385D7C), with the yellow circular arrows and dot
- * pager the real page uses.
+ * The product filmstrip.
+ *
+ * Not a one-at-a-time carousel: the whole strip slides, so the next panel is
+ * already half on screen with its own caption above it. That is what tells you
+ * there is more to see, and it is why the captions travel with their slides
+ * rather than sitting in one fixed slot above the stage.
+ *
+ * Centring is done with a percentage padding on the track and a pixel
+ * translate, so the active slide lands dead centre at any viewport width
+ * without measuring anything.
  */
 export function FeatureCarousel() {
   const [i, setI] = useState(0);
-  const slide = SLIDES[i];
+
+  const go = (n: number) => setI((n + SLIDES.length) % SLIDES.length);
 
   return (
-    <section
-      className="relative overflow-hidden px-10 pt-28 pb-20"
-      style={{
-        background:
-          "linear-gradient(180deg, #000 0%, #1a2c3c 22%, #264055 50%, #385D7C 88%, #0d1620 100%)",
-      }}
-    >
-      <div className="mx-auto max-w-[1560px]">
-        <p className="mb-12 text-center text-[24px] leading-snug text-fg">{slide.caption}</p>
+    <section className="relative overflow-hidden bg-black pt-24 pb-16">
+      <Starfield />
 
-        <div className="flex justify-center">
-          <SlideArt kind={slide.kind} />
+      {/* The band lifts out of black into blue behind the pager, then settles
+          back down so it meets the black marquee below without a seam. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%]"
+        style={{
+          background:
+            "linear-gradient(180deg, transparent 0%, rgba(38,64,85,0.5) 48%, #3c6183 82%, #0a1018 100%)",
+        }}
+      />
+
+      <div className="relative">
+        <div className="overflow-hidden">
+          <div
+            className="flex transition-transform duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              paddingLeft: `calc(50% - ${SLIDE_W / 2}px)`,
+              paddingRight: `calc(50% - ${SLIDE_W / 2}px)`,
+              transform: `translateX(-${i * STEP}px)`,
+            }}
+          >
+            {SLIDES.map(({ caption, Art }, n) => (
+              <div
+                key={n}
+                style={{ width: SLIDE_W, marginRight: n === SLIDES.length - 1 ? 0 : GAP }}
+                className="shrink-0"
+              >
+                <p className="mb-10 flex min-h-[66px] items-start justify-center text-center text-[22px] leading-[1.35] text-fg">
+                  <span>{caption}</span>
+                </p>
+                <Art />
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-14 flex items-center justify-center gap-5">
           <button
             type="button"
             aria-label="Previous"
-            onClick={() => setI((v) => (v - 1 + SLIDES.length) % SLIDES.length)}
+            onClick={() => go(i - 1)}
             className="flex h-11 w-11 items-center justify-center rounded-full bg-amber text-black transition-transform hover:scale-105"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5" strokeWidth={2.2} />
           </button>
 
           <div className="flex items-center gap-3">
@@ -89,7 +134,7 @@ export function FeatureCarousel() {
                 aria-current={n === i}
                 onClick={() => setI(n)}
                 className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                  n === i ? "bg-amber" : "bg-white/35 hover:bg-white/60"
+                  n === i ? "bg-amber" : "bg-white/25 hover:bg-white/50"
                 }`}
               />
             ))}
@@ -98,89 +143,13 @@ export function FeatureCarousel() {
           <button
             type="button"
             aria-label="Next"
-            onClick={() => setI((v) => (v + 1) % SLIDES.length)}
+            onClick={() => go(i + 1)}
             className="flex h-11 w-11 items-center justify-center rounded-full bg-amber text-black transition-transform hover:scale-105"
           >
-            <ArrowRight className="h-5 w-5" />
+            <ArrowRight className="h-5 w-5" strokeWidth={2.2} />
           </button>
         </div>
       </div>
     </section>
   );
-}
-
-/** Small in-markup mocks so the carousel ships without screenshots. */
-function SlideArt({ kind }: { kind: "call" | "summary" | "actions" | "ask" }) {
-  return (
-    <div className="w-full max-w-[1000px] overflow-hidden rounded-2xl bg-[#0b0b0d] ring-1 ring-white/10">
-      <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-        <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-        <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-        <span className="ml-3 text-[12px] text-fg-dim">fathom.video</span>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2">
-        <div className="space-y-3">
-          <div className="aspect-video rounded-lg bg-gradient-to-br from-[#8e1141] to-[#3d0a1e]" />
-          <div className="flex gap-2">
-            <span className="h-2 w-16 rounded bg-white/20" />
-            <span className="h-2 w-10 rounded bg-white/10" />
-          </div>
-        </div>
-
-        <div className="space-y-2.5">
-          {kind === "call" && (
-            <>
-              <Line w="w-2/3" strong />
-              <Line w="w-full" />
-              <Line w="w-5/6" />
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] text-fg">
-                <span className="h-1.5 w-1.5 rounded-full bg-success" /> Listening…
-              </span>
-            </>
-          )}
-          {kind === "summary" && (
-            <>
-              <span className="flex items-center gap-1.5 text-[12px] text-brand">
-                <Sparkles className="h-3 w-3" /> Enhanced Summary
-              </span>
-              <Line w="w-full" />
-              <Line w="w-11/12" />
-              <Line w="w-4/5" />
-              <Line w="w-3/5" />
-            </>
-          )}
-          {kind === "actions" && (
-            <>
-              {["Confirm security review timeline", "Send pricing to Elena", "Run migration dry run"].map((t) => (
-                <span key={t} className="flex items-start gap-2 text-[12px] text-fg">
-                  <span className="mt-0.5 h-3 w-3 shrink-0 rounded-sm border border-fg-dim" />
-                  <span className="min-w-0">
-                    {t} <span className="text-brand">@2:41</span>
-                  </span>
-                </span>
-              ))}
-            </>
-          )}
-          {kind === "ask" && (
-            <>
-              <p className="ml-auto w-fit rounded-lg bg-white/10 px-3 py-1.5 text-[12px] text-fg">
-                What did we promise BrightCode?
-              </p>
-              <Line w="w-full" />
-              <Line w="w-10/12" />
-              <span className="block text-[11px] text-brand">
-                &ldquo;Trial on the October run&rdquo; @5:56
-              </span>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Line({ w, strong = false }: { w: string; strong?: boolean }) {
-  return <span className={`block h-2.5 rounded ${w} ${strong ? "bg-white/40" : "bg-white/15"}`} />;
 }
