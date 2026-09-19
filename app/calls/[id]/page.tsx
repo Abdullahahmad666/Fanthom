@@ -3,6 +3,17 @@ import { DetailLayout } from "@/components/layout/DetailLayout";
 import { MeetingDetail } from "@/components/detail/MeetingDetail";
 import { getMeeting, MEETINGS } from "@/lib/fixtures";
 
+/** Per-meeting title, so a shared link reads as the meeting not the app. */
+export async function generateMetadata({ params }: PageProps<"/calls/[id]">) {
+  const { id } = await params;
+  const meeting = getMeeting(id);
+  if (!meeting) return { title: "Meeting" };
+  return {
+    title: meeting.title,
+    description: `Recap, transcript and action items from ${meeting.title}.`,
+  };
+}
+
 export function generateStaticParams() {
   return MEETINGS.map((m) => ({ id: m.id }));
 }

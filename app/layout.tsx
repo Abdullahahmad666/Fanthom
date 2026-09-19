@@ -10,9 +10,36 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const DESCRIPTION =
+  "Fathom summarizes your meetings so you can focus on the conversation. Recordings, transcripts, AI summaries, action items and highlights from every call.";
+
 export const metadata: Metadata = {
-  title: "Fathom",
-  description: "AI notetaker — frontend prototype",
+  /* Resolves the relative OG and icon URLs Next generates. Without it those
+     come out relative and most scrapers ignore them. */
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Fathom — AI notetaking that is out of this world",
+    /* Pages set a short title; this frames it. */
+    template: "%s · Fathom",
+  },
+  description: DESCRIPTION,
+  applicationName: "Fathom",
+  openGraph: {
+    type: "website",
+    siteName: "Fathom",
+    url: SITE_URL,
+    title: "Fathom — AI notetaking that is out of this world",
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fathom — AI notetaking that is out of this world",
+    description: DESCRIPTION,
+  },
+  /* A prototype rebuild should not be competing with the real product in
+     search results. */
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

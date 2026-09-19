@@ -2,6 +2,11 @@ import { TopBar } from "@/components/layout/TopBar";
 import { SettingsView } from "@/components/settings/SettingsView";
 import { listIntegrations } from "@/backend/src/services/integrations";
 
+export const metadata = {
+  title: "Settings",
+  description: "Auto-record, calendar and integrations.",
+};
+
 /**
  * Server shell: reads which providers this user has actually connected, then
  * hands them to the interactive view. Returns an empty list when Supabase is
