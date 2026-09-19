@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Info, Play, UserRound, Users } from "lucide-react";
+import { Starfield } from "./Starfield";
 
 type Pillar = {
   id: string;
@@ -91,16 +92,18 @@ export function PillarSection() {
   const p = PILLARS[active];
 
   return (
-    <section ref={sectionRef} className="relative h-[300vh] bg-black">
+    <section ref={sectionRef} className="relative h-[300vh]">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+        <Starfield />
+
         {/* Gradient slab the planet sits on, bleeding off the right edge. */}
         <div
           aria-hidden="true"
-          className="absolute top-0 right-0 hidden h-full w-[52%] lg:block"
+          className="absolute top-1/2 right-0 hidden h-[78%] w-[46%] -translate-y-1/2 rounded-l-[80px] lg:block"
           style={{ background: "linear-gradient(160deg,#f0b6d0 0%,#c084fc 45%,#8b2ff5 100%)" }}
         />
 
-        <div className="relative mx-auto grid w-full max-w-[1560px] items-center gap-10 px-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+        <div className="relative mx-auto grid w-full max-w-[1560px] items-center gap-20 px-10 xl:gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           {/* Pillars */}
           <div className="space-y-6">
             {PILLARS.map((pillar, i) => {
@@ -170,22 +173,6 @@ export function PillarSection() {
           </div>
         </div>
 
-        {/* Progress dots */}
-        <div className="absolute bottom-10 left-1/2 flex -translate-x-1/2 gap-2 lg:left-10 lg:translate-x-0">
-          {PILLARS.map((pillar, i) => (
-            <button
-              key={pillar.id}
-              type="button"
-              aria-label={pillar.title}
-              onClick={() => goTo(i)}
-              className="h-1.5 rounded-full transition-all duration-300"
-              style={{
-                width: i === active ? 34 : 14,
-                background: i === active ? pillar.accent : "#3a3a3f",
-              }}
-            />
-          ))}
-        </div>
       </div>
     </section>
   );
