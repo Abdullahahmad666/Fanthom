@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <ListLayout>
+    <ListLayout rail={false}>
       <NotInPrototype title="Alerts" />
     </ListLayout>
   );

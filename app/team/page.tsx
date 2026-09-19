@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <ListLayout>
+    <ListLayout rail={false}>
       <TeamEdition />
     </ListLayout>
   );

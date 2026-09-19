@@ -26,10 +26,17 @@ export function useSearchQuery() {
 export function ListLayout({
   children,
   initialQuery = "",
+  rail = true,
 }: {
   children: ReactNode;
   /** Seeded from ?q= so searches from other pages land filtered. */
   initialQuery?: string;
+  /**
+   * Ask Fathom answers over your calls, so it is dropped on the tabs that
+   * have none to answer over -- Team Calls, Deals and Alerts. An assistant
+   * that can only say "no data" is worse than no assistant.
+   */
+  rail?: boolean;
 }) {
   const [query, setQuery] = useState(initialQuery);
 
@@ -40,7 +47,7 @@ export function ListLayout({
         <TabNav />
         <div className="flex min-h-0 flex-1">
           <main className="min-w-0 flex-1 overflow-y-auto">{children}</main>
-          <AskFathomRail />
+          {rail && <AskFathomRail />}
         </div>
       </div>
     </SearchContext.Provider>

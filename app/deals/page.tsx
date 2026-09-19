@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <ListLayout>
+    <ListLayout rail={false}>
       {/* The upsell is absolutely positioned over the pipeline, so the table
           stays visible behind it rather than being swapped out. */}
       <div className="relative">
