@@ -18,7 +18,9 @@ const TABS: { id: DetailTab; label: string }[] = [
 
 /** Copy button at the right of the tab row; its label follows the active tab. */
 function TabAction() {
-  const { meeting, tab, template } = useMeeting();
+  /* `sections` rather than meeting.summaries[template], so Copy Recap picks
+     up a generated template too. */
+  const { meeting, tab, sections } = useMeeting();
   const [copied, setCopied] = useState(false);
 
   if (tab === "ask") return null;
@@ -26,7 +28,7 @@ function TabAction() {
   const copy = () => {
     const text =
       tab === "summary"
-        ? (meeting.summaries[template] ?? [])
+        ? sections
             .map(
               (s) =>
                 `${s.heading}\n${s.blocks

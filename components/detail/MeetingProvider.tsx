@@ -15,9 +15,12 @@ import type {
   Highlight,
   HighlightKind,
   Meeting,
+  SummarySection,
   TemplateId,
   TranscriptTurn,
 } from "@/lib/types";
+import { TEMPLATE_LABELS } from "@/lib/types";
+import { deriveSummary } from "@/lib/deriveSummary";
 
 export type DetailTab = "summary" | "transcript" | "ask";
 
@@ -25,6 +28,12 @@ export type DetailTab = "summary" | "transcript" | "ask";
 export type PlayerSize = "regular" | "expanded" | "fullscreen";
 
 export const PLAYBACK_RATES = [1, 1.2, 1.5, 2];
+
+/** A template the summary tab can render, built-in or generated. */
+export type SummaryTemplate = { id: string; label: string; sections: SummarySection[] };
+
+/** How long a regeneration takes to run its progress bar. */
+const REGEN_MS = 2200;
 
 type Ctx = {
   meeting: Meeting;
@@ -48,8 +57,14 @@ type Ctx = {
   /* view */
   tab: DetailTab;
   setTab: (t: DetailTab) => void;
-  template: TemplateId;
-  setTemplate: (t: TemplateId) => void;
+  /* summary templates, built-in plus anything the user has generated */
+  templates: SummaryTemplate[];
+  template: string;
+  setTemplate: (id: string) => void;
+  sections: SummarySection[];
+  /** 0-100 while a regeneration runs, null otherwise. */
+  generating: number | null;
+  regenerate: (instruction: string) => void;
 };
 
 const MeetingCtx = createContext<Ctx | null>(null);
@@ -85,8 +100,76 @@ export function MeetingProvider({
   const [actionItems, setActionItems] = useState<ActionItem[]>(meeting.actionItems);
   const [highlights, setHighlights] = useState<Highlight[]>(meeting.highlights);
 
-  const firstTemplate = (Object.keys(meeting.summaries)[0] ?? "general") as TemplateId;
-  const [template, setTemplate] = useState<TemplateId>(firstTemplate);
+  /* Built-in templates come from the meeting; generated ones are appended as
+     the user asks for them, and both render through the same picker. */
+  const builtIns = useMemo<SummaryTemplate[]>(
+    () =>
+      (Object.keys(meeting.summaries) as TemplateId[]).map((id) => ({
+        id,
+        label: TEMPLATE_LABELS[id],
+        sections: meeting.summaries[id] ?? [],
+      })),
+    [meeting.summaries],
+  );
+
+  const [customs, setCustoms] = useState<SummaryTemplate[]>([]);
+  const [template, setTemplate] = useState<string>(builtIns[0]?.id ?? "general");
+  const [generating, setGenerating] = useState<number | null>(null);
+  const regenTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const templates = useMemo(() => [...builtIns, ...customs], [builtIns, customs]);
+  const sections = useMemo(
+    () => templates.find((t) => t.id === template)?.sections ?? [],
+    [templates, template],
+  );
+
+  /**
+   * Regeneration runs a progress bar and then swaps in the new template.
+   *
+   * The wait is presentation -- deriveSummary is synchronous -- but a summary
+   * that appeared the instant you asked would not read as having been
+   * generated, and the product shows a percentage here.
+   */
+  const regenerate = useCallback(
+    (instruction: string) => {
+      if (regenTimer.current) clearInterval(regenTimer.current);
+      setGenerating(0);
+
+      const started = performance.now();
+      regenTimer.current = setInterval(() => {
+        const pct = Math.min(((performance.now() - started) / REGEN_MS) * 100, 100);
+        setGenerating(Math.round(pct));
+
+        if (pct < 100) return;
+        if (regenTimer.current) clearInterval(regenTimer.current);
+        regenTimer.current = null;
+
+        setCustoms((prev) => {
+          const base = [...builtIns, ...prev].find((t) => t.id === template)?.sections ?? [];
+          const others = builtIns.filter((t) => t.id !== template).map((t) => t.sections);
+          const { label, sections: next } = deriveSummary({
+            base,
+            others,
+            instruction,
+            index: prev.length,
+          });
+          const id = `custom-${prev.length + 1}`;
+          setTemplate(id);
+          return [...prev, { id, label, sections: next }];
+        });
+
+        setGenerating(null);
+      }, 90);
+    },
+    [builtIns, template],
+  );
+
+  useEffect(
+    () => () => {
+      if (regenTimer.current) clearInterval(regenTimer.current);
+    },
+    [],
+  );
 
   const raf = useRef<number | null>(null);
   const last = useRef<number>(0);
@@ -224,13 +307,18 @@ export function MeetingProvider({
       renameHighlight,
       tab,
       setTab,
+      templates,
       template,
       setTemplate,
+      sections,
+      generating,
+      regenerate,
     }),
     [
       meeting, currentTime, playing, rate, seek, togglePlay, playerSize,
       actionItems, highlights, addActionItem, toggleActionItem, addHighlight,
-      removeHighlight, renameHighlight, tab, template,
+      removeHighlight, renameHighlight, tab, templates, template, sections,
+      generating, regenerate,
     ],
   );
 

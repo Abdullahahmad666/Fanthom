@@ -144,6 +144,9 @@ function RowMenu() {
   );
 }
 
+/** Distance below the scroll container's top edge that counts as "reading". */
+const READ_LINE = 96;
+
 export function TranscriptPanel() {
   const {
     meeting, currentTime, seek, highlights, removeHighlight, playing,
@@ -172,10 +175,56 @@ export function TranscriptPanel() {
     return id;
   }, [meeting.transcript, currentTime]);
 
+  /**
+   * Scrolling the transcript moves the playhead, whether or not the recording
+   * is running: whichever turn reaches the read line is the moment the
+   * playhead sits at. It is the same relationship as following along, driven
+   * from the other end.
+   *
+   * The two directions would otherwise fight -- a programmatic scrollIntoView
+   * fires the same scroll event a finger does -- so follow() raises a flag
+   * that the handler checks before treating a scroll as the user's.
+   */
+  const programmatic = useRef(false);
+  const frame = useRef<number | null>(null);
+
   useEffect(() => {
     if (!autoScroll || !playing || term) return;
+    programmatic.current = true;
     activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+    const t = setTimeout(() => {
+      programmatic.current = false;
+    }, 700);
+    return () => clearTimeout(t);
   }, [activeTurnId, autoScroll, playing, term]);
+
+  useEffect(
+    () => () => {
+      if (frame.current) cancelAnimationFrame(frame.current);
+    },
+    [],
+  );
+
+  const onScroll = () => {
+    if (programmatic.current) return;
+    setAutoScroll(false);
+    if (frame.current) return;
+
+    frame.current = requestAnimationFrame(() => {
+      frame.current = null;
+      const el = scrollRef.current;
+      if (!el) return;
+
+      /* The read line sits below the floating search, so the turn the eye is
+         on is the one being seeked to -- not one hidden behind the field. */
+      const line = el.getBoundingClientRect().top + READ_LINE;
+      let t = -1;
+      el.querySelectorAll<HTMLElement>("[data-t]").forEach((node) => {
+        if (node.getBoundingClientRect().top <= line) t = Number(node.dataset.t);
+      });
+      if (t >= 0) seek(t);
+    });
+  };
 
   const highlightFor = (turn: TranscriptTurn) =>
     highlights.find((h) => h.tSec === turn.tSec);
@@ -221,7 +270,7 @@ export function TranscriptPanel() {
 
       <div
         ref={scrollRef}
-        onScroll={() => setAutoScroll(false)}
+        onScroll={onScroll}
         className="max-h-[620px] overflow-y-auto px-6 pt-16 pb-10"
       >
         {turns.map((turn) => {
@@ -239,6 +288,7 @@ export function TranscriptPanel() {
             <div
               key={turn.id}
               ref={isActive ? activeRef : undefined}
+              data-t={turn.tSec}
               className="group/turn relative py-3"
             >
               {hl && meta && (
