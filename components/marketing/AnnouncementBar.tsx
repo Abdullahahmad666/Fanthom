@@ -36,7 +36,9 @@ export function AnnouncementBar() {
         type="button"
         onClick={() => setOpen(false)}
         aria-label="Dismiss announcement"
-        className="absolute right-4 rounded p-1 text-neutral-500 transition-colors hover:text-neutral-900"
+        /* p-2.5 rather than p-1: the glyph stays 16px, the tap target
+           reaches 36px. */
+        className="absolute right-2 rounded p-2.5 text-neutral-500 transition-colors hover:text-neutral-900"
       >
         <X className="h-4 w-4" />
       </button>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
 import { BookDemoModal } from "./BookDemoModal";
 
@@ -49,6 +49,7 @@ export function MarketingHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -63,9 +64,14 @@ export function MarketingHeader() {
         scrolled ? "bg-black" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-[1560px] items-center gap-6 px-10 py-5">
+      <div className="mx-auto flex max-w-[1560px] items-center gap-3 px-4 py-4 sm:gap-6 sm:px-6 xl:px-10 xl:py-5">
         <Link href="/" aria-label="Fathom" className="shrink-0">
-          <FathomWordmark size={26} />
+          <span className="hidden sm:block">
+            <FathomWordmark size={26} />
+          </span>
+          <span className="sm:hidden">
+            <FathomWordmark size={19} />
+          </span>
         </Link>
 
         <nav className="mx-auto hidden items-center gap-9 rounded-full px-9 py-3.5 ring-1 ring-white/25 xl:flex">
@@ -93,23 +99,23 @@ export function MarketingHeader() {
           )}
         </nav>
 
-        <div className="ml-auto flex items-center gap-7 xl:ml-0">
+        <div className="ml-auto flex items-center gap-4 sm:gap-7 xl:ml-0">
           <button
             type="button"
             onClick={() => setDemoOpen(true)}
-            className="hidden text-[16px] whitespace-nowrap text-fg transition-colors hover:text-[#73bfff] sm:block"
+            className="hidden py-2 text-[16px] whitespace-nowrap text-fg transition-colors hover:text-[#73bfff] lg:block"
           >
             Book a Demo
           </button>
           <Link
             href="/login"
-            className="text-[16px] whitespace-nowrap text-fg transition-colors hover:text-[#73bfff]"
+            className="hidden py-2 text-[14px] whitespace-nowrap text-fg transition-colors hover:text-[#73bfff] sm:block sm:text-[16px]"
           >
             Log In
           </Link>
           <Link
             href="/signup"
-            className={`rounded-full px-7 py-3 text-[15px] font-bold tracking-wide whitespace-nowrap uppercase transition-colors ${
+            className={`rounded-full px-4 py-2.5 text-[12px] font-bold tracking-wide whitespace-nowrap uppercase transition-colors sm:px-7 sm:py-3 sm:text-[15px] ${
               scrolled
                 ? "bg-gradient-to-r from-[#a9d5ff] to-[#73bfff] text-black hover:opacity-90"
                 : "border border-[#73bfff] text-fg hover:bg-[#73bfff]/10"
@@ -117,8 +123,70 @@ export function MarketingHeader() {
           >
             Sign up free
           </Link>
+
+          {/* Below xl the nav pill is gone, so this is the only way to reach
+              it. Without it the marketing site has no navigation on a phone. */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            /* No negative margin: at 360px the row is already full and it
+               pushed the button past the container padding. */
+            className="p-2 text-fg xl:hidden"
+          >
+            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
+
+      {menuOpen && (
+        <div className="border-t border-white/10 bg-black px-5 pt-2 pb-6 xl:hidden">
+          {NAV.map(({ label, menu }) => (
+            <div key={label} className="border-b border-white/8 py-3">
+              <p className="text-[17px] font-semibold text-fg">
+                {label === "Pricing" ? (
+                  <Link href="/pricing" onClick={() => setMenuOpen(false)}>
+                    Pricing
+                  </Link>
+                ) : (
+                  label
+                )}
+              </p>
+              {menu && (
+                <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5">
+                  {menu.map((item) => (
+                    <span key={item} className="text-[15px] text-fg-muted">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          <div className="mt-4 flex items-center gap-6">
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                setDemoOpen(true);
+              }}
+              className="py-1 text-[17px] font-semibold text-[#73bfff]"
+            >
+              Book a Demo
+            </button>
+            {/* Only route to sign-in below sm, where the inline link is gone. */}
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="py-1 text-[17px] font-semibold text-fg sm:hidden"
+            >
+              Log In
+            </Link>
+          </div>
+        </div>
+      )}
 
       {demoOpen && <BookDemoModal onClose={() => setDemoOpen(false)} />}
     </header>

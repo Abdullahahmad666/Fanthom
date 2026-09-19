@@ -153,20 +153,33 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           </Popover>
         </div>
 
+        {/* Below lg the label is dropped but the control stays: hiding it
+            outright left no way to reach Settings on a phone, since the
+            account menu does not carry it either. */}
         {ACTIONS.map(({ label, Icon, href }) => {
           const active = href && pathname === href;
-          const classes = `hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 lg:flex ${
+          const classes = `flex items-center gap-2 rounded-lg p-2 text-[13px] transition-colors duration-150 lg:px-2.5 lg:py-1.5 ${
             active ? "bg-field text-fg" : "text-fg hover:text-brand"
           }`;
-          return href ? (
-            <Link key={label} href={href} className={classes} aria-current={active ? "page" : undefined}>
+          const body = (
+            <>
               <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
-              {label}
+              <span className="hidden lg:inline">{label}</span>
+            </>
+          );
+          return href ? (
+            <Link
+              key={label}
+              href={href}
+              className={classes}
+              aria-label={label}
+              aria-current={active ? "page" : undefined}
+            >
+              {body}
             </Link>
           ) : (
-            <button key={label} type="button" className={classes}>
-              <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
-              {label}
+            <button key={label} type="button" aria-label={label} className={classes}>
+              {body}
             </button>
           );
         })}

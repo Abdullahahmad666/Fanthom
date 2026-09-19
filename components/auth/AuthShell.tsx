@@ -40,7 +40,10 @@ export function AuthShell({
 
           <p className="mt-8 text-center text-[15px] text-fg">
             {swapPrompt}{" "}
-            <Link href={swapHref} className="text-brand underline underline-offset-2">
+            <Link
+              href={swapHref}
+              className="inline-block py-2 text-brand underline underline-offset-2"
+            >
               {swapLabel}
             </Link>
           </p>

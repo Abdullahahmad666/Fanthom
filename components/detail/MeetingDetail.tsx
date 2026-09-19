@@ -81,7 +81,7 @@ function Body() {
   return (
     <div
       className={`grid grid-cols-1 gap-7 pt-6 ${
-        expanded ? "" : "lg:grid-cols-[662px_minmax(0,1fr)]"
+        expanded ? "" : "xl:grid-cols-[662px_minmax(0,1fr)]"
       }`}
     >
       <div className="min-w-0">

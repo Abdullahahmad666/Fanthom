@@ -10,10 +10,17 @@ import {
   SummarySlide,
 } from "./FeatureSlides";
 
-/** Slide box, and the distance between two slides' centres. */
-const SLIDE_W = 520;
-const GAP = 150;
-const STEP = SLIDE_W + GAP;
+/**
+ * Slide geometry, in CSS rather than JS.
+ *
+ * The slide was a fixed 520px, which a 390px phone cut a quarter off. Holding
+ * the width and the gap as custom properties lets the translate be a calc()
+ * over the same values, so the strip stays aligned at any width without
+ * measuring anything on resize.
+ */
+const SLIDE_W = "min(520px, calc(100vw - 40px))";
+const GAP = "clamp(24px, 9vw, 150px)";
+const STEP = `calc(${SLIDE_W} + ${GAP})`;
 
 const SLIDES: { caption: ReactNode; Art: () => ReactNode }[] = [
   {
@@ -95,15 +102,18 @@ export function FeatureCarousel() {
           <div
             className="flex transition-transform duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
             style={{
-              paddingLeft: `calc(50% - ${SLIDE_W / 2}px)`,
-              paddingRight: `calc(50% - ${SLIDE_W / 2}px)`,
-              transform: `translateX(-${i * STEP}px)`,
+              paddingLeft: `calc(50% - (${SLIDE_W}) / 2)`,
+              paddingRight: `calc(50% - (${SLIDE_W}) / 2)`,
+              transform: `translateX(calc(-1 * ${i} * ${STEP}))`,
             }}
           >
             {SLIDES.map(({ caption, Art }, n) => (
               <div
                 key={n}
-                style={{ width: SLIDE_W, marginRight: n === SLIDES.length - 1 ? 0 : GAP }}
+                style={{
+                  width: SLIDE_W,
+                  marginRight: n === SLIDES.length - 1 ? 0 : GAP,
+                }}
                 className="shrink-0"
               >
                 <p className="mb-10 flex min-h-[66px] items-start justify-center text-center text-[22px] leading-[1.35] text-fg">

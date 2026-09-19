@@ -16,9 +16,11 @@ import { Starfield } from "./Starfield";
  * section ships no assets and the art stays sharp behind the copy.
  */
 
-const CARD_W = 470;
-const GAP = 44;
-const STEP = CARD_W + GAP;
+/* Held as CSS values so the translate is a calc() over the same numbers: a
+   fixed 470px card had a quarter of it off the side of a phone. */
+const CARD_W = "min(470px, calc(100vw - 56px))";
+const GAP = "clamp(16px, 4vw, 44px)";
+const STEP = `calc(${CARD_W} + ${GAP})`;
 /** How many fit before the strip needs to move. */
 const VISIBLE = 3;
 
@@ -107,7 +109,7 @@ export function RoleCards() {
         <div className="overflow-hidden px-10">
           <div
             className="flex transition-transform duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-            style={{ transform: `translateX(-${i * STEP}px)` }}
+            style={{ transform: `translateX(calc(-1 * ${i} * ${STEP}))` }}
           >
             {ROLES.map((role, n) => (
               <RoleCard key={role.title} role={role} last={n === ROLES.length - 1} />

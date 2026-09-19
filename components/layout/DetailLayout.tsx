@@ -15,7 +15,7 @@ export function DetailLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
       <TopBar />
-      <main className="mx-auto w-full max-w-[var(--detail-max)] flex-1 px-4 pb-20 lg:px-0">
+      <main className="mx-auto w-full max-w-[var(--detail-max)] flex-1 px-4 pb-20 xl:px-0">
         {children}
       </main>
     </div>
