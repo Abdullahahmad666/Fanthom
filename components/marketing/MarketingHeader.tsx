@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
+import { BookDemoModal } from "./BookDemoModal";
 
 const NAV = [
   { label: "Overview", caret: false },
@@ -21,6 +22,7 @@ const NAV = [
  */
 export function MarketingHeader() {
   const [scrolled, setScrolled] = useState(false);
+  const [demoOpen, setDemoOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -53,9 +55,13 @@ export function MarketingHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-7 xl:ml-0">
-          <span className="hidden cursor-pointer text-[16px] whitespace-nowrap text-fg sm:block">
+          <button
+            type="button"
+            onClick={() => setDemoOpen(true)}
+            className="hidden text-[16px] whitespace-nowrap text-fg transition-colors hover:text-[#73bfff] sm:block"
+          >
             Book a Demo
-          </span>
+          </button>
           <Link
             href="/login"
             className="text-[16px] whitespace-nowrap text-fg transition-colors hover:text-[#73bfff]"
@@ -74,6 +80,8 @@ export function MarketingHeader() {
           </Link>
         </div>
       </div>
+
+      {demoOpen && <BookDemoModal onClose={() => setDemoOpen(false)} />}
     </header>
   );
 }
