@@ -1,8 +1,15 @@
 # Fathom — UI Specification
 
 Derived from screenshots of the live product. All measurements are **CSS pixels**: the
-captures are 3213×1943 at 2× DPR, i.e. a **1606 × 971 CSS viewport**, so every pixel
+captures are 3213×1943, read as 2× DPR, i.e. a **1606 × 971 CSS viewport**, so every pixel
 measurement below is the raw value halved.
+
+> **The 2× assumption was too low.** Everything built to these numbers rendered
+> noticeably oversized in the browser, which means the captures were taken at a higher
+> device pixel ratio, or at 2× with OS/browser scaling on top. The implementation
+> therefore runs at roughly **0.85 of the figures below** — a 52px top bar rather than 63,
+> a 48px tab strip rather than 62, a 320px search field rather than 400. The measurements
+> are kept as measured; treat them as proportions rather than absolutes.
 
 > **Revision 2.** A second batch of screenshots showed a real recorded meeting and its
 > tabs, menus and modals. That corrected several things Revision 1 had wrong — they are

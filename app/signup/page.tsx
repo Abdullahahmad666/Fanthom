@@ -14,11 +14,11 @@ export default function SignUpPage() {
 
       <div className="mx-auto grid w-full max-w-[1400px] flex-1 grid-cols-1 items-start gap-16 px-8 lg:grid-cols-[440px_1fr]">
         <div className="rounded-2xl bg-canvas px-10 py-12 ring-1 ring-line">
-          <p className="text-center text-[34px]" aria-hidden="true">🚀</p>
-          <h1 className="mt-4 text-center text-[34px] font-bold text-fg">
+          <p className="text-center text-[28px]" aria-hidden="true">🚀</p>
+          <h1 className="mt-4 text-center text-[28px] font-bold text-fg">
             Sign up for Fathom
           </h1>
-          <p className="mt-5 text-center text-[16px] text-fg-muted">
+          <p className="mt-5 text-center text-[14px] text-fg-muted">
             Connect your work email to get started in minutes
           </p>
 
@@ -30,7 +30,7 @@ export default function SignUpPage() {
               <Link
                 key={label}
                 href="/signup/questionnaire"
-                className="flex h-[58px] items-center justify-center gap-3 rounded-xl bg-white text-[18px] font-semibold text-neutral-900 transition-opacity hover:opacity-90"
+                className="flex h-[58px] items-center justify-center gap-3 rounded-xl bg-white text-[15px] font-semibold text-neutral-900 transition-opacity hover:opacity-90"
               >
                 {mark}
                 {label}
@@ -38,14 +38,14 @@ export default function SignUpPage() {
             ))}
           </div>
 
-          <p className="mt-9 text-center text-[16px] text-fg">
+          <p className="mt-9 text-center text-[14px] text-fg">
             Already have a Fathom account?{" "}
             <Link href="/calls" className="text-brand underline-offset-2 hover:underline">
               Sign in
             </Link>
           </p>
 
-          <p className="mt-8 text-center text-[13px] leading-relaxed text-fg-dim">
+          <p className="mt-8 text-center text-[12px] leading-relaxed text-fg-dim">
             By using Fathom, you agree to the{" "}
             <span className="underline">Terms of Service</span> and{" "}
             <span className="underline">Privacy Policy</span>.
@@ -54,26 +54,26 @@ export default function SignUpPage() {
 
         <div className="hidden pt-16 lg:block">
           <span className="block text-[90px] leading-none font-bold text-fg-dim/40">&ldquo;</span>
-          <blockquote className="-mt-8 max-w-[640px] text-[30px] leading-snug font-medium">
+          <blockquote className="-mt-8 max-w-[640px] text-[26px] leading-snug font-medium">
             <span className="text-fg">&lsquo;Work smarter, not harder,&rsquo; they said. </span>
             <span className="bg-gradient-to-r from-orange-500 to-amber-400 bg-clip-text font-bold text-transparent">
               Fathom took it personally.
             </span>
           </blockquote>
-          <p className="mt-7 text-[15px] font-semibold text-fg">Rosanne K.</p>
-          <p className="text-[15px] text-fg-muted">Executive</p>
+          <p className="mt-7 text-[13px] font-semibold text-fg">Rosanne K.</p>
+          <p className="text-[13px] text-fg-muted">Executive</p>
         </div>
       </div>
 
       <div className="mt-16 flex flex-wrap items-center justify-center gap-6 border-t border-line px-8 py-8">
-        <span className="text-[15px] font-semibold text-fg">
+        <span className="text-[13px] font-semibold text-fg">
           <span className="text-amber">★★★★★</span> 5.0/5.0
         </span>
-        <span className="text-[14px] text-fg-muted">Used at over 300K+ companies</span>
+        <span className="text-[13px] text-fg-muted">Used at over 300K+ companies</span>
         {LOGOS.map((l) => (
           <span
             key={l}
-            className="rounded-lg bg-surface px-5 py-2.5 text-[15px] font-semibold text-fg-muted"
+            className="rounded-lg bg-surface px-5 py-2.5 text-[13px] font-semibold text-fg-muted"
           >
             {l}
           </span>

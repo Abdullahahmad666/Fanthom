@@ -73,7 +73,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
 
       <form onSubmit={submit} className="relative ml-4 hidden sm:block lg:ml-7">
         <Search
-          className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-fg-muted"
+          className="pointer-events-none absolute top-1/2 left-3 h-[15px] w-[15px] -translate-y-1/2 text-fg-muted"
           strokeWidth={2.5}
         />
         <input
@@ -82,10 +82,10 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           onChange={(e) => (onList ? onQueryChange(e.target.value) : setLocal(e.target.value))}
           placeholder="Search Call Recordings"
           aria-label="Search call recordings"
-          className="h-[38px] w-[380px] max-w-[30vw] rounded-lg bg-field pr-3 pl-9 text-[14px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
+          className="h-[34px] w-[320px] max-w-[28vw] rounded-lg bg-field pr-3 pl-8 text-[13px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
         />
         {!onList && local.trim() && (
-          <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[12px] text-fg-dim">
+          <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[11px] text-fg-dim">
             {pathname === "/" ? "" : "↵ search"}
           </span>
         )}
@@ -94,17 +94,17 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
       <div className="ml-auto flex items-center gap-4 lg:gap-6">
         {ACTIONS.map(({ label, Icon, href }) => {
           const active = href && pathname === href;
-          const classes = `hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[14px] transition-colors duration-150 lg:flex ${
+          const classes = `hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 lg:flex ${
             active ? "bg-field text-fg" : "text-fg hover:text-brand"
           }`;
           return href ? (
             <Link key={label} href={href} className={classes} aria-current={active ? "page" : undefined}>
-              <Icon className="h-5 w-5" strokeWidth={2} />
+              <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
               {label}
             </Link>
           ) : (
             <button key={label} type="button" className={classes}>
-              <Icon className="h-5 w-5" strokeWidth={2} />
+              <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
               {label}
             </button>
           );
@@ -117,11 +117,11 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
               <button
                 type="button"
                 onClick={toggle}
-                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[14px] transition-colors duration-150 ${
+                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 ${
                   open ? "bg-field text-fg" : "text-fg hover:text-brand"
                 }`}
               >
-                <LifeBuoy className="h-5 w-5" strokeWidth={2} />
+                <LifeBuoy className="h-[18px] w-[18px]" strokeWidth={2} />
                 Help &amp; Feedback
               </button>
             )}
@@ -141,7 +141,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
                           close();
                           if (href) router.push(href);
                         }}
-                        className="flex w-full items-center gap-3 px-5 py-2.5 text-left text-[16px] text-fg transition-colors hover:bg-white/5"
+                        className="flex w-full items-center gap-3 px-5 py-2.5 text-left text-[14px] text-fg transition-colors hover:bg-white/5"
                       >
                         {Icon ? (
                           <Icon className="h-5 w-5 shrink-0 text-fg-muted" strokeWidth={1.8} />
@@ -154,8 +154,8 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
                   </div>
                 ))}
                 <div className="border-t border-white/10 px-5 py-3">
-                  <p className="text-[14px] text-fg-dim">Logged in as</p>
-                  <p className="truncate text-[15px] text-fg-muted">
+                  <p className="text-[13px] text-fg-dim">Logged in as</p>
+                  <p className="truncate text-[13px] text-fg-muted">
                     abdullahahmad5618@gmail.com
                   </p>
                 </div>
@@ -166,8 +166,8 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
 
         {/* Streak counter. Amber star + count, no surrounding pill. */}
         <span className="flex items-center gap-1.5" title="Streak">
-          <Star className="h-5 w-5 fill-amber text-amber" />
-          <span className="text-[16px] font-semibold text-amber">25</span>
+          <Star className="h-[18px] w-[18px] fill-amber text-amber" />
+          <span className="text-[14px] font-semibold text-amber">25</span>
         </span>
 
         <Popover
@@ -176,7 +176,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
               type="button"
               onClick={toggle}
               aria-label="Account"
-              className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-avatar text-[15px] font-semibold text-fg"
+              className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-avatar text-[13px] font-semibold text-fg"
             >
               A
             </button>

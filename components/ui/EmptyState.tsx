@@ -9,7 +9,7 @@ export function EmptyState({ label }: { label: string }) {
   return (
     <div className="flex items-center justify-center gap-4 py-28 text-fg-muted">
       <CircleSlash className="h-7 w-7" strokeWidth={1.5} />
-      <p className="text-[28px] font-normal">{label}</p>
+      <p className="text-[24px] font-normal">{label}</p>
     </div>
   );
 }
@@ -20,7 +20,7 @@ export function EmptyState({ label }: { label: string }) {
  */
 export function EmptyBox({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-lg bg-surface px-4 py-4 text-[15px] leading-relaxed text-fg-muted italic">
+    <div className="rounded-lg bg-surface px-4 py-4 text-[13px] leading-relaxed text-fg-muted italic">
       {children}
     </div>
   );

@@ -42,9 +42,9 @@
 /* Measured chrome geometry, kept as custom properties so the layouts and the
    sticky offsets can never drift apart. */
 :root {
-  --topbar-h: 63px;
-  --tabnav-h: 62px;
-  --rail-w: 400px;
+  --topbar-h: 52px;
+  --tabnav-h: 48px;
+  --rail-w: 360px;
   --detail-max: 1120px;
 }
 

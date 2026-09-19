@@ -42,7 +42,7 @@ export function LearnSection() {
             className="group max-w-[340px] overflow-hidden rounded-lg transition-transform hover:-translate-y-0.5"
           >
             <span className="block aspect-video w-full" style={{ background: art }} />
-            <span className="flex h-[52px] items-center justify-center gap-2.5 bg-[#35353d] text-[15px] text-fg transition-colors group-hover:bg-[#40404a]">
+            <span className="flex h-[46px] items-center justify-center gap-2.5 bg-[#35353d] text-[13px] text-fg transition-colors group-hover:bg-[#40404a]">
               <Icon className="h-4 w-4" />
               {label}
             </span>
@@ -51,13 +51,13 @@ export function LearnSection() {
       </div>
 
       <h2 className="section-label mt-12 mb-4">Meeting preferences</h2>
-      <p className="max-w-[720px] text-[15px] leading-relaxed text-fg">
+      <p className="max-w-[720px] text-[13px] leading-relaxed text-fg">
         Fathom will auto-record starting with your next external meeting, and the
         summary will be shared with attendees automatically.
       </p>
       <Link
         href="/settings"
-        className="mt-3 inline-block text-[15px] text-brand hover:underline"
+        className="mt-3 inline-block text-[13px] text-brand hover:underline"
       >
         Edit Settings
       </Link>

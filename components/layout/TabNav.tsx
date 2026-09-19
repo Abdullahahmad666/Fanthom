@@ -36,7 +36,7 @@ export function TabNav() {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className="group relative flex items-center whitespace-nowrap text-[16px] font-medium transition-colors duration-150"
+            className="group relative flex items-center whitespace-nowrap text-[14px] font-medium transition-colors duration-150"
           >
             <span className={active ? "text-brand" : "text-fg group-hover:text-brand"}>
               {label}

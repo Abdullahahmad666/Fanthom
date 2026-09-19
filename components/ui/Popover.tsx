@@ -88,10 +88,10 @@ export function MenuItem({
     >
       {icon && <span className={`mt-0.5 ${danger ? "text-red-400" : "text-fg-muted"}`}>{icon}</span>}
       <span className="min-w-0">
-        <span className={`block text-[15px] font-semibold ${danger ? "text-red-400" : "text-fg"}`}>
+        <span className={`block text-[13px] font-semibold ${danger ? "text-red-400" : "text-fg"}`}>
           {label}
         </span>
-        {description && <span className="block text-[13px] text-fg-muted">{description}</span>}
+        {description && <span className="block text-[12px] text-fg-muted">{description}</span>}
       </span>
     </button>
   );

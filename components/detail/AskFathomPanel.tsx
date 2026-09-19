@@ -69,7 +69,7 @@ export function AskFathomPanel() {
           <span className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-surface">
             <FathomMark className="h-7 w-8 text-brand" />
           </span>
-          <p className="mt-5 text-[18px] font-semibold text-fg">
+          <p className="mt-5 text-[15px] font-semibold text-fg">
             Hi, what can I tell you about this meeting?
           </p>
           <div className="mt-10 grid w-full max-w-[620px] grid-cols-1 gap-3 sm:grid-cols-2">
@@ -78,7 +78,7 @@ export function AskFathomPanel() {
                 key={s}
                 type="button"
                 onClick={() => answer(s)}
-                className="rounded-lg bg-surface px-4 py-3.5 text-left text-[15px] text-fg ring-1 ring-line transition-colors hover:bg-raised"
+                className="rounded-lg bg-surface px-4 py-3.5 text-left text-[13px] text-fg ring-1 ring-line transition-colors hover:bg-raised"
               >
                 {s}
               </button>
@@ -89,7 +89,7 @@ export function AskFathomPanel() {
         <div className="flex-1 space-y-5">
           {messages.map((m, i) =>
             m.role === "user" ? (
-              <p key={i} className="text-right text-[15px] text-fg">
+              <p key={i} className="text-right text-[13px] text-fg">
                 <span className="inline-block rounded-lg bg-bubble px-3.5 py-2.5 text-left">
                   {m.text}
                 </span>
@@ -100,7 +100,7 @@ export function AskFathomPanel() {
                   <FathomMark className="h-3 w-4 text-brand" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[15px] leading-relaxed text-fg/90">{m.text}</p>
+                  <p className="text-[13px] leading-relaxed text-fg/90">{m.text}</p>
                   {m.cites?.length ? (
                     <ul className="mt-3 space-y-1.5">
                       {m.cites.map((c, j) => (
@@ -108,7 +108,7 @@ export function AskFathomPanel() {
                           <button
                             type="button"
                             onClick={() => seek(c.tSec)}
-                            className="text-left text-[14px] leading-snug text-brand hover:underline"
+                            className="text-left text-[13px] leading-snug text-brand hover:underline"
                           >
                             {c.label}{" "}
                             <span className="font-medium">@{formatClock(c.tSec)}</span>
@@ -130,7 +130,7 @@ export function AskFathomPanel() {
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Ask Fathom AI"
           aria-label="Ask Fathom AI"
-          className="h-[52px] w-full rounded-lg bg-surface pr-16 pl-4 text-[15px] text-fg ring-1 ring-line placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+          className="h-[52px] w-full rounded-lg bg-surface pr-16 pl-4 text-[13px] text-fg ring-1 ring-line placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         />
         <button
           type="submit"

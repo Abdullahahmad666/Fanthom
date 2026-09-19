@@ -8,8 +8,8 @@ export function NotInPrototype({ title }: { title: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-28 text-center">
       <Construction className="h-7 w-7 text-fg-dim" strokeWidth={1.5} />
-      <p className="text-[22px] text-fg-muted">{title}</p>
-      <p className="max-w-sm text-[15px] text-fg-dim">
+      <p className="text-[19px] text-fg-muted">{title}</p>
+      <p className="max-w-sm text-[13px] text-fg-dim">
         Out of scope for this prototype. The build focuses on My Calls and the
         meeting detail experience.
       </p>

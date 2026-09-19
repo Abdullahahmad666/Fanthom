@@ -94,7 +94,7 @@ export default function SettingsPage() {
       <TopBar />
 
       <main className="mx-auto w-full max-w-[1120px] flex-1 px-6 pb-24">
-        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-4 py-16 text-[22px] font-medium text-fg">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-4 py-16 text-[19px] font-medium text-fg">
           <span>Auto-record</span>
           <MadLibSelect value={record} options={RECORD} onChange={setRecord} size="md" />
           <span>and auto-share</span>
@@ -113,20 +113,20 @@ export default function SettingsPage() {
 
               <div className="flex flex-wrap items-start gap-4">
                 <span
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-[20px] font-bold text-white ${it.markClass}`}
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-[17px] font-bold text-white ${it.markClass}`}
                 >
                   {it.mark}
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-[20px] font-bold text-fg">
+                  <h2 className="text-[17px] font-bold text-fg">
                     {it.name}:{" "}
                     <span className={it.status === "full" ? "text-success" : "text-amber"}>
                       {it.statusLabel}
                     </span>
                   </h2>
                   {it.body && (
-                    <p className="mt-1 max-w-[560px] text-[15px] leading-snug text-fg-muted">
+                    <p className="mt-1 max-w-[560px] text-[13px] leading-snug text-fg-muted">
                       {it.body}
                     </p>
                   )}
@@ -135,7 +135,7 @@ export default function SettingsPage() {
                 {it.action && (
                   <button
                     type="button"
-                    className="flex shrink-0 items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[16px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+                    className="flex shrink-0 items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[14px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
                   >
                     {it.action.label}
                     {it.action.icon === "link" ? (
@@ -152,7 +152,7 @@ export default function SettingsPage() {
                   key={row.label}
                   className="mt-5 flex flex-wrap items-center gap-4 border-t border-line pt-5"
                 >
-                  <span className="min-w-0 flex-1 text-[16px] font-semibold text-fg">
+                  <span className="min-w-0 flex-1 text-[14px] font-semibold text-fg">
                     {row.label}
                   </span>
                   {row.kind === "toggle" ? (
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                   ) : (
                     <button
                       type="button"
-                      className="flex items-center gap-2 rounded-lg border border-brand px-4 py-2.5 text-[15px] font-semibold text-brand transition-colors hover:bg-brand/10"
+                      className="flex items-center gap-2 rounded-lg border border-brand px-4 py-2.5 text-[13px] font-semibold text-brand transition-colors hover:bg-brand/10"
                     >
                       {row.buttonLabel}
                       <ExternalLink className="h-4 w-4" />
@@ -181,18 +181,18 @@ export default function SettingsPage() {
         <p className="section-label mt-12 mb-4">Calendar</p>
         <section className="rounded-xl bg-surface p-6">
           <div className="flex flex-wrap items-center gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#4285F4] text-[20px] font-bold text-white">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#4285F4] text-[17px] font-bold text-white">
               G
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-[20px] font-bold text-fg">
+              <h2 className="text-[17px] font-bold text-fg">
                 Google Calendar: <span className="text-success">Connected</span>
               </h2>
-              <p className="mt-1 text-[15px] text-fg-muted">
+              <p className="mt-1 text-[13px] text-fg-muted">
                 abdullahahmad5618@gmail.com · syncing 3 upcoming meetings
               </p>
             </div>
-            <span className="flex items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[16px] font-semibold text-success">
+            <span className="flex items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[14px] font-semibold text-success">
               <Check className="h-4 w-4" /> Connected
             </span>
           </div>

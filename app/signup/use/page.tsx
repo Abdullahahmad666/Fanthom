@@ -35,8 +35,8 @@ export default function IntendedUsePage() {
               }`}
             >
               <Icon className={`h-11 w-11 ${active ? "text-brand" : "text-fg-muted"}`} strokeWidth={1.5} />
-              <span className={`text-[20px] font-bold ${active ? "text-fg" : "text-fg-muted"}`}>{title}</span>
-              <span className="text-[15px] leading-snug text-fg-muted">{body}</span>
+              <span className={`text-[17px] font-bold ${active ? "text-fg" : "text-fg-muted"}`}>{title}</span>
+              <span className="text-[13px] leading-snug text-fg-muted">{body}</span>
             </button>
           );
         })}

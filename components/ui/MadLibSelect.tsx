@@ -19,7 +19,7 @@ export function MadLibSelect({
   onChange: (v: string) => void;
   size?: "lg" | "md";
 }) {
-  const text = size === "lg" ? "text-[24px]" : "text-[18px]";
+  const text = size === "lg" ? "text-[20px]" : "text-[15px]";
   const pad = size === "lg" ? "px-5 py-3" : "px-4 py-2";
 
   return (
@@ -47,7 +47,7 @@ export function MadLibSelect({
                 onChange(opt);
                 close();
               }}
-              className={`block w-full px-4 py-2.5 text-left text-[15px] transition-colors hover:bg-surface ${
+              className={`block w-full px-4 py-2.5 text-left text-[13px] transition-colors hover:bg-surface ${
                 opt === value ? "text-brand" : "text-fg"
               }`}
             >
@@ -73,7 +73,7 @@ export function ContinueButton({
   variant?: "filled" | "outline";
 }) {
   const base =
-    "flex h-[60px] w-full max-w-[560px] items-center justify-center rounded-lg text-[18px] font-medium transition-colors";
+    "flex h-[60px] w-full max-w-[560px] items-center justify-center rounded-lg text-[15px] font-medium transition-colors";
 
   if (disabled) {
     return (

@@ -55,7 +55,7 @@ export default function ConnectPage() {
             type="button"
             onClick={connect}
             disabled={state === "connecting"}
-            className="flex h-[70px] w-[420px] max-w-full items-center justify-center gap-3 rounded-xl bg-brand text-[22px] font-medium text-black transition-colors hover:bg-[#33cbff] disabled:opacity-70"
+            className="flex h-[70px] w-[420px] max-w-full items-center justify-center gap-3 rounded-xl bg-brand text-[19px] font-medium text-black transition-colors hover:bg-[#33cbff] disabled:opacity-70"
           >
             {state === "connecting" ? (
               <>
@@ -68,14 +68,14 @@ export default function ConnectPage() {
             )}
           </button>
 
-          <p className="mt-8 text-[16px] text-fg-muted">
+          <p className="mt-8 text-[14px] text-fg-muted">
             Use a different calendar?{" "}
             <button type="button" onClick={connect} className="text-fg underline underline-offset-2">
               Connect Outlook
             </button>
           </p>
 
-          <p className="mt-3 text-[16px] text-fg-muted">
+          <p className="mt-3 text-[14px] text-fg-muted">
             Never join scheduled meetings?{" "}
             <Link href="/onboarding/preferences" className="text-fg underline underline-offset-2">
               Skip this step
@@ -91,10 +91,10 @@ export default function ConnectPage() {
                 <li key={m.title} className="flex items-center gap-3">
                   <Check className="h-5 w-5 shrink-0 text-success" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[16px] font-semibold text-fg">
+                    <span className="block truncate text-[14px] font-semibold text-fg">
                       {m.title}
                     </span>
-                    <span className="block text-[14px] text-fg-muted">
+                    <span className="block text-[13px] text-fg-muted">
                       {m.time} · {m.people} people
                     </span>
                   </span>
@@ -117,7 +117,7 @@ export default function ConnectPage() {
                     )
                   }
                   aria-pressed={on}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-3 text-[16px] transition-colors ${
+                  className={`flex items-center gap-2 rounded-lg px-4 py-3 text-[14px] transition-colors ${
                     on
                       ? "bg-accentsoft text-brand ring-1 ring-brand"
                       : "bg-surface text-fg-muted hover:text-fg"

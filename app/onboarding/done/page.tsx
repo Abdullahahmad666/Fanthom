@@ -18,7 +18,7 @@ export default function OnboardingDonePage() {
     >
       <ul className="mb-12 space-y-3">
         {DONE.map((d) => (
-          <li key={d} className="flex items-center gap-3 text-[18px] text-fg">
+          <li key={d} className="flex items-center gap-3 text-[15px] text-fg">
             <Check className="h-5 w-5 shrink-0 text-success" />
             {d}
           </li>
@@ -27,12 +27,12 @@ export default function OnboardingDonePage() {
 
       <Link
         href="/calls"
-        className="flex h-[60px] w-[420px] max-w-full items-center justify-center gap-3 rounded-lg bg-brand text-[18px] font-medium text-black transition-colors hover:bg-[#33cbff]"
+        className="flex h-[60px] w-[420px] max-w-full items-center justify-center gap-3 rounded-lg bg-brand text-[15px] font-medium text-black transition-colors hover:bg-[#33cbff]"
       >
         Go to My Calls <ArrowRight className="h-5 w-5" />
       </Link>
 
-      <p className="mt-6 max-w-[520px] text-center text-[15px] text-fg-dim">
+      <p className="mt-6 max-w-[520px] text-center text-[13px] text-fg-dim">
         Recording capture is stubbed in this prototype — your account is seeded with
         five real-shaped meetings so there is something to explore.
       </p>

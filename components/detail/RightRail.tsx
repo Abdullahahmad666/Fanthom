@@ -33,8 +33,8 @@ export function RightRail() {
 
   return (
     <aside className="pt-6">
-      <h1 className="text-[26px] leading-tight font-semibold text-fg">{meeting.title}</h1>
-      <p className="mt-1 text-[14px] text-fg-muted">
+      <h1 className="text-[22px] leading-tight font-semibold text-fg">{meeting.title}</h1>
+      <p className="mt-1 text-[13px] text-fg-muted">
         {new Date(`${meeting.date}T00:00:00Z`).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
@@ -47,7 +47,7 @@ export function RightRail() {
         <button
           type="button"
           onClick={() => setSharing(true)}
-          className="flex flex-1 items-center justify-between rounded-lg bg-accentsoft px-4 py-3 text-[15px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+          className="flex flex-1 items-center justify-between rounded-lg bg-accentsoft px-4 py-3 text-[13px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
         >
           Share
           <Link2 className="h-4 w-4" />
@@ -82,10 +82,10 @@ export function RightRail() {
             <li key={p.id} className="flex items-center gap-3">
               <Avatar participant={p} size={32} />
               <span className="min-w-0">
-                <span className="block truncate text-[15px] font-semibold text-fg">
+                <span className="block truncate text-[13px] font-semibold text-fg">
                   {p.name}
                 </span>
-                <span className="block truncate text-[13px] text-fg-muted">
+                <span className="block truncate text-[12px] text-fg-muted">
                   {p.role}, {p.company}
                 </span>
               </span>
@@ -127,13 +127,13 @@ export function RightRail() {
                   </button>
                   <span className="min-w-0 flex-1">
                     <span
-                      className={`block text-[14px] leading-snug font-semibold ${
+                      className={`block text-[13px] leading-snug font-semibold ${
                         item.done ? "text-fg-dim line-through" : "text-fg"
                       }`}
                     >
                       {item.text}
                     </span>
-                    <span className="mt-0.5 block text-[13px]">
+                    <span className="mt-0.5 block text-[12px]">
                       <button
                         type="button"
                         onClick={() => jump(item.tSec)}
@@ -186,14 +186,14 @@ export function RightRail() {
                       <Play className="h-4 w-4 fill-current" />
                     </span>
                     <span className="min-w-0">
-                      <span className={`text-[15px] font-semibold ${meta.className}`}>
+                      <span className={`text-[13px] font-semibold ${meta.className}`}>
                         {meta.label}
                       </span>
-                      <span className="text-[14px] text-fg-muted">
+                      <span className="text-[13px] text-fg-muted">
                         {" "}
                         - {formatClock(h.tSec)}
                       </span>
-                      <span className="mt-0.5 block text-[14px] leading-snug text-fg-muted group-hover/annot:text-fg">
+                      <span className="mt-0.5 block text-[13px] leading-snug text-fg-muted group-hover/annot:text-fg">
                         {h.note}
                       </span>
                     </span>

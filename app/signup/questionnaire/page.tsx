@@ -17,7 +17,7 @@ export default function QuestionnairePage() {
 
   return (
     <OnboardingShell progress={25} eyebrow="Tell us about yourself">
-      <div className="flex max-w-[1100px] flex-wrap items-center justify-center gap-x-4 gap-y-5 text-[30px] font-medium text-fg">
+      <div className="flex max-w-[1100px] flex-wrap items-center justify-center gap-x-4 gap-y-5 text-[26px] font-medium text-fg">
         <span>I work in</span>
         <MadLibSelect value={dept} options={DEPARTMENTS} onChange={setDept} />
         <span>as</span>

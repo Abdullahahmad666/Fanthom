@@ -46,7 +46,7 @@ function AddMenu({ turn }: { turn: TranscriptTurn }) {
                 addActionItem(turn, short);
                 close();
               }}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left text-[15px] font-bold tracking-wide text-fg uppercase transition-colors hover:bg-surface"
+              className="flex w-full items-center gap-3 px-4 py-3 text-left text-[13px] font-bold tracking-wide text-fg uppercase transition-colors hover:bg-surface"
             >
               <SquareCheck className="h-5 w-5" /> Action Item
             </button>
@@ -56,7 +56,7 @@ function AddMenu({ turn }: { turn: TranscriptTurn }) {
                 addHighlight(turn, "bookmark", short);
                 close();
               }}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left text-[15px] font-bold tracking-wide text-fg uppercase transition-colors hover:bg-surface"
+              className="flex w-full items-center gap-3 px-4 py-3 text-left text-[13px] font-bold tracking-wide text-fg uppercase transition-colors hover:bg-surface"
             >
               <Bookmark className="h-5 w-5" /> Bookmark
             </button>
@@ -65,7 +65,7 @@ function AddMenu({ turn }: { turn: TranscriptTurn }) {
           <div className="border-y border-line py-1">
             <span
               title="Comments are not part of this prototype"
-              className="flex w-full cursor-not-allowed items-center gap-3 px-4 py-3 text-[15px] font-bold tracking-wide text-fg/35 uppercase"
+              className="flex w-full cursor-not-allowed items-center gap-3 px-4 py-3 text-[13px] font-bold tracking-wide text-fg/35 uppercase"
             >
               <MessageSquare className="h-5 w-5" /> Comment
             </span>
@@ -82,7 +82,7 @@ function AddMenu({ turn }: { turn: TranscriptTurn }) {
                     addHighlight(turn, kind, short);
                     close();
                   }}
-                  className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-[15px] font-bold tracking-wide uppercase transition-colors hover:bg-surface ${meta.className}`}
+                  className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-[13px] font-bold tracking-wide uppercase transition-colors hover:bg-surface ${meta.className}`}
                 >
                   <span className="flex h-5 w-5 items-center justify-center rounded border-2 border-current">
                     <span className="h-0 w-0 border-y-[3px] border-l-[5px] border-y-transparent border-l-current" />
@@ -129,7 +129,7 @@ function RowMenu() {
             <span
               key={label}
               title="Transcript editing is not part of this prototype"
-              className="flex w-full cursor-not-allowed items-start gap-3 px-4 py-2.5 text-[15px] font-semibold text-fg/40"
+              className="flex w-full cursor-not-allowed items-start gap-3 px-4 py-2.5 text-[13px] font-semibold text-fg/40"
             >
               <Icon className="mt-0.5 h-4 w-4 shrink-0" />
               {label}
@@ -189,7 +189,7 @@ export function TranscriptPanel() {
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search Transcript"
             aria-label="Search transcript"
-            className="h-10 w-[260px] rounded-full bg-[#1d1e1f] pr-9 pl-10 text-[15px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className="h-10 w-[260px] rounded-full bg-[#1d1e1f] pr-9 pl-10 text-[13px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           />
           <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-fg-muted">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -211,7 +211,7 @@ export function TranscriptPanel() {
       </div>
 
       {term && (
-        <p className="px-6 pt-4 text-[13px] text-fg-muted">
+        <p className="px-6 pt-4 text-[12px] text-fg-muted">
           {turns.length} matching {turns.length === 1 ? "turn" : "turns"}
         </p>
       )}
@@ -240,7 +240,7 @@ export function TranscriptPanel() {
             >
               {hl && meta && (
                 <div className="mb-2 flex items-center gap-2 pl-10">
-                  <span className={`text-[15px] font-bold tracking-wide uppercase ${meta.className}`}>
+                  <span className={`text-[13px] font-bold tracking-wide uppercase ${meta.className}`}>
                     {meta.label}
                   </span>
                   <button
@@ -251,7 +251,7 @@ export function TranscriptPanel() {
                   >
                     <X className="h-4 w-4" />
                   </button>
-                  <span className="truncate text-[15px] text-fg underline underline-offset-2">
+                  <span className="truncate text-[13px] text-fg underline underline-offset-2">
                     {hl.note}
                   </span>
                 </div>
@@ -271,7 +271,7 @@ export function TranscriptPanel() {
 
                 <div className="min-w-0 flex-1">
                   <p
-                    className={`mb-1.5 text-[14px] text-fg-muted ${isOwner ? "text-right" : "text-left"}`}
+                    className={`mb-1.5 text-[13px] text-fg-muted ${isOwner ? "text-right" : "text-left"}`}
                   >
                     {speaker?.name ?? "Unknown"}
                     <span className="ml-2 text-fg-dim">{formatClock(turn.tSec)}</span>
@@ -283,7 +283,7 @@ export function TranscriptPanel() {
                         key={s.id}
                         type="button"
                         onClick={() => seek(s.tSec)}
-                        className={`max-w-[85%] rounded-lg px-3.5 py-2.5 text-left text-[15px] leading-relaxed transition-colors ${
+                        className={`max-w-[85%] rounded-lg px-3.5 py-2.5 text-left text-[13px] leading-relaxed transition-colors ${
                           hl && meta
                             ? hlIsLive
                               ? `${meta.live} text-black`
@@ -306,7 +306,7 @@ export function TranscriptPanel() {
         })}
 
         {turns.length === 0 && (
-          <p className="py-16 text-center text-[15px] text-fg-muted">
+          <p className="py-16 text-center text-[13px] text-fg-muted">
             No transcript matches for “{q}”.
           </p>
         )}
@@ -319,7 +319,7 @@ export function TranscriptPanel() {
             setAutoScroll(true);
             activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
           }}
-          className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-brand px-4 py-2 text-[15px] font-semibold text-black shadow-lg"
+          className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-brand px-4 py-2 text-[13px] font-semibold text-black shadow-lg"
         >
           <ArrowDown className="h-4 w-4" /> Resume Auto-Scroll
         </button>

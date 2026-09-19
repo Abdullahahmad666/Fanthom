@@ -50,7 +50,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
         className="w-full max-w-[660px] overflow-hidden rounded-xl bg-raised"
       >
         <div className="flex items-center justify-between px-7 pt-6 pb-5">
-          <h2 className="text-[26px] font-semibold text-fg">Share Recording</h2>
+          <h2 className="text-[22px] font-semibold text-fg">Share Recording</h2>
           <button
             type="button"
             onClick={onClose}
@@ -67,7 +67,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
             <input
               placeholder="Add users and emails"
               aria-label="Add users and emails"
-              className="h-[52px] w-full rounded-lg bg-[#2d2c31] pr-4 pl-11 text-[16px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              className="h-[52px] w-full rounded-lg bg-[#2d2c31] pr-4 pl-11 text-[14px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             />
           </div>
 
@@ -78,7 +78,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
                 <button
                   type="button"
                   onClick={() => setClipId(null)}
-                  className={`rounded-full px-3.5 py-1.5 text-[14px] transition-colors ${
+                  className={`rounded-full px-3.5 py-1.5 text-[13px] transition-colors ${
                     clipId === null
                       ? "bg-brand text-black"
                       : "bg-surface text-fg-muted hover:text-fg"
@@ -92,7 +92,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
                     type="button"
                     onClick={() => setClipId(h.id)}
                     title={h.note}
-                    className={`max-w-[220px] truncate rounded-full px-3.5 py-1.5 text-[14px] transition-colors ${
+                    className={`max-w-[220px] truncate rounded-full px-3.5 py-1.5 text-[13px] transition-colors ${
                       clipId === h.id
                         ? "bg-brand text-black"
                         : "bg-surface text-fg-muted hover:text-fg"
@@ -111,14 +111,14 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
               <li key={p.id} className="flex items-center gap-3">
                 <Avatar participant={p} size={36} />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[16px] font-semibold text-fg">
+                  <span className="block truncate text-[14px] font-semibold text-fg">
                     {p.name}
                   </span>
-                  <span className="block truncate text-[14px] text-fg-muted">
+                  <span className="block truncate text-[13px] text-fg-muted">
                     {p.email ?? `${p.role}, ${p.company}`}
                   </span>
                 </span>
-                <span className="shrink-0 text-[15px] text-fg-muted">
+                <span className="shrink-0 text-[13px] text-fg-muted">
                   {p.isOwner ? "Owner" : "Can view"}
                 </span>
               </li>
@@ -129,7 +129,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
         <div className="flex flex-wrap items-center justify-between gap-3 bg-modalfoot px-7 py-4">
           <button
             type="button"
-            className="flex items-center gap-2 text-[15px] text-fg transition-colors hover:text-brand"
+            className="flex items-center gap-2 text-[13px] text-fg transition-colors hover:text-brand"
           >
             <Globe className="h-4 w-4" />
             Anyone with the link can view
@@ -139,7 +139,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={copy}
-            className="flex items-center gap-2 rounded-md border border-brand px-4 py-2 text-[15px] font-semibold text-brand transition-colors hover:bg-brand/10"
+            className="flex items-center gap-2 rounded-md border border-brand px-4 py-2 text-[13px] font-semibold text-brand transition-colors hover:bg-brand/10"
           >
             {copied ? <Check className="h-4 w-4" /> : <Link2 className="h-4 w-4" />}
             {copied ? "Copied" : clip ? "Copy Clip Link" : "Copy Link"}

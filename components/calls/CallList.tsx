@@ -51,10 +51,10 @@ function ResultRow({ meeting, hits, term }: { meeting: Meeting; hits: SearchHit[
         </Link>
 
         <div className="min-w-0 flex-1">
-          <Link href={`/calls/${meeting.id}`} className="text-[17px] font-semibold text-fg hover:text-brand">
+          <Link href={`/calls/${meeting.id}`} className="text-[15px] font-semibold text-fg hover:text-brand">
             <Marked text={meeting.title} term={term} />
           </Link>
-          <p className="mt-0.5 text-[13px] text-fg-muted">
+          <p className="mt-0.5 text-[12px] text-fg-muted">
             {meeting.date} · {meeting.startTime} · {formatDuration(meeting.durationSec)} ·{" "}
             {meeting.participants.length} people
           </p>
@@ -65,8 +65,8 @@ function ResultRow({ meeting, hits, term }: { meeting: Meeting; hits: SearchHit[
               const body = (
                 <span className="flex min-w-0 items-start gap-2">
                   <Icon className="mt-0.5 h-4 w-4 shrink-0 text-fg-dim" />
-                  <span className="min-w-0 text-[14px] leading-snug text-fg-muted">
-                    <span className="mr-2 text-[12px] tracking-wide text-fg-dim uppercase">{label}</span>
+                  <span className="min-w-0 text-[13px] leading-snug text-fg-muted">
+                    <span className="mr-2 text-[11px] tracking-wide text-fg-dim uppercase">{label}</span>
                     <Marked text={hit.snippet} term={term} />
                     {hit.tSec !== undefined && (
                       <span className="ml-2 font-medium text-brand">@{formatClock(hit.tSec)}</span>
@@ -114,7 +114,7 @@ export function CallList() {
 
     return (
       <div className="mx-auto max-w-[1180px] px-8 pt-8">
-        <p className="mb-5 text-[14px] text-fg-muted">
+        <p className="mb-5 text-[13px] text-fg-muted">
           {results.length === 0
             ? "No matches"
             : `${totalHits} match${totalHits === 1 ? "" : "es"} across ${results.length} meeting${
@@ -148,7 +148,7 @@ export function CallList() {
     <div className="mx-auto max-w-[1180px] px-8 pt-8 pb-12">
       {groupByDate(meetings).map((group) => (
         <section key={group.label} className="mb-12">
-          <h2 className="mb-5 text-[18px] font-semibold text-fg">{group.label}</h2>
+          <h2 className="mb-5 text-[15px] font-semibold text-fg">{group.label}</h2>
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {group.meetings.map((m) => (
               <CallCard

@@ -33,7 +33,7 @@ export function Player() {
   return (
     <div className="overflow-hidden rounded-xl bg-content">
       {/* Header strip: start time, meeting code. Small, but very characteristic. */}
-      <div className="flex items-center gap-2 px-4 py-2.5 text-[13px] text-fg-muted">
+      <div className="flex items-center gap-2 px-4 py-2.5 text-[12px] text-fg-muted">
         <span>{meeting.startTime}</span>
         <span className="text-fg-dim">|</span>
         <span>{meeting.meetingCode}</span>
@@ -61,7 +61,7 @@ export function Player() {
           {!playing && (
             <span className="flex flex-col items-center gap-1">
               <Play className="h-14 w-14 fill-white/80 text-white/80" />
-              <span className="text-[15px] text-white/80">
+              <span className="text-[13px] text-white/80">
                 {formatDuration(meeting.durationSec)}
               </span>
             </span>
@@ -99,7 +99,7 @@ export function Player() {
             </span>
           </button>
 
-          <span className="w-12 shrink-0 text-[15px] font-medium text-white tabular-nums">
+          <span className="w-12 shrink-0 text-[13px] font-medium text-white tabular-nums">
             {formatClock(currentTime)}
           </span>
 
@@ -157,11 +157,11 @@ export function Player() {
           <button
             type="button"
             onClick={cycleRate}
-            className="shrink-0 text-[15px] font-semibold text-white"
+            className="shrink-0 text-[13px] font-semibold text-white"
             aria-label={`Playback speed ${rate}x`}
           >
             {rate}
-            <span className="text-[13px] font-normal">×</span>
+            <span className="text-[12px] font-normal">×</span>
           </button>
 
           <PictureInPicture2 className="h-5 w-5 shrink-0 text-white" />

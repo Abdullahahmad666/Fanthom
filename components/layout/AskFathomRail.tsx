@@ -21,9 +21,8 @@ type Msg = {
 /**
  * Account-scoped Ask Fathom rail, shown on list pages only.
  *
- * Owns its own scroll: the header, suggestions and composer stay put while the
- * conversation scrolls between them, so a long thread never moves the meeting
- * list behind it.
+ * The header, suggestions and composer stay put. The conversation area only
+ * becomes scrollable once a thread exists, so an empty rail shows no scrollbar.
  *
  * As on the detail page, there is no model here. Answers are retrieved from
  * the seeded transcripts and cited with real timestamps.
@@ -80,7 +79,7 @@ export function AskFathomRail() {
           aria-label="Open Ask Fathom"
           className="rounded-md p-1.5 text-fg-muted transition-colors hover:bg-surface hover:text-fg"
         >
-          <PanelRightOpen className="h-5 w-5" />
+          <PanelRightOpen className="h-[18px] w-[18px]" />
         </button>
       </div>
     );
@@ -89,7 +88,7 @@ export function AskFathomRail() {
   return (
     <aside className="hidden w-[var(--rail-w)] shrink-0 flex-col border-l border-line bg-canvas xl:flex">
       <div className="flex shrink-0 items-center gap-2 px-5 pt-5 pb-3">
-        <Sparkles className="h-4 w-4 text-fg" />
+        <Sparkles className="h-[15px] w-[15px] text-fg" />
         <span className="section-label text-fg-muted">
           Ask <span className="font-bold text-fg">Fathom</span>
         </span>
@@ -99,14 +98,20 @@ export function AskFathomRail() {
           aria-label="Collapse Ask Fathom"
           className="ml-auto rounded-md p-1 text-fg-muted transition-colors hover:bg-surface hover:text-fg"
         >
-          <PanelRightClose className="h-5 w-5" />
+          <PanelRightClose className="h-[18px] w-[18px]" />
         </button>
       </div>
 
-      {/* Conversation. The only part of the rail that scrolls. */}
-      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 pb-2">
+      {/* Conversation. Only becomes a scroll container once there is a thread
+          to scroll -- an empty rail should not show a scrollbar. */}
+      <div
+        ref={scrollRef}
+        className={`min-h-0 flex-1 px-4 pb-2 ${
+          messages.length > 0 ? "overflow-y-auto" : "overflow-hidden"
+        }`}
+      >
         {showBanner && (
-          <div className="mb-4 rounded-lg bg-amberbg px-4 py-3 text-[13px] leading-relaxed text-amber">
+          <div className="mb-4 rounded-lg bg-amberbg px-4 py-3 text-[12px] leading-relaxed text-amber">
             <span aria-hidden="true">🎁 </span>
             <strong className="font-bold">Account-level Ask Fathom is here!</strong>{" "}
             We&apos;re gifting you unlimited use until Oct 1.{" "}
@@ -125,7 +130,7 @@ export function AskFathomRail() {
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-surface">
               <FathomMark className="h-5 w-6 text-brand" />
             </span>
-            <p className="mt-4 text-[15px] text-fg-muted">
+            <p className="mt-4 text-[13px] text-fg-muted">
               Ask across every meeting you have recorded.
             </p>
           </div>
@@ -134,7 +139,7 @@ export function AskFathomRail() {
             {messages.map((m, i) =>
               m.role === "user" ? (
                 <p key={i} className="text-right">
-                  <span className="inline-block max-w-[85%] rounded-lg bg-field px-3 py-2 text-left text-[14px] text-fg">
+                  <span className="inline-block max-w-[85%] rounded-lg bg-field px-3 py-2 text-left text-[13px] text-fg">
                     {m.text}
                   </span>
                 </p>
@@ -144,14 +149,14 @@ export function AskFathomRail() {
                     <FathomMark className="h-2.5 w-3 text-brand" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[14px] leading-relaxed text-fg/90">{m.text}</p>
+                    <p className="text-[13px] leading-relaxed text-fg/90">{m.text}</p>
                     {m.cites?.length ? (
                       <ul className="mt-2 space-y-1.5">
                         {m.cites.map((c, j) => (
                           <li key={j}>
                             <a
                               href={`/calls/${c.meetingId}?t=${c.tSec}`}
-                              className="block text-[13px] leading-snug text-brand hover:underline"
+                              className="block text-[12px] leading-snug text-brand hover:underline"
                             >
                               {c.label}{" "}
                               <span className="font-medium">@{formatClock(c.tSec)}</span>
@@ -175,7 +180,7 @@ export function AskFathomRail() {
               key={s}
               type="button"
               onClick={() => ask(s)}
-              className="rounded-lg bg-field px-3 py-1.5 text-[13px] text-fg transition-colors hover:bg-bubble"
+              className="rounded-lg bg-field px-3 py-1.5 text-[12px] text-fg transition-colors hover:bg-bubble"
             >
               {s}
             </button>
@@ -189,12 +194,12 @@ export function AskFathomRail() {
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Ask anything..."
           aria-label="Ask Fathom anything"
-          className="w-full bg-transparent text-[14px] text-fg placeholder:text-fg-muted focus:outline-none"
+          className="w-full bg-transparent text-[13px] text-fg placeholder:text-fg-muted focus:outline-none"
         />
         <div className="mt-5 flex items-center">
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[14px] text-fg transition-colors hover:bg-field"
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-fg transition-colors hover:bg-field"
           >
             My Calls
             <ChevronDown className="h-4 w-4" />

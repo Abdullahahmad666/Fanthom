@@ -53,22 +53,22 @@ export function CallCard({
           </span>
         </span>
 
-        <span className="absolute bottom-3 left-3 rounded bg-black/70 px-2 py-1 text-[13px] text-fg">
+        <span className="absolute bottom-3 left-3 rounded bg-black/70 px-2 py-1 text-[12px] text-fg">
           {meeting.participants.length}{" "}
           {meeting.participants.length === 1 ? "person" : "people"}
         </span>
 
-        <span className="absolute right-3 bottom-3 rounded bg-black/70 px-2 py-1 text-[13px] font-medium text-fg">
+        <span className="absolute right-3 bottom-3 rounded bg-black/70 px-2 py-1 text-[12px] font-medium text-fg">
           {formatDuration(meeting.durationSec)}
         </span>
       </div>
 
-      <div className="flex h-[62px] items-center gap-3 px-4">
+      <div className="flex h-[54px] items-center gap-3 px-3.5">
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-[15px] font-semibold text-fg">
+          <span className="block truncate text-[13px] font-semibold text-fg">
             {meeting.title}
           </span>
-          <span className="block truncate text-[13px] text-fg-muted">
+          <span className="block truncate text-[12px] text-fg-muted">
             {meeting.startTime} · {meeting.platform}
           </span>
         </span>
@@ -81,7 +81,7 @@ export function CallCard({
                 type="button"
                 onClick={toggle}
                 aria-label={`Options for ${meeting.title}`}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-bubble text-fg transition-colors hover:bg-[#5a5b5b]"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-bubble text-fg transition-colors hover:bg-[#5a5b5b]"
               >
                 {copied ? (
                   <Check className="h-4 w-4 text-success" />

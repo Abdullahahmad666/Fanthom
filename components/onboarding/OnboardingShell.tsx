@@ -39,11 +39,11 @@ export function OnboardingShell({
       </div>
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-16">
-        <p className="mb-5 text-center text-[17px] tracking-[0.06em] text-fg-muted uppercase">
+        <p className="mb-5 text-center text-[15px] tracking-[0.06em] text-fg-muted uppercase">
           {eyebrow}
         </p>
         {title && (
-          <h1 className="mb-12 max-w-[760px] text-center text-[30px] leading-snug font-bold text-fg">
+          <h1 className="mb-12 max-w-[760px] text-center text-[26px] leading-snug font-bold text-fg">
             {title}
           </h1>
         )}
@@ -51,13 +51,13 @@ export function OnboardingShell({
       </main>
 
       {note && (
-        <p className="flex items-center justify-center gap-3 px-6 pb-6 text-center text-[16px] text-fg-muted">
+        <p className="flex items-center justify-center gap-3 px-6 pb-6 text-center text-[14px] text-fg-muted">
           {note}
         </p>
       )}
 
       {footer && (
-        <p className="pb-8 text-center text-[16px] text-fg-muted">
+        <p className="pb-8 text-center text-[14px] text-fg-muted">
           <span className="mr-1.5 inline-block h-4 w-4 rounded-full bg-fg-dim align-[-2px]" />
           Signing up as{" "}
           <span className="text-fg">abdullahahmad5618@gmail.com</span>. Wrong account?{" "}
