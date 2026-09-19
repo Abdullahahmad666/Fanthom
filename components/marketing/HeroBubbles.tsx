@@ -110,19 +110,19 @@ export function HeroBubbles() {
 
       {/* Prompt */}
       <div style={floatStyle(FLOATS.prompt)} className="absolute top-[186px] right-0 w-[55%]">
-        <div className="relative">
-          {/* The model badges sit on the capsule's top edge, half outside it. */}
-          <div className="absolute -top-4 right-6 z-10 flex items-center gap-2">
-            <ModelBadge>
-              <OpenAiMark />
-            </ModelBadge>
-            <ModelBadge>
-              <ClaudeMark />
-            </ModelBadge>
-          </div>
+        <Capsule gradient="from-[#7c3aed] via-[#2563eb] to-[#f97316]">
+          <div className="relative">
+            {/* Inside the capsule, so it crops with everything else. */}
+            <div className="absolute -top-1 right-0 flex items-center gap-2">
+              <ModelBadge>
+                <OpenAiMark />
+              </ModelBadge>
+              <ModelBadge>
+                <ClaudeMark />
+              </ModelBadge>
+            </div>
 
-          <Capsule gradient="from-[#7c3aed] via-[#2563eb] to-[#f97316]">
-            <p className="max-w-[80%] pt-1 text-[13px] leading-snug text-fg">
+            <p className="max-w-[72%] pt-1 text-[13px] leading-snug text-fg">
               Fathom, what follow-ups did I commit to in my meetings this week?
               <span className="ml-[2px] inline-block h-[1em] w-px translate-y-[0.15em] bg-fg align-baseline" />
             </p>
@@ -136,8 +136,8 @@ export function HeroBubbles() {
                 <ArrowUp className="h-3 w-3 text-fg" />
               </span>
             </div>
-          </Capsule>
-        </div>
+          </div>
+        </Capsule>
       </div>
 
       {/* Summary tabs */}
@@ -186,10 +186,18 @@ function Faces() {
   );
 }
 
+/**
+ * overflow-hidden is the point of this, not an incidental: everything a
+ * capsule holds is cropped to its rounded shape, so an oversized panel reads
+ * as a window onto the product rather than a chunk of UI floating loose over
+ * the starfield.
+ */
 function Capsule({ children, gradient }: { children: ReactNode; gradient: string }) {
   return (
-    <div className={`rounded-[42px] bg-gradient-to-br p-px ${gradient}`}>
-      <div className="rounded-[41px] bg-[#0a0a0a]/95 px-6 py-5 backdrop-blur">{children}</div>
+    <div className={`overflow-hidden rounded-[42px] bg-gradient-to-br p-px ${gradient}`}>
+      <div className="overflow-hidden rounded-[41px] bg-[#0a0a0a]/95 px-6 py-5 backdrop-blur">
+        {children}
+      </div>
     </div>
   );
 }

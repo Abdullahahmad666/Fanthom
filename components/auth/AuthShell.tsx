@@ -98,7 +98,7 @@ function Testimonial() {
 
 function SocialProof() {
   return (
-    <div className="mt-20 flex scale-90 flex-wrap items-center justify-center gap-x-7 gap-y-5 px-8 pb-10">
+    <div className="mt-20 flex flex-wrap items-center justify-center gap-x-7 gap-y-5 px-8 pb-10">
       <div className="flex items-center gap-3">
         <G2Badge size={38} />
         <div className="border-l border-line pl-3">

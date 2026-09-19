@@ -1,11 +1,13 @@
 /**
  * Headline that writes itself in, a word at a time.
  *
- * Each word gets the same animation with a staggered delay, and a caret blinks
- * at the end of the line until the last word has landed. It is pure CSS in a
- * server component -- no hydration, no client bundle, and the global
+ * Each word gets the same animation with a staggered delay. It is pure CSS in
+ * a server component -- no hydration, no client bundle, and the global
  * prefers-reduced-motion rule collapses the whole thing for anyone who asked
  * for that.
+ *
+ * No caret: it kept blinking in the corner of the eye long after the line had
+ * settled, which pulled attention off the headline it was meant to serve.
  */
 
 /** Gap between words landing. */
@@ -20,7 +22,6 @@ export function AnimatedHeadline({
   className?: string;
 }) {
   const words = text.split(" ");
-  const settled = (words.length - 1) * STEP_MS + WORD_MS;
 
   return (
     <h1 className={className}>
@@ -41,13 +42,6 @@ export function AnimatedHeadline({
             {i < words.length - 1 ? " " : ""}
           </span>
         ))}
-
-        <span
-          style={{
-            animation: `caret-blink 900ms steps(1, end) infinite, caret-retire 1ms linear ${settled + 260}ms forwards`,
-          }}
-          className="ml-[0.06em] inline-block h-[0.78em] w-[0.045em] translate-y-[0.04em] bg-brand align-baseline"
-        />
       </span>
     </h1>
   );

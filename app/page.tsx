@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Lock, X } from "lucide-react";
-import { FathomMark } from "@/components/brand/FathomMark";
+import { Lock } from "lucide-react";
+import { AnnouncementBar } from "@/components/marketing/AnnouncementBar";
 import { Starfield } from "@/components/marketing/Starfield";
 import { BRAND_LOGOS, G2Badge } from "@/components/marketing/BrandLogos";
 import { AnimatedHeadline } from "@/components/marketing/AnimatedHeadline";
@@ -26,23 +26,7 @@ const CTA =
 export default function MarketingHomePage() {
   return (
     <div className="min-h-screen bg-black text-fg">
-      {/* Announcement bar */}
-      <div className="relative flex items-center justify-center gap-3 bg-[#f8f5f5] px-12 py-3.5 text-center text-neutral-900">
-        <span className="flex items-center gap-2" aria-hidden="true">
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-black text-[11px] font-bold text-white">
-            S
-          </span>
-          <span className="text-[15px]">+</span>
-          <FathomMark className="h-4 w-5 text-black" />
-        </span>
-        <span className="text-[14px] font-semibold tracking-wide">
-          FATHOM IS NOW PART OF SUPERHUMAN.
-        </span>
-        <span className="text-[14px] font-semibold tracking-wide underline underline-offset-4">
-          LEARN MORE →
-        </span>
-        <X className="absolute right-5 h-4 w-4 text-neutral-500" />
-      </div>
+      <AnnouncementBar />
 
       <MarketingHeader />
 
@@ -90,21 +74,28 @@ export default function MarketingHomePage() {
       {/* Social proof */}
       <section className="relative overflow-hidden px-10 pb-28">
         <Starfield />
-        <div className="relative mx-auto flex max-w-[1560px] flex-wrap items-center justify-center gap-x-9 gap-y-8">
-          <div className="flex items-center gap-4">
-            <G2Badge size={46} />
+        {/* One row on a desktop width: the rating, the count and all six
+            logos. The tiles are sized so the line fits rather than wrapping
+            a lone logo onto a second row. */}
+        <div className="relative mx-auto flex max-w-[1560px] flex-wrap items-center justify-center gap-x-6 gap-y-6 xl:flex-nowrap">
+          <div className="flex shrink-0 items-center gap-3">
+            <G2Badge size={38} />
             <span>
-              <span className="flex items-center gap-2.5">
-                <span className="text-[20px] tracking-[0.06em] text-[#f5a623]">★★★★★</span>
-                <span className="text-[21px] font-semibold">5.0/5.0</span>
+              <span className="flex items-center gap-2">
+                <span className="text-[16px] tracking-[0.06em] text-[#f5a623]">★★★★★</span>
+                <span className="text-[17px] font-semibold">5.0/5.0</span>
               </span>
-              <span className="mt-1 block text-[15px] text-fg">#1 rated · 6,500+ reviews</span>
+              <span className="mt-0.5 block text-[13px] whitespace-nowrap text-fg">
+                #1 rated · 6,500+ reviews
+              </span>
             </span>
           </div>
 
           {/* Wraps to three lines in the product, which is what keeps the row
               from stretching. */}
-          <p className="w-[120px] text-[17px] leading-[1.35] text-fg">Used at 300K+ companies</p>
+          <p className="w-[92px] shrink-0 text-[14px] leading-[1.35] text-fg">
+            Used at 300K+ companies
+          </p>
 
           {BRAND_LOGOS.map(({ key, Logo }) => (
             <Logo key={key} />
