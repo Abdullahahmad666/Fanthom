@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { label: "My Calls", href: "/" },
+  { label: "My Calls", href: "/calls" },
   { label: "Team Calls", href: "/team" },
   { label: "Playlists", href: "/playlists" },
   { label: "Alerts", href: "/alerts" },
@@ -27,7 +27,10 @@ export function TabNav() {
       className="sticky top-[var(--topbar-h)] z-30 flex h-[var(--tabnav-h)] shrink-0 items-stretch gap-10 overflow-x-auto border-t border-canvas bg-surface px-[38px]"
     >
       {TABS.map(({ label, href }) => {
-        const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+        const active =
+          href === "/calls"
+            ? pathname === "/calls" || pathname.startsWith("/calls/")
+            : pathname.startsWith(href);
         return (
           <Link
             key={href}

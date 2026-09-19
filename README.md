@@ -35,11 +35,20 @@ being judged. The time went into the experience on the other side of capture ins
 | Summary template switching | Real — each template is genuinely different content |
 | Share modal, clip-scoped links | Real |
 | Ask Fathom | **Retrieval only.** No model. It finds transcript lines matching your question and cites them with working timestamps; the connecting sentence is canned |
-| Recording bot, calendar, ASR | Not built |
+| Marketing home, signup, onboarding, settings | Real screens, no auth behind them |
+| Calendar connect | Resolves to a connected state listing seeded meetings. No OAuth |
+| Recording bot, ASR | Not built |
 | Deals, Alerts, Team Calls, Playlists | Not built — routed to an honest placeholder rather than left as dead tabs |
 
 Nothing above is hidden in the UI. The detail page states under the player that capture is
 stubbed and that playback runs on a simulated clock.
+
+## Where to start
+
+The live link lands on the **Fathom marketing home**, so a first-time visitor sees the
+product the way a real one would. `Sign up free` walks the whole flow — signup,
+questionnaire, calendar connect, preferences — and ends in the app. `Log In` or
+`Skip to the app` jumps straight to **/calls** if you would rather not sit through it.
 
 ## The thing worth clicking
 
@@ -97,10 +106,11 @@ No backend, no database, no environment variables.
 ## Layout
 
 ```
-app/                  routes: / , /calls/[id] , placeholder tabs
+app/                  / marketing · /signup · /onboarding · /calls · /calls/[id] · /settings
 components/layout/    the two shells — ListLayout and DetailLayout
 components/calls/     list, card, search results
 components/detail/    player, tabs, transcript, summary, rail, share
+components/onboarding/ shared shell for the signup and onboarding steps
 lib/fixtures/         seed meetings
 lib/types.ts          domain model
 docs/UI-SPEC.md       measured UI specification

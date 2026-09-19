@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { Gift, LifeBuoy, Search, Settings, Star } from "lucide-react";
+import {
+  BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, LogOut, Search,
+  Settings, Star, Video,
+} from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
 import { MenuItem, Popover } from "@/components/ui/Popover";
 
@@ -16,7 +19,26 @@ type TopBarProps = {
 const ACTIONS: { label: string; Icon: typeof Gift; href?: string }[] = [
   { label: "Refer", Icon: Gift },
   { label: "Settings", Icon: Settings, href: "/settings" },
-  { label: "Help & Feedback", Icon: LifeBuoy },
+];
+
+/** Help & Feedback dropdown: four groups, the last one naming the account. */
+const HELP_GROUPS: { label: string; Icon?: typeof Gift; href?: string }[][] = [
+  [
+    { label: "Start Test Call", Icon: Video },
+    { label: "Tutorial", Icon: BookOpen },
+    { label: "FAQs", Icon: CircleHelp },
+    { label: "Developers", Icon: Code2 },
+  ],
+  [
+    { label: "Privacy Policy" },
+    { label: "Terms of Service" },
+    { label: "Security & Compliance" },
+    { label: "System Status" },
+  ],
+  [
+    { label: "Download App", Icon: Download },
+    { label: "Logout", Icon: LogOut, href: "/" },
+  ],
 ];
 
 /**
@@ -40,12 +62,12 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
     e.preventDefault();
     if (onList) return;
     const q = local.trim();
-    if (q) router.push(`/?q=${encodeURIComponent(q)}`);
+    if (q) router.push(`/calls?q=${encodeURIComponent(q)}`);
   };
 
   return (
     <header className="sticky top-0 z-40 flex h-[var(--topbar-h)] shrink-0 items-center bg-surface px-4 sm:px-6">
-      <Link href="/" className="shrink-0" aria-label="Fathom home">
+      <Link href="/calls" className="shrink-0" aria-label="My Calls">
         <FathomWordmark />
       </Link>
 
@@ -88,6 +110,60 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           );
         })}
 
+        <div className="hidden lg:block">
+          <Popover
+            className="min-w-[320px] bg-[#343435] py-0"
+            trigger={({ toggle, open }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[15px] transition-colors duration-150 ${
+                  open ? "bg-field text-fg" : "text-fg hover:text-brand"
+                }`}
+              >
+                <LifeBuoy className="h-5 w-5" strokeWidth={2} />
+                Help &amp; Feedback
+              </button>
+            )}
+          >
+            {(close) => (
+              <>
+                {HELP_GROUPS.map((group, gi) => (
+                  <div
+                    key={gi}
+                    className={gi > 0 ? "border-t border-white/10 py-2" : "py-2"}
+                  >
+                    {group.map(({ label, Icon, href }) => (
+                      <button
+                        key={label}
+                        type="button"
+                        onClick={() => {
+                          close();
+                          if (href) router.push(href);
+                        }}
+                        className="flex w-full items-center gap-3 px-5 py-2.5 text-left text-[16px] text-fg transition-colors hover:bg-white/5"
+                      >
+                        {Icon ? (
+                          <Icon className="h-5 w-5 shrink-0 text-fg-muted" strokeWidth={1.8} />
+                        ) : (
+                          <span className="w-5 shrink-0" />
+                        )}
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                ))}
+                <div className="border-t border-white/10 px-5 py-3">
+                  <p className="text-[14px] text-fg-dim">Logged in as</p>
+                  <p className="truncate text-[15px] text-fg-muted">
+                    abdullahahmad5618@gmail.com
+                  </p>
+                </div>
+              </>
+            )}
+          </Popover>
+        </div>
+
         {/* Streak counter. Amber star + count, no surrounding pill. */}
         <span className="flex items-center gap-1.5" title="Streak">
           <Star className="h-5 w-5 fill-amber text-amber" />
@@ -128,7 +204,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
                 label="Sign out"
                 onClick={() => {
                   close();
-                  router.push("/welcome");
+                  router.push("/");
                 }}
               />
             </>

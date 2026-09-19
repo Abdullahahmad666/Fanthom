@@ -78,14 +78,14 @@ export type HighlightKind =
 
 export const HIGHLIGHT_META: Record<
   HighlightKind,
-  { label: string; className: string; bar: string; bubble: string }
+  { label: string; className: string; bar: string; bubble: string; live: string }
 > = {
-  highlight: { label: "Highlight", className: "text-brand", bar: "bg-brand", bubble: "bg-[#126080]" },
-  positive: { label: "Positive Reaction", className: "text-success", bar: "bg-success", bubble: "bg-[#14532d]" },
-  review: { label: "Needs Review", className: "text-amber", bar: "bg-amber", bubble: "bg-[#4a3a0c]" },
-  feedback: { label: "Feedback", className: "text-orange-400", bar: "bg-orange-400", bubble: "bg-[#5a2c0c]" },
-  bookmark: { label: "Bookmark", className: "text-blue-400", bar: "bg-blue-400", bubble: "bg-[#1e3a8a]" },
-  action: { label: "Action Item", className: "text-fg", bar: "bg-fg-muted", bubble: "bg-bubble" },
+  highlight: { label: "Highlight", className: "text-brand", bar: "bg-brand", bubble: "bg-[#126080]", live: "bg-brand" },
+  positive: { label: "Positive Reaction", className: "text-success", bar: "bg-success", bubble: "bg-[#14532d]", live: "bg-success" },
+  review: { label: "Needs Review", className: "text-amber", bar: "bg-amber", bubble: "bg-[#4a3a0c]", live: "bg-amber" },
+  feedback: { label: "Feedback", className: "text-orange-400", bar: "bg-orange-400", bubble: "bg-[#5a2c0c]", live: "bg-orange-400" },
+  bookmark: { label: "Bookmark", className: "text-blue-400", bar: "bg-blue-400", bubble: "bg-[#1e3a8a]", live: "bg-blue-400" },
+  action: { label: "Action Item", className: "text-fg", bar: "bg-fg-muted", bubble: "bg-bubble", live: "bg-fg-muted" },
 };
 
 export type Highlight = {

@@ -33,7 +33,7 @@ export function OnboardingShell({
       </div>
 
       <div className="flex justify-center pt-8">
-        <Link href="/welcome" aria-label="Fathom">
+        <Link href="/" aria-label="Fathom">
           <FathomWordmark />
         </Link>
       </div>
@@ -61,7 +61,7 @@ export function OnboardingShell({
           <span className="mr-1.5 inline-block h-4 w-4 rounded-full bg-fg-dim align-[-2px]" />
           Signing up as{" "}
           <span className="text-fg">abdullahahmad5618@gmail.com</span>. Wrong account?{" "}
-          <Link href="/welcome" className="text-fg underline underline-offset-2">
+          <Link href="/" className="text-fg underline underline-offset-2">
             Sign out
           </Link>
         </p>

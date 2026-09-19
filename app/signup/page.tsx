@@ -40,7 +40,7 @@ export default function SignUpPage() {
 
           <p className="mt-9 text-center text-[16px] text-fg">
             Already have a Fathom account?{" "}
-            <Link href="/" className="text-brand underline-offset-2 hover:underline">
+            <Link href="/calls" className="text-brand underline-offset-2 hover:underline">
               Sign in
             </Link>
           </p>

@@ -227,6 +227,10 @@ export function TranscriptPanel() {
           const isActive = turn.id === activeTurnId;
           const hl = highlightFor(turn);
           const meta = hl ? HIGHLIGHT_META[hl.kind] : null;
+          // Observed: a highlighted range renders full brand cyan while the
+          // playhead is inside it, and a muted tint otherwise.
+          const hlIsLive =
+            !!hl && currentTime >= hl.tSec && currentTime <= (hl.endSec ?? hl.tSec + 30);
 
           return (
             <div
@@ -280,8 +284,12 @@ export function TranscriptPanel() {
                         type="button"
                         onClick={() => seek(s.tSec)}
                         className={`max-w-[85%] rounded-lg px-3.5 py-2.5 text-left text-[15px] leading-relaxed transition-colors ${
-                          hl && meta ? `${meta.bubble} text-fg` : "bg-bubble text-fg hover:bg-[#5a5b5b]"
-                        } ${isActive ? "ring-2 ring-brand/70" : ""}`}
+                          hl && meta
+                            ? hlIsLive
+                              ? `${meta.live} text-black`
+                              : `${meta.bubble} text-fg`
+                            : "bg-bubble text-fg hover:bg-[#5a5b5b]"
+                        } ${isActive && !hl ? "ring-2 ring-brand/70" : ""}`}
                       >
                         {term ? <Marked text={s.text} term={term} /> : s.text}
                       </button>

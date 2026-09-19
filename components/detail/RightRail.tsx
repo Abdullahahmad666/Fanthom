@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Link2, Lock, MoreVertical, Play } from "lucide-react";
+import {
+  Check, Download, Link2, ListPlus, Lock, MoreVertical, Play, Trash2,
+} from "lucide-react";
 import { useMeeting } from "./MeetingProvider";
 import { ShareModal } from "./ShareModal";
 import { EmptyBox } from "@/components/ui/EmptyState";
@@ -11,9 +13,18 @@ import { formatClock, HIGHLIGHT_META, participantById } from "@/lib/types";
 
 export function RightRail() {
   const {
-    meeting, actionItems, toggleActionItem, highlights, seek, setTab,
+    meeting, actionItems, toggleActionItem, highlights, removeHighlight, seek, setTab,
   } = useMeeting();
   const [sharing, setSharing] = useState(false);
+  const [copiedClip, setCopiedClip] = useState<string | null>(null);
+
+  /** Clip link for a single annotation -- the "share a moment" path. */
+  const copyClip = (id: string, tSec: number) => {
+    const url = `${window.location.origin}/calls/${meeting.id}?t=${Math.round(tSec)}&clip=${id}`;
+    navigator.clipboard?.writeText(url).catch(() => {});
+    setCopiedClip(id);
+    setTimeout(() => setCopiedClip(null), 1800);
+  };
 
   const jump = (tSec: number) => {
     seek(tSec);
@@ -162,11 +173,14 @@ export function RightRail() {
             {highlights.map((h) => {
               const meta = HIGHLIGHT_META[h.kind];
               return (
-                <li key={h.id}>
+                <li
+                  key={h.id}
+                  className="group/annot relative -mx-3 rounded-lg px-3 py-2 transition-colors hover:bg-raised"
+                >
                   <button
                     type="button"
                     onClick={() => jump(h.tSec)}
-                    className="group flex w-full gap-2 text-left"
+                    className="flex w-full gap-2 pr-16 text-left"
                   >
                     <span className={`mt-0.5 shrink-0 ${meta.className}`}>
                       <Play className="h-4 w-4 fill-current" />
@@ -179,11 +193,63 @@ export function RightRail() {
                         {" "}
                         - {formatClock(h.tSec)}
                       </span>
-                      <span className="mt-0.5 block text-[14px] leading-snug text-fg-muted group-hover:text-fg">
+                      <span className="mt-0.5 block text-[14px] leading-snug text-fg-muted group-hover/annot:text-fg">
                         {h.note}
                       </span>
                     </span>
                   </button>
+
+                  {/* Row actions, revealed on hover. */}
+                  <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 transition-opacity group-hover/annot:opacity-100 focus-within:opacity-100">
+                    <button
+                      type="button"
+                      aria-label="Copy clip link"
+                      onClick={() => copyClip(h.id, h.tSec)}
+                      className="rounded p-1 text-fg-muted transition-colors hover:text-fg"
+                    >
+                      {copiedClip === h.id ? (
+                        <Check className="h-4 w-4 text-success" />
+                      ) : (
+                        <Link2 className="h-4 w-4" />
+                      )}
+                    </button>
+                    <Popover
+                      className="min-w-[260px]"
+                      trigger={({ toggle }) => (
+                        <button
+                          type="button"
+                          onClick={toggle}
+                          aria-label="Annotation options"
+                          className="rounded bg-surface p-1 text-fg-muted transition-colors hover:text-fg"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </button>
+                      )}
+                    >
+                      {(close) => (
+                        <>
+                          <MenuItem
+                            icon={<Trash2 className="h-4 w-4" />}
+                            label="Delete Annotation"
+                            onClick={() => {
+                              removeHighlight(h.id);
+                              close();
+                            }}
+                          />
+                          <MenuItem
+                            icon={<Download className="h-4 w-4" />}
+                            label="Download Video Clip (mp4)"
+                            onClick={close}
+                          />
+                          <MenuItem
+                            icon={<ListPlus className="h-4 w-4" />}
+                            label="Add to Playlist"
+                            onClick={close}
+                          />
+                        </>
+                      )}
+                    </Popover>
+                  </div>
                 </li>
               );
             })}

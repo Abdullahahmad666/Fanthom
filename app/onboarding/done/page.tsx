@@ -26,7 +26,7 @@ export default function OnboardingDonePage() {
       </ul>
 
       <Link
-        href="/"
+        href="/calls"
         className="flex h-[60px] w-[420px] max-w-full items-center justify-center gap-3 rounded-lg bg-brand text-[18px] font-medium text-black transition-colors hover:bg-[#33cbff]"
       >
         Go to My Calls <ArrowRight className="h-5 w-5" />
