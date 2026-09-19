@@ -4,8 +4,21 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
 
-/** Height of one rung of the ladder, in px. */
-const STEP = 96;
+/**
+ * Ladder geometry, measured off the product.
+ *
+ * The column is exactly as wide as its bubble and the three sit close
+ * together -- the gap is under a quarter of a bubble. Spreading them across a
+ * three-column grid, which is what this did, broke the read: the bubbles
+ * stopped looking like the tops of bars and started looking like three
+ * unrelated circles.
+ */
+const DIAMETER = 200;
+const COL_GAP = 46;
+/** Height of one rung. */
+const STEP = 113;
+/** How far the lowest bar runs on past its bubble. */
+const TAIL = 75;
 
 /** Decelerating arrival -- fast in, soft landing. */
 const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
@@ -20,22 +33,25 @@ const STATS = [
   {
     value: "95% of users",
     body: "say Fathom helps them stay fully present in meetings",
-    circle: "#B54E00",
-    column: "rgba(181,78,0,0.14)",
+    circle: "#D94A08",
+    column: "rgba(217,74,8,0.16)",
   },
   {
     value: "6+ hours saved",
     body: "per team member every week on follow-up work",
-    circle: "#DCA9B7",
-    column: "rgba(220,169,183,0.26)",
+    circle: "#F0A8C2",
+    column: "rgba(240,168,194,0.26)",
   },
   {
     value: "3X Faster",
     body: "from meeting insights to actionable next steps",
-    circle: "#92C0FE",
-    column: "rgba(146,192,254,0.24)",
+    circle: "#3FA3EE",
+    column: "rgba(63,163,238,0.22)",
   },
 ];
+
+/** Tallest bubble's top to the foot of the bars. */
+const ROW_H = (STATS.length - 1) * STEP + DIAMETER + TAIL;
 
 /**
  * "Fathom teams work smarter".
@@ -105,16 +121,20 @@ export function StatsSection() {
   }, [reduced]);
 
   return (
-    <section className="overflow-hidden bg-[#f7f5f5] px-10 py-32 text-neutral-900">
+    <section className="overflow-hidden bg-[#f7f5f5] px-10 pt-28 pb-6 text-neutral-900">
       <h2 className="text-center text-[clamp(34px,5vw,62px)] leading-tight font-light">
         Fathom teams
         <br />
         work smarter
       </h2>
 
+      {/* The bars all end on the same line -- the foot of the row -- so the
+          higher a bubble sits, the longer its bar. That is what makes the
+          three read as one chart rather than three badges. */}
       <div
         ref={gridRef}
-        className="mx-auto mt-28 grid min-h-[460px] max-w-[1080px] items-start gap-8 sm:grid-cols-3"
+        style={{ height: ROW_H, gap: COL_GAP }}
+        className="mx-auto mt-8 flex justify-center"
       >
         {STATS.map((s, i) => {
           /* Sequential reveal: each column waits until the one to its left has
@@ -122,18 +142,20 @@ export function StatsSection() {
           const raw = Math.min(Math.max((t - i * 0.2) / 0.26, 0), 1);
           const enter = reduced ? 1 : easeOutCubic(raw);
 
-          /* The ladder: a permanent step per column -- low, medium, high. */
-          const step = -i * STEP;
+          /* The ladder: the rightmost bubble sits highest. */
+          const top = (STATS.length - 1 - i) * STEP;
           /* Each arrives from below, and drifts gently on past as it leaves. */
           const rise = (1 - enter) * 130;
           const drift = reduced ? 0 : q * (26 + i * 14);
-          const y = step + rise - drift;
+          const y = rise - drift;
 
           return (
-            <div key={s.value} className="flex justify-center">
+            <div key={s.value} style={{ width: DIAMETER }} className="relative shrink-0">
               <div
-                className="relative will-change-transform"
+                className="absolute inset-x-0 will-change-transform"
                 style={{
+                  top,
+                  height: DIAMETER,
                   transform: `translateY(${y}px) scale(${0.88 + 0.12 * enter})`,
                   opacity: enter,
                   filter: enter < 1 ? `blur(${(1 - enter) * 7}px)` : undefined,
@@ -141,17 +163,19 @@ export function StatsSection() {
               >
                 <div
                   aria-hidden="true"
-                  className="absolute top-[58%] left-1/2 h-[230px] w-[125px] -translate-x-1/2"
+                  className="absolute inset-x-0"
                   style={{
+                    top: DIAMETER / 2,
+                    height: ROW_H - top - DIAMETER / 2,
                     background: `linear-gradient(180deg, ${s.column} 0%, transparent 100%)`,
                   }}
                 />
                 <div
-                  className="relative flex h-[190px] w-[190px] flex-col items-center justify-center rounded-full px-6 text-center"
-                  style={{ background: s.circle }}
+                  style={{ background: s.circle, width: DIAMETER, height: DIAMETER }}
+                  className="relative flex flex-col items-center justify-center rounded-full px-6 text-center"
                 >
-                  <p className="text-[17px] font-bold">{s.value}</p>
-                  <p className="mt-1.5 text-[13px] leading-snug">{s.body}</p>
+                  <p className="text-[20px] leading-tight font-bold">{s.value}</p>
+                  <p className="mt-1.5 text-[15px] leading-snug">{s.body}</p>
                 </div>
               </div>
             </div>
