@@ -145,3 +145,7 @@ That session records `model: claude-opus-5` on the frontmatter and on both entri
 Beyond the two canaries the directory also holds the orphaned `--max-turns` attempt (§5a), and two throwaway `Say OK. No tools.` sessions used to probe the payload shape and then to verify the retry fix. All are left in place. None have been edited, tidied, or removed.
 
 `.agent-logs/.capture-debug.log` is the hook's own diagnostic trail — every fire, every failure, with timestamps. It is not part of the transcript format; it is there as evidence the hook ran and to make the next failure diagnosable.
+
+## 7. Repo was flattened after capture was verified
+
+The Next.js app originally sat in a nested git repo at `naano-clone/`, which meant the code and the capture logs lived in two different repos and could never share a commit history. The inner `.git` was removed and its contents moved to the repo root, so this is now a single repo. `next build` passes after the move, and a further canary (`7b1eb9be`, 10:30:55) confirms capture still fires from the new root with the model resolved correctly.
