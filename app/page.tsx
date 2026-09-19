@@ -7,6 +7,7 @@ import { FeatureCarousel } from "@/components/marketing/FeatureCarousel";
 import { TeamTabs } from "@/components/marketing/TeamTabs";
 import { PillarSection } from "@/components/marketing/PillarSection";
 import { StatsSection } from "@/components/marketing/StatsSection";
+import { UnstoppableSection } from "@/components/marketing/UnstoppableSection";
 import { WorksWhereYouMeet } from "@/components/marketing/WorksWhereYouMeet";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
@@ -153,6 +154,8 @@ export default function MarketingHomePage() {
       <PillarSection />
 
       <StatsSection />
+
+      <UnstoppableSection />
 
       <WorksWhereYouMeet />
 

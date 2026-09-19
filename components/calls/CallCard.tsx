@@ -3,7 +3,7 @@
 import Link, { useLinkStatus } from "next/link";
 import { Check, Download, Link2, MoreVertical, Play, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { AvatarStack } from "@/components/ui/Avatar";
+import { VideoPoster } from "@/components/ui/VideoPoster";
 import { BrandSpinner } from "@/components/ui/BrandLoader";
 import { MenuItem, Popover } from "@/components/ui/Popover";
 import { formatDuration, type Meeting } from "@/lib/types";
@@ -26,9 +26,9 @@ function PendingOverlay() {
  * A call in the list. Measured at ~500px wide with a 16:9 poster and a 70px
  * footer (docs/UI-SPEC.md 3).
  *
- * Recordings here have no still frames, so the poster uses the product's
- * audio-only treatment -- a radial gradient with the participants over it --
- * rather than inventing a fake video thumbnail.
+ * Recordings here have no still frames, so VideoPoster stands in: a
+ * participant tile grid for group calls, and the product's audio-only radial
+ * treatment for a solo one.
  *
  * The whole card is clickable via a stretched overlay link rather than by
  * wrapping everything in an anchor, because the overflow menu is a real button
@@ -52,16 +52,11 @@ export function CallCard({
 
   return (
     <div className="group relative overflow-hidden rounded-lg bg-raised transition-colors hover:bg-[#2f2f34] focus-within:outline-2 focus-within:outline-brand">
-      <div
-        className="relative aspect-video w-full"
-        style={{
-          background: `radial-gradient(circle at 50% 45%, ${meeting.poster[0]}, ${meeting.poster[1]})`,
-        }}
+      <VideoPoster
+        participants={meeting.participants}
+        poster={meeting.poster}
+        className="aspect-video w-full"
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <AvatarStack participants={meeting.participants} max={4} size={46} />
-        </div>
-
         <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-150 group-hover:opacity-100">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-black/45 backdrop-blur-sm">
             <Play className="h-6 w-6 translate-x-0.5 fill-white text-white" />
@@ -76,7 +71,7 @@ export function CallCard({
         <span className="absolute right-3 bottom-3 rounded bg-black/70 px-2 py-1 text-[12px] font-medium text-fg">
           {formatDuration(meeting.durationSec)}
         </span>
-      </div>
+      </VideoPoster>
 
       <div className="flex h-[54px] items-center gap-3 px-3.5">
         <span className="min-w-0 flex-1">

@@ -3,15 +3,14 @@
 import { useRef } from "react";
 import { Info, MicOff, Pause, PictureInPicture2, Play, Volume2 } from "lucide-react";
 import { useMeeting } from "./MeetingProvider";
-import { Avatar } from "@/components/ui/Avatar";
+import { VideoPoster } from "@/components/ui/VideoPoster";
 import { formatClock, formatDuration, HIGHLIGHT_META } from "@/lib/types";
 
 /**
  * Recording player.
  *
- * There is no media file -- capture is stubbed -- so this renders the product's
- * audio-only poster treatment and runs off the virtual clock in
- * MeetingProvider. Everything a real player would drive (scrubbing, seeking,
+ * There is no media file -- capture is stubbed -- so VideoPoster stands in for
+ * the frame and playback runs off the virtual clock in MeetingProvider. Everything a real player would drive (scrubbing, seeking,
  * speed, transcript follow) behaves identically.
  */
 export function Player() {
@@ -41,27 +40,21 @@ export function Player() {
         <span className="ml-auto text-fg-dim">{meeting.platform}</span>
       </div>
 
-      <div
-        className="relative aspect-video w-full"
-        style={{
-          background: `radial-gradient(circle at 50% 45%, ${meeting.poster[0]}, ${meeting.poster[1]})`,
-        }}
+      <VideoPoster
+        participants={meeting.participants}
+        poster={meeting.poster}
+        className="aspect-video w-full"
       >
         <button
           type="button"
           onClick={togglePlay}
           aria-label={playing ? "Pause" : "Play"}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+          className="absolute inset-0 flex flex-col items-center justify-center gap-3"
         >
-          <span className="flex items-center gap-2">
-            {meeting.participants.slice(0, 5).map((p) => (
-              <Avatar key={p.id} participant={p} size={64} ring />
-            ))}
-          </span>
           {!playing && (
-            <span className="flex flex-col items-center gap-1">
-              <Play className="h-14 w-14 fill-white/80 text-white/80" />
-              <span className="text-[13px] text-white/80">
+            <span className="flex flex-col items-center gap-1 rounded-2xl bg-black/35 px-6 py-4 backdrop-blur-[2px]">
+              <Play className="h-12 w-12 fill-white/85 text-white/85" />
+              <span className="text-[13px] text-white/85">
                 {formatDuration(meeting.durationSec)}
               </span>
             </span>
@@ -166,7 +159,7 @@ export function Player() {
 
           <PictureInPicture2 className="h-5 w-5 shrink-0 text-white" />
         </div>
-      </div>
+      </VideoPoster>
     </div>
   );
 }
