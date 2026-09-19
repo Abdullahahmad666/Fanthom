@@ -1,7 +1,7 @@
 "use client";
 
 import Link, { useLinkStatus } from "next/link";
-import { Check, Download, Link2, MoreVertical, Play, Trash2 } from "lucide-react";
+import { Check, Link2, MoreVertical, Play, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { VideoPoster } from "@/components/ui/VideoPoster";
 import { BrandSpinner } from "@/components/ui/BrandLoader";
@@ -111,11 +111,6 @@ export function CallCard({
                     copyLink();
                     close();
                   }}
-                />
-                <MenuItem
-                  icon={<Download className="h-4 w-4" />}
-                  label="Download Video"
-                  onClick={close}
                 />
                 <MenuItem
                   icon={<Trash2 className="h-4 w-4" />}

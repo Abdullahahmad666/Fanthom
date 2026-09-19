@@ -17,16 +17,6 @@ export function RightRail() {
   } = useMeeting();
   const [sharing, setSharing] = useState(false);
   const [copiedClip, setCopiedClip] = useState<string | null>(null);
-  const [copiedLink, setCopiedLink] = useState(false);
-
-  /** Whole-recording link, matching the card's Copy Share Link. */
-  const copyMeetingLink = () => {
-    navigator.clipboard
-      ?.writeText(`${window.location.origin}/calls/${meeting.id}`)
-      .catch(() => {});
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 1800);
-  };
 
   /** Clip link for a single annotation -- the "share a moment" path. */
   const copyClip = (id: string, tSec: number) => {
@@ -76,15 +66,6 @@ export function RightRail() {
         >
           {(close) => (
             <>
-              <MenuItem
-                icon={<Link2 className="h-4 w-4" />}
-                label={copiedLink ? "Link copied" : "Copy Share Link"}
-                description="Anyone with the link can view"
-                onClick={() => {
-                  copyMeetingLink();
-                  close();
-                }}
-              />
               <MenuItem
                 icon={<Download className="h-4 w-4" />}
                 label="Download Video"
