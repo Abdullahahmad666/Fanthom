@@ -5,6 +5,21 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Starfield } from "./Starfield";
 import { MockAppWindow } from "./MockAppWindow";
 
+/**
+ * Visibility across a statement's own slice of the stage.
+ *
+ * Deliberately a plateau rather than a crossfade: each claim fades in, holds
+ * fully readable for most of its slice, fades out, then leaves a short gap
+ * before the next arrives -- so one is clearly gone before the next appears.
+ */
+function phase(d: number) {
+  if (d < 0) return 0;
+  if (d < 0.15) return d / 0.15; // in
+  if (d < 0.8) return 1; // hold
+  if (d < 0.95) return 1 - (d - 0.8) / 0.15; // out
+  return 0;
+}
+
 /** Three claims that swap as the section is scrolled, each highlighting a phrase. */
 const STATEMENTS: ReactNode[] = [
   <>
@@ -85,7 +100,7 @@ export function UnstoppableSection() {
         </div>
       </section>
 
-      <section ref={stageRef} className="relative h-[300vh]">
+      <section ref={stageRef} className="relative h-[450vh]">
         <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-10">
           {/* The stars drift up through the stage. Without this the sticky
               section reads as frozen and the text looks like a carousel
@@ -104,15 +119,16 @@ export function UnstoppableSection() {
                  its own slice, so the text travels upward continuously instead
                  of cutting between fixed positions.
 
-                 The first and last are pinned at centre outside their slice,
-                 so the stage is never showing a CTA with no text above it. */
+                 The first and last are clamped into their hold window outside
+                 their slice, so the stage never opens or closes on a CTA with
+                 no text above it. */
               const d = p * STATEMENTS.length - i;
               const held =
-                i === 0 ? Math.max(d, 0.5)
-                : i === STATEMENTS.length - 1 ? Math.min(d, 0.5)
+                i === 0 ? Math.max(d, 0.15)
+                : i === STATEMENTS.length - 1 ? Math.min(d, 0.8)
                 : d;
-              const vis = Math.min(Math.max(1 - Math.abs(held - 0.5) / 0.85, 0), 1);
-              const y = (held - 0.5) * -170;
+              const vis = phase(held);
+              const y = (held - 0.5) * -90;
 
               return (
                 <p

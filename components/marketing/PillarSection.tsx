@@ -95,7 +95,7 @@ export function PillarSection() {
   const p = PILLARS[active];
 
   return (
-    <section ref={sectionRef} className="relative h-[300vh]">
+    <section ref={sectionRef} className="relative h-[420vh]">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
         <div
           aria-hidden="true"
