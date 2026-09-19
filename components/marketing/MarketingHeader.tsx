@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
@@ -45,6 +46,7 @@ const NAV: { label: string; menu?: string[] }[] = [
  * the filled pale-blue pill.
  */
 export function MarketingHeader() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
 
@@ -70,6 +72,16 @@ export function MarketingHeader() {
           {NAV.map(({ label, menu }) =>
             menu ? (
               <NavMenu key={label} label={label} items={menu} />
+            ) : label === "Pricing" ? (
+              <Link
+                key={label}
+                href="/pricing"
+                className={`text-[16px] whitespace-nowrap transition-colors hover:text-[#73bfff] ${
+                  pathname === "/pricing" ? "text-[#73bfff]" : "text-fg"
+                }`}
+              >
+                {label}
+              </Link>
             ) : (
               <span
                 key={label}
