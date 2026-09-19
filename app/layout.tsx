@@ -17,7 +17,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
-      <body className="min-h-full">{children}</body>
+      {/*
+        Browser extensions inject attributes onto <body> before React hydrates
+        -- ColorZilla's `cz-shortcut-listen`, Grammarly's `data-gr-*` and others
+        -- which React reports as a hydration mismatch we cannot fix from here.
+
+        suppressHydrationWarning applies to this element's own attributes only,
+        not to its descendants, so genuine mismatches inside the app are still
+        reported.
+      */}
+      <body className="min-h-full" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
