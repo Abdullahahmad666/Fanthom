@@ -120,3 +120,25 @@ body {
   from { stroke-dashoffset: 274; }
   to   { stroke-dashoffset: 0; }
 }
+
+/*
+  Tailwind v3's preflight gave buttons `cursor: pointer`; v4 dropped it, so
+  every button in the app fell back to the browser default arrow and read as
+  unclickable. Put it back, and make disabled controls say so.
+*/
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [role="menuitem"]:not(:disabled),
+  [role="switch"]:not(:disabled),
+  [role="checkbox"]:not(:disabled),
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}

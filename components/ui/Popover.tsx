@@ -1,13 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+
+type Coords = { top: number; left?: number; right?: number };
 
 /**
- * Menu popover. One component serves both the call-card overflow menu and the
- * transcript row menu -- they differ only in items and alignment.
+ * Menu popover. One component serves the call-card overflow menu, the
+ * transcript row menus and the rail menus.
  *
- * Near-black fill rather than a drop shadow, which is how the product separates
- * floating surfaces from the page (docs/UI-SPEC.md 1.4).
+ * The panel renders through a portal on document.body rather than inline.
+ * Inline, it was being clipped by whatever it sat inside -- the card's
+ * overflow-hidden, and the transcript's own scroll container -- so menus
+ * appeared cut off or invisible.
+ *
+ * Near-black fill rather than a drop shadow, which is how the product
+ * separates floating surfaces from the page (docs/UI-SPEC.md 1.4).
  */
 export function Popover({
   trigger,
@@ -21,24 +29,56 @@ export function Popover({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState<Coords | null>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const place = useCallback(() => {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const panelH = panelRef.current?.offsetHeight ?? 200;
+    const below = window.innerHeight - r.bottom;
+    // Flip above the trigger when there is not room beneath it.
+    const top = below < panelH + 16 && r.top > panelH + 16 ? r.top - panelH - 8 : r.bottom + 8;
+
+    setCoords(
+      align === "right"
+        ? { top, right: Math.max(8, window.innerWidth - r.right) }
+        : { top, left: Math.max(8, r.left) },
+    );
+  }, [align]);
+
+  useLayoutEffect(() => {
+    if (open) place();
+  }, [open, place]);
 
   useEffect(() => {
     if (!open) return;
+
     const onDown = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+      const t = e.target as Node;
+      if (!anchorRef.current?.contains(t) && !panelRef.current?.contains(t)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
+    // Track the trigger if anything behind the menu scrolls or resizes.
+    window.addEventListener("scroll", place, true);
+    window.addEventListener("resize", place);
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", place);
     };
-  }, [open]);
+  }, [open, place]);
+
+  const close = () => setOpen(false);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={anchorRef} className="relative">
       {trigger({
         open,
         toggle: (e) => {
@@ -47,16 +87,27 @@ export function Popover({
           setOpen((v) => !v);
         },
       })}
-      {open && (
-        <div
-          role="menu"
-          className={`absolute top-full z-50 mt-2 min-w-[240px] rounded-lg bg-popover py-2 ring-1 ring-line ${
-            align === "right" ? "right-0" : "left-0"
-          } ${className}`}
-        >
-          {children(() => setOpen(false))}
-        </div>
-      )}
+
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            ref={panelRef}
+            role="menu"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "fixed",
+              top: coords?.top ?? -9999,
+              left: coords?.left,
+              right: coords?.right,
+              visibility: coords ? "visible" : "hidden",
+            }}
+            className={`z-[100] min-w-[240px] rounded-lg bg-popover py-2 ring-1 ring-line ${className}`}
+          >
+            {children(close)}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
