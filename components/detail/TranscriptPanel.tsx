@@ -84,7 +84,7 @@ function AddMenu({ turn }: { turn: TranscriptTurn }) {
                   }}
                   className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-[15px] font-bold tracking-wide uppercase transition-colors hover:bg-surface ${meta.className}`}
                 >
-                  <span className={`flex h-5 w-5 items-center justify-center rounded ring-1.5 ring-current`}>
+                  <span className="flex h-5 w-5 items-center justify-center rounded border-2 border-current">
                     <span className="h-0 w-0 border-y-[3px] border-l-[5px] border-y-transparent border-l-current" />
                   </span>
                   {meta.label}
@@ -179,8 +179,10 @@ export function TranscriptPanel() {
 
   return (
     <div className="relative">
-      {/* Floating search: overlays the content rather than sitting in flow. */}
-      <div className="pointer-events-none sticky top-2 z-20 flex justify-end px-6 pt-3">
+      {/* Floating search. Absolutely positioned so it sits *over* the scrolling
+          transcript, visibly overlapping bubbles, which is how the product
+          renders it -- not a row in the flow above the list. */}
+      <div className="pointer-events-none absolute top-3 right-0 z-20 flex justify-end px-6">
         <div className="pointer-events-auto relative">
           <input
             value={q}
@@ -209,7 +211,7 @@ export function TranscriptPanel() {
       </div>
 
       {term && (
-        <p className="px-6 pb-2 text-[13px] text-fg-muted">
+        <p className="px-6 pt-4 text-[13px] text-fg-muted">
           {turns.length} matching {turns.length === 1 ? "turn" : "turns"}
         </p>
       )}
@@ -217,7 +219,7 @@ export function TranscriptPanel() {
       <div
         ref={scrollRef}
         onScroll={() => setAutoScroll(false)}
-        className="max-h-[620px] overflow-y-auto px-6 pt-1 pb-10"
+        className="max-h-[620px] overflow-y-auto px-6 pt-16 pb-10"
       >
         {turns.map((turn) => {
           const speaker = participantById(meeting, turn.speakerId);
