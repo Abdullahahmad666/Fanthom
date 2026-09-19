@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Check, Download, ExternalLink, Link2, Star } from "lucide-react";
 
 import { MadLibSelect } from "@/components/ui/MadLibSelect";
+import { Toggle } from "./parts";
+import { SettingsExtras } from "./SettingsExtras";
 
 const RECORD = ["All meetings", "Only external meetings", "Only meetings I host", "No meetings"];
 const SHARE = ["Summary & recording", "Summary only", "Nothing"];
@@ -62,27 +64,6 @@ const INTEGRATIONS: Integration[] = [
     markClass: "bg-[#5059C9]",
   },
 ];
-
-function Toggle({ on, onChange, label }: { on: boolean; onChange: () => void; label: string }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={on}
-      aria-label={label}
-      onClick={onChange}
-      className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
-        on ? "bg-brand" : "bg-bubble"
-      }`}
-    >
-      <span
-        className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-all ${
-          on ? "left-6" : "left-1"
-        }`}
-      />
-    </button>
-  );
-}
 
 export function SettingsView({
   connected = [],
@@ -228,6 +209,8 @@ export function SettingsView({
             )}
           </div>
         </section>
+
+        <SettingsExtras />
       </main>
   );
 }
