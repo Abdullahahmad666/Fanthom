@@ -67,16 +67,25 @@ export type ActionItem = {
   manual?: boolean;
 };
 
-export type HighlightKind = "highlight" | "feedback" | "bookmark" | "action";
+/** Matches the annotation types in the transcript's ⊕ menu. */
+export type HighlightKind =
+  | "highlight"
+  | "positive"
+  | "review"
+  | "feedback"
+  | "bookmark"
+  | "action";
 
 export const HIGHLIGHT_META: Record<
   HighlightKind,
-  { label: string; className: string }
+  { label: string; className: string; bar: string; bubble: string }
 > = {
-  highlight: { label: "Highlight", className: "text-brand" },
-  feedback: { label: "Product Feedback", className: "text-purple-400" },
-  bookmark: { label: "Bookmark", className: "text-blue-400" },
-  action: { label: "Action Item", className: "text-success" },
+  highlight: { label: "Highlight", className: "text-brand", bar: "bg-brand", bubble: "bg-[#126080]" },
+  positive: { label: "Positive Reaction", className: "text-success", bar: "bg-success", bubble: "bg-[#14532d]" },
+  review: { label: "Needs Review", className: "text-amber", bar: "bg-amber", bubble: "bg-[#4a3a0c]" },
+  feedback: { label: "Feedback", className: "text-orange-400", bar: "bg-orange-400", bubble: "bg-[#5a2c0c]" },
+  bookmark: { label: "Bookmark", className: "text-blue-400", bar: "bg-blue-400", bubble: "bg-[#1e3a8a]" },
+  action: { label: "Action Item", className: "text-fg", bar: "bg-fg-muted", bubble: "bg-bubble" },
 };
 
 export type Highlight = {

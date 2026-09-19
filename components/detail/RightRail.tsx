@@ -1,0 +1,197 @@
+"use client";
+
+import { useState } from "react";
+import { Link2, Lock, MoreVertical, Play } from "lucide-react";
+import { useMeeting } from "./MeetingProvider";
+import { ShareModal } from "./ShareModal";
+import { EmptyBox } from "@/components/ui/EmptyState";
+import { Avatar } from "@/components/ui/Avatar";
+import { MenuItem, Popover } from "@/components/ui/Popover";
+import { formatClock, HIGHLIGHT_META, participantById } from "@/lib/types";
+
+export function RightRail() {
+  const {
+    meeting, actionItems, toggleActionItem, highlights, seek, setTab,
+  } = useMeeting();
+  const [sharing, setSharing] = useState(false);
+
+  const jump = (tSec: number) => {
+    seek(tSec);
+    setTab("transcript");
+  };
+
+  return (
+    <aside className="pt-6">
+      <h1 className="text-[28px] leading-tight font-semibold text-fg">{meeting.title}</h1>
+      <p className="mt-1 text-[14px] text-fg-muted">
+        {new Date(`${meeting.date}T00:00:00Z`).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          timeZone: "UTC",
+        })}
+      </p>
+
+      <div className="mt-5 flex items-stretch gap-2">
+        <button
+          type="button"
+          onClick={() => setSharing(true)}
+          className="flex flex-1 items-center justify-between rounded-lg bg-accentsoft px-4 py-3 text-[15px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+        >
+          Share
+          <Link2 className="h-4 w-4" />
+        </button>
+        <Popover
+          trigger={({ toggle }) => (
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label="More options"
+              className="flex h-full items-center rounded-lg bg-surface px-3 text-fg-muted transition-colors hover:text-fg"
+            >
+              <MoreVertical className="h-5 w-5" />
+            </button>
+          )}
+        >
+          {(close) => (
+            <>
+              <MenuItem label="Download transcript" onClick={close} />
+              <MenuItem label="Delete Recording" danger onClick={close} />
+            </>
+          )}
+        </Popover>
+      </div>
+
+      {/* Attendees. Present in the older product UI and absent from the current
+          captures; included because the brief asks for participants. */}
+      <section className="mt-8">
+        <p className="section-label mb-3">Attendees</p>
+        <ul className="space-y-3">
+          {meeting.participants.map((p) => (
+            <li key={p.id} className="flex items-center gap-3">
+              <Avatar participant={p} size={32} />
+              <span className="min-w-0">
+                <span className="block truncate text-[15px] font-semibold text-fg">
+                  {p.name}
+                </span>
+                <span className="block truncate text-[13px] text-fg-muted">
+                  {p.role}, {p.company}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-8">
+        <p className="section-label mb-3">
+          Action Items
+          {actionItems.length > 0 && (
+            <span className="ml-2 text-fg-muted">{actionItems.length}</span>
+          )}
+        </p>
+
+        {actionItems.length === 0 ? (
+          <EmptyBox>None detected. Add manually on transcript tab</EmptyBox>
+        ) : (
+          <ul className="space-y-3.5">
+            {actionItems.map((item) => {
+              const owner = participantById(meeting, item.ownerId);
+              return (
+                <li key={item.id} className="flex gap-3">
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={item.done}
+                    onClick={() => toggleActionItem(item.id)}
+                    className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded border-2 transition-colors ${
+                      item.done ? "border-brand bg-brand" : "border-fg-dim hover:border-fg"
+                    }`}
+                  >
+                    {item.done && (
+                      <svg viewBox="0 0 24 24" className="h-3 w-3 text-black" fill="none" stroke="currentColor" strokeWidth="4">
+                        <path d="m5 13 4 4L19 7" />
+                      </svg>
+                    )}
+                  </button>
+                  <span className="min-w-0 flex-1">
+                    <span
+                      className={`block text-[14px] leading-snug font-semibold ${
+                        item.done ? "text-fg-dim line-through" : "text-fg"
+                      }`}
+                    >
+                      {item.text}
+                    </span>
+                    <span className="mt-0.5 block text-[13px]">
+                      <button
+                        type="button"
+                        onClick={() => jump(item.tSec)}
+                        className="font-medium text-brand hover:underline"
+                      >
+                        @{formatClock(item.tSec)}
+                      </button>
+                      <span className="text-fg-muted"> · {owner?.name ?? "Unassigned"}</span>
+                      {item.manual && (
+                        <span className="ml-2 rounded bg-surface px-1.5 py-0.5 text-[11px] text-fg-muted">
+                          added by you
+                        </span>
+                      )}
+                    </span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+
+      <section className="mt-8">
+        <p className="section-label mb-3 flex items-center gap-2">
+          Annotations
+          <span className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-bold text-amber">
+            <Lock className="h-3 w-3" /> INTERNAL TEAM ONLY
+          </span>
+        </p>
+
+        {highlights.length === 0 ? (
+          <EmptyBox>
+            No annotations yet. Hover a transcript line and use + to add one.
+          </EmptyBox>
+        ) : (
+          <ul className="space-y-3.5">
+            {highlights.map((h) => {
+              const meta = HIGHLIGHT_META[h.kind];
+              return (
+                <li key={h.id}>
+                  <button
+                    type="button"
+                    onClick={() => jump(h.tSec)}
+                    className="group flex w-full gap-2 text-left"
+                  >
+                    <span className={`mt-0.5 shrink-0 ${meta.className}`}>
+                      <Play className="h-4 w-4 fill-current" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className={`text-[15px] font-semibold ${meta.className}`}>
+                        {meta.label}
+                      </span>
+                      <span className="text-[14px] text-fg-muted">
+                        {" "}
+                        - {formatClock(h.tSec)}
+                      </span>
+                      <span className="mt-0.5 block text-[14px] leading-snug text-fg-muted group-hover:text-fg">
+                        {h.note}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+
+      {sharing && <ShareModal onClose={() => setSharing(false)} />}
+    </aside>
+  );
+}
