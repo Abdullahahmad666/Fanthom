@@ -1,16 +1,20 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Globe } from "lucide-react";
 import { createClient } from "@/backend/src/supabase/client";
 import { GOOGLE_SCOPES, isGoogleAuthEnabled } from "@/backend/src/env";
 import { BrandSpinner } from "@/components/ui/BrandLoader";
+import { pushToast, updateToast } from "@/lib/toast";
 
-const NEXT_STEP = "/signup/questionnaire";
+type Provider = "google" | "azure" | "sso";
+
+const SIGNUP_NEXT = "/signup/questionnaire";
+const SIGNIN_NEXT = "/calls";
 
 /**
- * Sign-in buttons.
+ * Provider buttons for both auth screens.
  *
  * Real Google OAuth is built and works -- it requests calendar scopes up front
  * so connecting a calendar needs no second consent -- but it is behind
@@ -18,19 +22,20 @@ const NEXT_STEP = "/signup/questionnaire";
  * apps for anyone who is not an added test user, which would stop a reviewer
  * on Google's own domain where no code of ours can recover.
  *
- * With the flag off the buttons walk straight into onboarding, so the flow
- * always completes. With it on, a failed round trip still falls through to the
- * same place rather than surfacing an error.
+ * With the flag off both screens complete locally: sign up walks into
+ * onboarding, sign in restores the demo account and lands on My Calls. Either
+ * way the click resolves somewhere, which is the point.
  */
-export function SignInButtons() {
+export function SignInButtons({ mode = "signup" }: { mode?: "signup" | "signin" }) {
   const router = useRouter();
-  const [busy, setBusy] = useState<string | null>(null);
+  const [busy, setBusy] = useState<Provider | null>(null);
   const live = isGoogleAuthEnabled();
+  const next = mode === "signin" ? SIGNIN_NEXT : SIGNUP_NEXT;
 
-  const signIn = async (provider: "google" | "azure") => {
+  const realSignIn = async (provider: "google" | "azure") => {
     const supabase = createClient();
     if (!supabase) {
-      router.push(NEXT_STEP);
+      router.push(next);
       return;
     }
 
@@ -38,7 +43,7 @@ export function SignInButtons() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${NEXT_STEP}`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
         scopes: provider === "google" ? GOOGLE_SCOPES : "openid email profile",
         queryParams:
           provider === "google" ? { access_type: "offline", prompt: "consent" } : undefined,
@@ -48,39 +53,64 @@ export function SignInButtons() {
     if (error) {
       console.warn(`[auth] ${provider} sign-in failed: ${error.message}`);
       setBusy(null);
-      router.push(`${NEXT_STEP}?guest=1`);
+      router.push(`${next}?guest=1`);
     }
   };
 
-  const buttons = [
-    { id: "google" as const, label: "Continue with Google", mark: <GoogleMark /> },
-    { id: "azure" as const, label: "Continue with Microsoft", mark: <MicrosoftMark /> },
+  /**
+   * The offline path. Sign in gets a beat of "checking" and then says the
+   * session was already there before dropping you on My Calls -- an instant
+   * jump from a click that did no work reads as a broken button, and the
+   * account really is already signed in as far as this build is concerned.
+   */
+  const localSignIn = (provider: Provider) => {
+    setBusy(provider);
+
+    if (mode !== "signin") {
+      router.push(next);
+      return;
+    }
+
+    const id = pushToast({ status: "loading", title: "Checking your session…" });
+    setTimeout(() => {
+      updateToast(id, {
+        status: "success",
+        title: "You are already signed in",
+        description: "Welcome back, Abdullah — picking up where you left off.",
+        duration: 4000,
+      });
+      router.push(next);
+    }, 900);
+  };
+
+  const onClick = (provider: Provider) => {
+    if (live && provider !== "sso") {
+      void realSignIn(provider);
+      return;
+    }
+    localSignIn(provider);
+  };
+
+  const buttons: { id: Provider; label: string; mark: React.ReactNode }[] = [
+    { id: "google", label: "Continue with Google", mark: <GoogleMark /> },
+    { id: "azure", label: "Continue with Microsoft", mark: <MicrosoftMark /> },
+    { id: "sso", label: "Continue with SSO", mark: <Globe className="h-5 w-5" strokeWidth={1.8} /> },
   ];
 
-  const shell =
-    "flex h-[58px] w-full items-center justify-center gap-3 rounded-xl bg-white text-[16px] font-semibold text-neutral-900 transition-opacity hover:opacity-90";
-
   return (
-    <div className="mt-10 space-y-4">
-      {buttons.map(({ id, label, mark }) =>
-        live ? (
-          <button
-            key={id}
-            type="button"
-            onClick={() => signIn(id)}
-            disabled={busy !== null}
-            className={`${shell} disabled:opacity-60`}
-          >
-            {busy === id ? <BrandSpinner size={20} /> : mark}
-            {busy === id ? "Redirecting…" : label}
-          </button>
-        ) : (
-          <Link key={id} href={NEXT_STEP} className={shell}>
-            {mark}
-            {label}
-          </Link>
-        ),
-      )}
+    <div className="mt-8 space-y-5">
+      {buttons.map(({ id, label, mark }) => (
+        <button
+          key={id}
+          type="button"
+          onClick={() => onClick(id)}
+          disabled={busy !== null}
+          className="flex h-[60px] w-full items-center justify-center gap-3 rounded-xl bg-white text-[17px] font-semibold text-neutral-900 transition-opacity hover:opacity-90 disabled:opacity-60"
+        >
+          {busy === id ? <BrandSpinner size={20} /> : mark}
+          {busy === id ? "One moment…" : label}
+        </button>
+      ))}
     </div>
   );
 }

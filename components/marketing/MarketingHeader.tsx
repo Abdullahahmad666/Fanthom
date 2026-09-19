@@ -57,7 +57,7 @@ export function MarketingHeader() {
             Book a Demo
           </span>
           <Link
-            href="/calls"
+            href="/login"
             className="text-[16px] whitespace-nowrap text-fg transition-colors hover:text-[#73bfff]"
           >
             Log In
