@@ -1,10 +1,10 @@
 import { ListLayout } from "@/components/layout/ListLayout";
-import { NotInPrototype } from "@/components/ui/NotInPrototype";
+import { PlaylistsView } from "@/components/calls/PlaylistsView";
 
-export default function Page() {
+export default function PlaylistsPage() {
   return (
     <ListLayout>
-      <NotInPrototype title="Playlists" />
+      <PlaylistsView />
     </ListLayout>
   );
 }

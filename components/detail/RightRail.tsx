@@ -6,6 +6,9 @@ import {
 } from "lucide-react";
 import { useMeeting } from "./MeetingProvider";
 import { ShareModal } from "./ShareModal";
+import { AddToPlaylistDialog } from "./AddToPlaylistDialog";
+import { canRenderVideo, downloadMeetingVideo } from "@/lib/downloadVideo";
+import type { PlaylistItem } from "@/lib/playlists";
 import { EmptyBox } from "@/components/ui/EmptyState";
 import { Avatar } from "@/components/ui/Avatar";
 import { MenuItem, Popover } from "@/components/ui/Popover";
@@ -17,6 +20,23 @@ export function RightRail() {
   } = useMeeting();
   const [sharing, setSharing] = useState(false);
   const [copiedClip, setCopiedClip] = useState<string | null>(null);
+  const [rendering, setRendering] = useState<string | null>(null);
+  const [playlistItem, setPlaylistItem] =
+    useState<Omit<PlaylistItem, "id" | "addedAt"> | null>(null);
+
+  /** Renders and downloads a real file; see lib/downloadVideo for the caveat. */
+  const download = async (key: string, range?: { startSec: number; endSec: number; caption: string }) => {
+    if (!canRenderVideo()) {
+      window.alert("This browser cannot record video. Try Chrome or Edge.");
+      return;
+    }
+    setRendering(key);
+    try {
+      await downloadMeetingVideo({ meeting, ...range });
+    } finally {
+      setRendering(null);
+    }
+  };
 
   /** Clip link for a single annotation -- the "share a moment" path. */
   const copyClip = (id: string, tSec: number) => {
@@ -68,8 +88,11 @@ export function RightRail() {
             <>
               <MenuItem
                 icon={<Download className="h-4 w-4" />}
-                label="Download Video"
-                onClick={close}
+                label={rendering === "full" ? "Rendering video…" : "Download Video"}
+                onClick={() => {
+                  close();
+                  void download("full");
+                }}
               />
               <MenuItem
                 icon={<Trash2 className="h-4 w-4" />}
@@ -247,13 +270,33 @@ export function RightRail() {
                           />
                           <MenuItem
                             icon={<Download className="h-4 w-4" />}
-                            label="Download Video Clip (mp4)"
-                            onClick={close}
+                            label={
+                              rendering === h.id ? "Rendering clip…" : "Download Video Clip"
+                            }
+                            onClick={() => {
+                              close();
+                              void download(h.id, {
+                                startSec: h.tSec,
+                                endSec: h.endSec ?? h.tSec + 30,
+                                caption: `${meta.label} · ${h.note}`,
+                              });
+                            }}
                           />
                           <MenuItem
                             icon={<ListPlus className="h-4 w-4" />}
                             label="Add to Playlist"
-                            onClick={close}
+                            onClick={() => {
+                              close();
+                              setPlaylistItem({
+                                meetingId: meeting.id,
+                                meetingTitle: meeting.title,
+                                highlightId: h.id,
+                                kind: h.kind,
+                                note: h.note,
+                                tSec: h.tSec,
+                                endSec: h.endSec,
+                              });
+                            }}
                           />
                         </>
                       )}
@@ -267,6 +310,9 @@ export function RightRail() {
       </section>
 
       {sharing && <ShareModal onClose={() => setSharing(false)} />}
+      {playlistItem && (
+        <AddToPlaylistDialog item={playlistItem} onClose={() => setPlaylistItem(null)} />
+      )}
     </aside>
   );
 }
