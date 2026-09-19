@@ -11,6 +11,7 @@ import { PillarSection } from "@/components/marketing/PillarSection";
 import { StatsSection } from "@/components/marketing/StatsSection";
 import { UnstoppableSection } from "@/components/marketing/UnstoppableSection";
 import { WorksWhereYouMeet } from "@/components/marketing/WorksWhereYouMeet";
+import { RoleCards } from "@/components/marketing/RoleCards";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
@@ -152,6 +153,8 @@ export default function MarketingHomePage() {
       <UnstoppableSection />
 
       <WorksWhereYouMeet />
+
+      <RoleCards />
 
       <MarketingFooter />
     </div>
