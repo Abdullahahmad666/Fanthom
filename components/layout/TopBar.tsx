@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Gift, LifeBuoy, Search, Settings, Star } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
+import { MenuItem, Popover } from "@/components/ui/Popover";
 
 type TopBarProps = {
   /** Controlled search text. Omit for an uncontrolled field. */
@@ -12,9 +13,9 @@ type TopBarProps = {
   onQueryChange?: (value: string) => void;
 };
 
-const ACTIONS = [
+const ACTIONS: { label: string; Icon: typeof Gift; href?: string }[] = [
   { label: "Refer", Icon: Gift },
-  { label: "Settings", Icon: Settings },
+  { label: "Settings", Icon: Settings, href: "/settings" },
   { label: "Help & Feedback", Icon: LifeBuoy },
 ];
 
@@ -68,17 +69,24 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         )}
       </form>
 
-      <div className="ml-auto flex items-center gap-6">
-        {ACTIONS.map(({ label, Icon }) => (
-          <button
-            key={label}
-            type="button"
-            className="hidden items-center gap-2 text-[15px] text-fg transition-colors duration-150 hover:text-brand lg:flex"
-          >
-            <Icon className="h-5 w-5" strokeWidth={2} />
-            {label}
-          </button>
-        ))}
+      <div className="ml-auto flex items-center gap-4 lg:gap-6">
+        {ACTIONS.map(({ label, Icon, href }) => {
+          const active = href && pathname === href;
+          const classes = `hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[15px] transition-colors duration-150 lg:flex ${
+            active ? "bg-field text-fg" : "text-fg hover:text-brand"
+          }`;
+          return href ? (
+            <Link key={label} href={href} className={classes} aria-current={active ? "page" : undefined}>
+              <Icon className="h-5 w-5" strokeWidth={2} />
+              {label}
+            </Link>
+          ) : (
+            <button key={label} type="button" className={classes}>
+              <Icon className="h-5 w-5" strokeWidth={2} />
+              {label}
+            </button>
+          );
+        })}
 
         {/* Streak counter. Amber star + count, no surrounding pill. */}
         <span className="flex items-center gap-1.5" title="Streak">
@@ -86,13 +94,46 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           <span className="text-[17px] font-semibold text-amber">25</span>
         </span>
 
-        <button
-          type="button"
-          aria-label="Account"
-          className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-avatar text-[15px] font-semibold text-fg"
+        <Popover
+          trigger={({ toggle }) => (
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label="Account"
+              className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-avatar text-[15px] font-semibold text-fg"
+            >
+              A
+            </button>
+          )}
         >
-          A
-        </button>
+          {(close) => (
+            <>
+              <MenuItem
+                label="Settings"
+                description="Auto-record, calendar and integrations"
+                onClick={() => {
+                  close();
+                  router.push("/settings");
+                }}
+              />
+              <MenuItem
+                label="Replay onboarding"
+                description="Signup, calendar connect and preferences"
+                onClick={() => {
+                  close();
+                  router.push("/signup");
+                }}
+              />
+              <MenuItem
+                label="Sign out"
+                onClick={() => {
+                  close();
+                  router.push("/welcome");
+                }}
+              />
+            </>
+          )}
+        </Popover>
       </div>
     </header>
   );
