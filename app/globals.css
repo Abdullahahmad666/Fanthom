@@ -114,3 +114,9 @@ body {
     transform: none;
   }
 }
+
+/* Connector charge travelling toward the hub on the integrations diagram. */
+@keyframes wwym-charge {
+  from { stroke-dashoffset: 274; }
+  to   { stroke-dashoffset: 0; }
+}
