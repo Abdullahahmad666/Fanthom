@@ -4,6 +4,12 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
 
+/** Height of one rung of the ladder, in px. */
+const STEP = 62;
+
+/** Decelerating arrival -- fast in, soft landing. */
+const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
+
 function subscribeReducedMotion(onChange: () => void) {
   const mq = window.matchMedia(REDUCED_QUERY);
   mq.addEventListener("change", onChange);
@@ -37,11 +43,13 @@ const STATS = [
  * Scroll-driven, and reversible because everything is derived from scroll
  * position rather than fired as a one-shot animation.
  *
- * Two effects combine. A staggered fade-and-rise brings the bubbles in left to
- * right, and a parallax gives each column a slightly faster upward travel than
- * the one before it, so they form a staircase on the way through and sit level
- * as the section passes the middle of the viewport -- which is the resting
- * state the capture shows.
+ * The three bubbles arrive one at a time, left to right, each fading up from
+ * below with a blur and scale that resolve as it lands. They settle into a
+ * ladder -- low, medium, high -- rather than a level row, and a gentle drift
+ * carries them on as the section leaves.
+ *
+ * Everything derives from scroll position, so the whole sequence plays
+ * backwards on the way up.
  */
 export function StatsSection() {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -75,7 +83,8 @@ export function StatsSection() {
 
       /* Signed distance of the row's centre from the viewport centre, in
          viewport heights: negative below, zero when centred, positive above.
-         Drives the parallax, so the columns sit level when centred. */
+         Drives the drift, which is zero when centred so the ladder reads
+         cleanly at rest and only spreads as the section enters and leaves. */
       const q = (vh / 2 - (rect.top + rect.height / 2)) / vh;
 
       setProgress({ t: Math.min(Math.max(t, 0), 1), q: Math.min(Math.max(q, -1), 1) });
@@ -103,38 +112,47 @@ export function StatsSection() {
         work smarter
       </h2>
 
-      <div ref={gridRef} className="mx-auto mt-24 grid max-w-[1180px] gap-10 sm:grid-cols-3">
+      <div
+        ref={gridRef}
+        className="mx-auto mt-28 grid min-h-[420px] max-w-[1080px] items-start gap-8 sm:grid-cols-3"
+      >
         {STATS.map((s, i) => {
-          /* Reveal: each column starts 18% of the way later than the one to its
-             left, and takes 42% of the travel to arrive. */
-          const enter = reduced ? 1 : Math.min(Math.max((t - i * 0.18) / 0.42, 0), 1);
-          const rise = (1 - enter) * 110;
-          /* Parallax: each column climbs faster than the last, so they staircase
-             on the way through and sit level when the row is centred. */
-          const parallax = reduced ? 0 : q * (70 + i * 55);
-          const y = rise - parallax;
+          /* Sequential reveal: each column waits until the one to its left has
+             almost finished, so they arrive one at a time rather than together. */
+          const raw = Math.min(Math.max((t - i * 0.2) / 0.26, 0), 1);
+          const enter = reduced ? 1 : easeOutCubic(raw);
+
+          /* The ladder: a permanent step per column -- low, medium, high. */
+          const step = -i * STEP;
+          /* Each arrives from below, and drifts gently on past as it leaves. */
+          const rise = (1 - enter) * 130;
+          const drift = reduced ? 0 : q * (26 + i * 14);
+          const y = step + rise - drift;
 
           return (
-            <div key={s.value} className="relative flex justify-center">
+            <div key={s.value} className="flex justify-center">
               <div
-                aria-hidden="true"
-                className="absolute top-[55%] h-[300px] w-[210px]"
+                className="relative will-change-transform"
                 style={{
-                  background: `linear-gradient(180deg, ${s.column} 0%, transparent 100%)`,
-                  transform: `translateY(${y}px)`,
+                  transform: `translateY(${y}px) scale(${0.88 + 0.12 * enter})`,
                   opacity: enter,
-                }}
-              />
-              <div
-                className="relative flex h-[300px] w-[300px] flex-col items-center justify-center rounded-full px-10 text-center will-change-transform"
-                style={{
-                  background: s.circle,
-                  transform: `translateY(${y}px)`,
-                  opacity: enter,
+                  filter: enter < 1 ? `blur(${(1 - enter) * 7}px)` : undefined,
                 }}
               >
-                <p className="text-[24px] font-bold">{s.value}</p>
-                <p className="mt-3 text-[17px] leading-snug">{s.body}</p>
+                <div
+                  aria-hidden="true"
+                  className="absolute top-[58%] left-1/2 h-[260px] w-[150px] -translate-x-1/2"
+                  style={{
+                    background: `linear-gradient(180deg, ${s.column} 0%, transparent 100%)`,
+                  }}
+                />
+                <div
+                  className="relative flex h-[230px] w-[230px] flex-col items-center justify-center rounded-full px-7 text-center"
+                  style={{ background: s.circle }}
+                >
+                  <p className="text-[19px] font-bold">{s.value}</p>
+                  <p className="mt-2 text-[14px] leading-snug">{s.body}</p>
+                </div>
               </div>
             </div>
           );
