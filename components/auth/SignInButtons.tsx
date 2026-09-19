@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/backend/src/supabase/client";
 import { GOOGLE_SCOPES, isSupabaseConfigured } from "@/backend/src/env";
-import { pushToast } from "@/lib/toast";
 import { BrandSpinner } from "@/components/ui/BrandLoader";
 
 /**
@@ -18,6 +18,7 @@ import { BrandSpinner } from "@/components/ui/BrandLoader";
  * the deployed demo is never a dead end.
  */
 export function SignInButtons() {
+  const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
   const configured = isSupabaseConfigured();
 
@@ -38,9 +39,13 @@ export function SignInButtons() {
       },
     });
 
+    /* Never strand the visitor on an error they cannot act on. The Google app
+       is in Testing mode, so anyone who is not an added test user is refused
+       by Google -- they continue into onboarding as a guest instead. */
     if (error) {
+      console.warn(`[auth] ${provider} sign-in failed: ${error.message}`);
       setBusy(null);
-      pushToast({ status: "error", title: "Sign-in failed", description: error.message });
+      router.push("/signup/questionnaire?guest=1");
     }
   };
 
@@ -75,11 +80,25 @@ export function SignInButtons() {
         ),
       )}
 
-      {!configured && (
-        <p className="text-center text-[12px] text-fg-dim">
-          Demo mode — set Supabase keys to enable real sign-in.
+      {/*
+        The one failure we cannot catch in code: Google's app is in Testing
+        mode, so a visitor who is not an added test user is stopped on
+        Google's own domain and never returns to our callback. This gives
+        them a way through instead of a dead end.
+      */}
+      <div className="pt-1 text-center">
+        <Link
+          href="/signup/questionnaire?guest=1"
+          className="text-[13px] text-fg-muted underline underline-offset-4 transition-colors hover:text-fg"
+        >
+          Continue without signing in
+        </Link>
+        <p className="mt-2 text-[12px] leading-relaxed text-fg-dim">
+          {configured
+            ? "Google sign-in is limited to approved test accounts while the app awaits verification."
+            : "Demo mode — set Supabase keys to enable real sign-in."}
         </p>
-      )}
+      </div>
     </div>
   );
 }
