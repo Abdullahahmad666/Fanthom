@@ -116,9 +116,33 @@ body {
 }
 
 /* Connector charge travelling toward the hub on the integrations diagram. */
+/* A charge running the length of one connector. --len is the line's own
+   length, so every connector's pulse travels its whole span at the same
+   speed -- a fixed number made the short lines stutter and the long ones
+   fall short. */
 @keyframes wwym-charge {
-  from { stroke-dashoffset: 274; }
+  from { stroke-dashoffset: var(--len, 274); }
   to   { stroke-dashoffset: 0; }
+}
+
+/* The cyan surge that traces a connector as it first draws in, then clears
+   to leave the white line behind it. */
+@keyframes wwym-surge {
+  0%   { opacity: 0; }
+  18%  { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+/* An endpoint arriving at the hub: lands cyan, cools to white. */
+@keyframes wwym-land {
+  0%, 55% { fill: #02beff; }
+  100%    { fill: #ffffff; }
+}
+
+/* One ring off the hub once all six are connected. */
+@keyframes wwym-hub {
+  from { opacity: 0.5; transform: scale(0.88); }
+  to   { opacity: 0; transform: scale(1.55); }
 }
 
 /*

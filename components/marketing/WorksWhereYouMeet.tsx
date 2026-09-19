@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FathomMark } from "@/components/brand/FathomMark";
 import { Starfield } from "./Starfield";
 
@@ -34,8 +34,48 @@ const NODES: Node[] = [
   { id: "asana", label: "Asana", side: "right", x: 735, y: 323, hx: 566, hy: 238, Icon: AsanaIcon },
 ];
 
+/** Gap between two connectors starting, and how long one takes to draw. */
+const STAGGER = 170;
+const DRAW = 780;
+/** The endpoint lands just before its line finishes arriving. */
+const ARRIVE = DRAW - 140;
+const ALL_IN = (NODES.length - 1) * STAGGER + DRAW;
+
+const lengthOf = (n: Node) => Math.hypot(n.hx - n.x, n.hy - n.y);
+
 export function WorksWhereYouMeet() {
   const [hovered, setHovered] = useState<string | null>(null);
+
+  /**
+   * The six apps wire themselves to the hub when the diagram comes into view,
+   * one after another, rather than being drawn already. It is the one moment
+   * on the page where the product's claim -- that it plugs into what you
+   * already use -- can be shown instead of stated.
+   *
+   * Fires once. Re-running it on every pass would turn a flourish into a tic
+   * for anyone scrolling back up.
+   */
+  const [connected, setConnected] = useState(false);
+  const diagramRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = diagramRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setConnected(true);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setConnected(true);
+        io.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <section className="relative overflow-hidden px-10 py-28">
@@ -51,6 +91,7 @@ export function WorksWhereYouMeet() {
 
         {/* Diagram */}
         <div
+          ref={diagramRef}
           className="relative mx-auto mt-10 w-full max-w-[1000px]"
           style={{ aspectRatio: `${VB.w} / ${VB.h}` }}
         >
@@ -89,46 +130,93 @@ export function WorksWhereYouMeet() {
 
             <circle cx={HUB.x} cy={HUB.y} r={HUB.r * 2.1} fill="url(#wwym-glow)" />
 
-            {NODES.map((n) => {
+            {NODES.map((n, i) => {
               const on = hovered === n.id;
+              const len = lengthOf(n);
+              const delay = i * STAGGER;
+              const ends = { x1: n.x, y1: n.y, x2: n.hx, y2: n.hy };
+
               return (
                 <g key={n.id}>
                   <line
-                    x1={n.x}
-                    y1={n.y}
-                    x2={n.hx}
-                    y2={n.hy}
+                    {...ends}
                     stroke="#fff"
                     strokeWidth={on ? 1.8 : 1}
                     opacity={hovered && !on ? 0.2 : on ? 1 : 0.65}
-                    className="transition-all duration-200"
+                    style={{
+                      strokeDasharray: len,
+                      strokeDashoffset: connected ? 0 : len,
+                      transition: `stroke-dashoffset ${DRAW}ms cubic-bezier(0.22,1,0.36,1) ${delay}ms, stroke-width 200ms, opacity 200ms`,
+                    }}
                   />
-                  {/* Charge travelling toward the hub while hovered. */}
-                  {on && (
+
+                  {/* Surge tracing the line as it draws, then clearing to
+                      leave the white connector behind it. */}
+                  {connected && (
                     <line
-                      x1={n.x}
-                      y1={n.y}
-                      x2={n.hx}
-                      y2={n.hy}
+                      {...ends}
                       stroke="#02beff"
                       strokeWidth="2.6"
                       strokeLinecap="round"
-                      strokeDasharray="14 260"
-                      className="animate-[wwym-charge_900ms_linear_infinite]"
+                      style={{
+                        strokeDasharray: len,
+                        animation: `wwym-surge ${DRAW + 320}ms ease-out ${delay}ms both`,
+                      }}
                     />
                   )}
+
+                  {/* Charge looping toward the hub while hovered. */}
+                  {on && connected && (
+                    <line
+                      {...ends}
+                      stroke="#02beff"
+                      strokeWidth="2.6"
+                      strokeLinecap="round"
+                      style={{
+                        ["--len" as string]: len,
+                        strokeDasharray: `14 ${Math.max(len - 14, 1)}`,
+                        animation: "wwym-charge 900ms linear infinite",
+                      }}
+                    />
+                  )}
+
                   <circle
                     cx={n.hx}
                     cy={n.hy}
                     r={on ? 5 : 3.6}
-                    fill={on ? "#02beff" : "#fff"}
-                    className="transition-all duration-200"
+                    fill="#fff"
+                    style={{
+                      transformBox: "view-box",
+                      transformOrigin: `${n.hx}px ${n.hy}px`,
+                      transform: connected ? "scale(1)" : "scale(0)",
+                      transition: `transform 420ms cubic-bezier(0.34,1.56,0.64,1) ${delay + ARRIVE}ms, r 200ms`,
+                      animation: connected
+                        ? `wwym-land 900ms ease-out ${delay + ARRIVE}ms both`
+                        : undefined,
+                    }}
                   />
                 </g>
               );
             })}
 
             <circle cx={HUB.x} cy={HUB.y} r={HUB.r} fill="#050505" stroke="#2a2a2e" strokeWidth="1" />
+
+            {/* One ring off the hub once the last connector lands. */}
+            {connected && (
+              <circle
+                cx={HUB.x}
+                cy={HUB.y}
+                r={HUB.r}
+                fill="none"
+                stroke="#02beff"
+                strokeWidth="1.6"
+                style={{
+                  transformBox: "view-box",
+                  transformOrigin: `${HUB.x}px ${HUB.y}px`,
+                  animation: `wwym-hub 1500ms ease-out ${ALL_IN - 120}ms both`,
+                }}
+              />
+            )}
           </svg>
 
           {/* Hub glyph */}
@@ -144,7 +232,7 @@ export function WorksWhereYouMeet() {
           </span>
 
           {/* Pills */}
-          {NODES.map((n) => {
+          {NODES.map((n, i) => {
             const on = hovered === n.id;
             return (
               <button
@@ -154,11 +242,17 @@ export function WorksWhereYouMeet() {
                 onMouseLeave={() => setHovered(null)}
                 onFocus={() => setHovered(n.id)}
                 onBlur={() => setHovered(null)}
-                className="absolute flex items-center gap-2 rounded-full bg-white py-1.5 pr-4 pl-2.5 text-[clamp(11px,1.1vw,15px)] font-medium whitespace-nowrap text-neutral-900 transition-all duration-200"
+                /* No transition class: the inline one below staggers the
+                   arrival and would override it anyway. */
+                className="absolute flex items-center gap-2 rounded-full bg-white py-1.5 pr-4 pl-2.5 text-[clamp(11px,1.1vw,15px)] font-medium whitespace-nowrap text-neutral-900"
                 style={{
                   left: `${(n.x / VB.w) * 100}%`,
                   top: `${(n.y / VB.h) * 100}%`,
-                  transform: `translate(${n.side === "left" ? "-100%" : "0"},-50%) scale(${on ? 1.06 : 1})`,
+                  transform: `translate(${n.side === "left" ? "-100%" : "0"},-50%) scale(${
+                    connected ? (on ? 1.06 : 1) : 0.9
+                  })`,
+                  opacity: connected ? 1 : 0,
+                  transition: `opacity 420ms ease-out ${i * STAGGER}ms, transform 420ms cubic-bezier(0.34,1.56,0.64,1) ${i * STAGGER}ms, box-shadow 200ms`,
                   boxShadow: on ? "0 0 0 2px #02beff, 0 8px 24px rgba(2,190,255,0.25)" : undefined,
                 }}
               >
