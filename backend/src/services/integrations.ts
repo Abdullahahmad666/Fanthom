@@ -92,7 +92,15 @@ export async function syncCalendar() {
     return { ok: true as const, count: events.length, events };
   } catch (e) {
     if (e instanceof GoogleAuthError) {
-      return { ok: false as const, reason: "reauth-required" as const };
+      /* Carry Google's own diagnosis through -- "reauth-required" on its own
+         sent us looking at the session when the project just had the Calendar
+         API switched off. */
+      return {
+        ok: false as const,
+        reason: "google-refused" as const,
+        detail: e.fix,
+        googleReason: e.reason,
+      };
     }
     return { ok: false as const, reason: (e as Error).message };
   }

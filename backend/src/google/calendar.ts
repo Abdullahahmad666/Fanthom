@@ -45,12 +45,49 @@ function detectPlatform(e: GoogleEvent): { platform: string | null; joinUrl: str
   return { platform: name, joinUrl: /^https?:/.test(url) ? url : null };
 }
 
+/**
+ * Google refused the call.
+ *
+ * 401 and 403 mean completely different things here -- an expired token, a
+ * token without calendar scope, and a project with the Calendar API switched
+ * off all land on this path and need different fixes. Google says which in
+ * the error body, so that reason is carried through rather than flattened
+ * into one message.
+ */
 export class GoogleAuthError extends Error {
-  constructor() {
-    super("Google access token is missing or expired. Sign in again to reconnect.");
+  /** Google's own machine reason, e.g. accessNotConfigured. */
+  readonly reason: string;
+  /** What the person using it should actually do. */
+  readonly fix: string;
+
+  constructor(status: number, reason: string, detail: string) {
+    const fix = explain(status, reason, detail);
+    super(fix);
     this.name = "GoogleAuthError";
+    this.reason = reason;
+    this.fix = fix;
   }
 }
+
+function explain(status: number, reason: string, detail: string) {
+  if (reason === "accessNotConfigured" || /has not been used in project|is disabled/i.test(detail)) {
+    return "The Google Calendar API is not enabled on this Google Cloud project. Enable it under APIs & Services -> Library -> Google Calendar API, then try again.";
+  }
+  if (reason === "insufficientPermissions" || /insufficient authentication scopes/i.test(detail)) {
+    return "This sign-in did not grant calendar access. Add the calendar scopes to the OAuth consent screen, then sign out and back in to re-consent.";
+  }
+  if (status === 401) {
+    return "Google's access token has expired. Sign in again to reconnect — tokens last about an hour and are not renewed by a session refresh.";
+  }
+  if (reason === "rateLimitExceeded" || status === 429) {
+    return "Google is rate limiting this project. Wait a moment and try again.";
+  }
+  return `Google refused the request (${status}${reason ? ` ${reason}` : ""}). ${detail}`.trim();
+}
+
+type GoogleError = {
+  error?: { message?: string; errors?: { reason?: string; message?: string }[] };
+};
 
 /** Upcoming events from the primary calendar. */
 export async function listUpcomingEvents(
@@ -69,7 +106,20 @@ export async function listUpcomingEvents(
     { headers: { Authorization: `Bearer ${accessToken}` }, cache: "no-store" },
   );
 
-  if (res.status === 401 || res.status === 403) throw new GoogleAuthError();
+  if (res.status === 401 || res.status === 403 || res.status === 429) {
+    /* Read the body before throwing: it is the only place Google says which
+       of the several 403s this is. */
+    let reason = "";
+    let detail = "";
+    try {
+      const body = (await res.json()) as GoogleError;
+      reason = body.error?.errors?.[0]?.reason ?? "";
+      detail = body.error?.message ?? "";
+    } catch {
+      // Non-JSON error body; the status alone will have to do.
+    }
+    throw new GoogleAuthError(res.status, reason, detail);
+  }
   if (!res.ok) throw new Error(`Google Calendar responded ${res.status}`);
 
   const data = (await res.json()) as { items?: GoogleEvent[] };
