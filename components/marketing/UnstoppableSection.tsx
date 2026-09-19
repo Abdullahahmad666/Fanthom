@@ -30,14 +30,17 @@ const STATEMENTS: ReactNode[] = [
 
 /**
  * "Make your team unstoppable" -- the product shot, then three claims that
- * cross-fade as you scroll a sticky stage.
+ * travel through a sticky stage as you scroll.
  *
- * The statements are stacked and faded rather than swapped, so moving back up
- * reverses cleanly instead of snapping.
+ * Deliberately not a carousel: there are no pager dots, the text moves upward
+ * continuously rather than swapping in a fixed spot, and the starfield drifts
+ * with it, so the stage reads as a page being scrolled rather than a slideshow
+ * advancing. Everything is derived from scroll offset, so it reverses.
  */
 export function UnstoppableSection() {
   const stageRef = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(0);
+  /** Continuous 0-1 progress through the stage, not a step index. */
+  const [p, setP] = useState(0);
 
   useEffect(() => {
     let frame = 0;
@@ -47,8 +50,8 @@ export function UnstoppableSection() {
       if (!el) return;
       const travel = el.offsetHeight - window.innerHeight;
       if (travel <= 0) return;
-      const p = -el.getBoundingClientRect().top / travel;
-      setActive(Math.floor(Math.min(Math.max(p, 0), 0.999) * STATEMENTS.length));
+      const raw = -el.getBoundingClientRect().top / travel;
+      setP(Math.min(Math.max(raw, 0), 1));
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(measure);
@@ -84,44 +87,57 @@ export function UnstoppableSection() {
 
       <section ref={stageRef} className="relative h-[300vh]">
         <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-10">
-          <Starfield />
+          {/* The stars drift up through the stage. Without this the sticky
+              section reads as frozen and the text looks like a carousel
+              swapping in place rather than a page being scrolled. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 will-change-transform"
+            style={{ transform: `translateY(${-p * 26}vh) scale(${1 + p * 0.12})` }}
+          >
+            <Starfield />
+          </div>
 
           <div className="relative flex w-full max-w-[900px] items-center justify-center">
-            {STATEMENTS.map((text, i) => (
-              <p
-                key={i}
-                aria-hidden={i !== active}
-                className={`text-center text-[clamp(24px,2.9vw,40px)] leading-[1.35] font-light text-fg transition-all duration-500 ${
-                  i === active
-                    ? "relative opacity-100 blur-0"
-                    : "pointer-events-none absolute inset-x-0 opacity-0 blur-[6px]"
-                }`}
-                style={{ transform: i === active ? "none" : "translateY(14px)" }}
-              >
-                {text}
-              </p>
-            ))}
+            {STATEMENTS.map((text, i) => {
+              /* Each statement owns a slice of the stage. d runs 0 to 1 across
+                 its own slice, so the text travels upward continuously instead
+                 of cutting between fixed positions.
+
+                 The first and last are pinned at centre outside their slice,
+                 so the stage is never showing a CTA with no text above it. */
+              const d = p * STATEMENTS.length - i;
+              const held =
+                i === 0 ? Math.max(d, 0.5)
+                : i === STATEMENTS.length - 1 ? Math.min(d, 0.5)
+                : d;
+              const vis = Math.min(Math.max(1 - Math.abs(held - 0.5) / 0.85, 0), 1);
+              const y = (held - 0.5) * -170;
+
+              return (
+                <p
+                  key={i}
+                  aria-hidden={vis < 0.6}
+                  className="absolute inset-x-0 text-center text-[clamp(24px,2.9vw,40px)] leading-[1.35] font-light text-fg will-change-transform"
+                  style={{
+                    opacity: vis,
+                    transform: `translateY(${y}px)`,
+                    filter: vis < 1 ? `blur(${(1 - vis) * 8}px)` : undefined,
+                    pointerEvents: vis > 0.6 ? "auto" : "none",
+                  }}
+                >
+                  {text}
+                </p>
+              );
+            })}
           </div>
 
           <Link
             href="/signup"
-            className="relative mt-20 inline-flex rounded-full bg-gradient-to-r from-[#a9d5ff] to-[#73bfff] px-8 py-3.5 text-[14px] font-semibold tracking-wide text-black uppercase transition-opacity hover:opacity-90"
+            className="relative mt-[260px] inline-flex rounded-full bg-gradient-to-r from-[#a9d5ff] to-[#73bfff] px-8 py-3.5 text-[14px] font-semibold tracking-wide text-black uppercase transition-opacity hover:opacity-90"
           >
             Try Fathom for your team
           </Link>
-
-          <div className="relative mt-10 flex gap-2">
-            {STATEMENTS.map((_, i) => (
-              <span
-                key={i}
-                className="h-1 rounded-full transition-all duration-300"
-                style={{
-                  width: i === active ? 28 : 12,
-                  background: i === active ? "#73bfff" : "#3a3a3f",
-                }}
-              />
-            ))}
-          </div>
         </div>
       </section>
     </>

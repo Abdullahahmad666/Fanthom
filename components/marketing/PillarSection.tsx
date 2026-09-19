@@ -59,6 +59,8 @@ const PILLARS: Pillar[] = [
 export function PillarSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
+  /** Continuous progress, used to drift the starfield through the stage. */
+  const [prog, setProg] = useState(0);
 
   useEffect(() => {
     const onScroll = () => {
@@ -69,6 +71,7 @@ export function PillarSection() {
       const progress = -el.getBoundingClientRect().top / travel;
       const clamped = Math.min(Math.max(progress, 0), 0.999);
       setActive(Math.floor(clamped * PILLARS.length));
+      setProg(clamped);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -94,7 +97,13 @@ export function PillarSection() {
   return (
     <section ref={sectionRef} className="relative h-[300vh]">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-        <Starfield />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 will-change-transform"
+          style={{ transform: `translateY(${-prog * 22}vh) scale(${1 + prog * 0.1})` }}
+        >
+          <Starfield />
+        </div>
 
         {/* Gradient slab the planet sits on, bleeding off the right edge. */}
         <div
