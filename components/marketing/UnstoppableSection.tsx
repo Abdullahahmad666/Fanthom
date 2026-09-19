@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Starfield } from "./Starfield";
 import { MockAppWindow } from "./MockAppWindow";
 
@@ -20,28 +20,84 @@ function phase(d: number) {
   return 0;
 }
 
-/** Three claims that swap as the section is scrolled, each highlighting a phrase. */
-const STATEMENTS: ReactNode[] = [
-  <>
-    Accurate meeting notes, call summaries, and alerts mean your team stays
-    perfectly aligned without the extra overhead &ndash;{" "}
-    <span className="text-[#EFC9A6]">even if they weren&apos;t able to attend live.</span>
-  </>,
-  <>
-    Every call offers{" "}
-    <span className="text-[#A855F7]">
-      real-time coaching moments and follow-up metrics with AI Scorecards
-    </span>{" "}
-    that elevate performance across the board.
-  </>,
-  <>
-    Smart AI-generated action items and{" "}
-    <span className="text-[#F08A6C]">
-      call insights from every conversation automatically flow to your tools
-    </span>
-    , driving business forward without the manual updates.
-  </>,
+/**
+ * Three claims that swap as the section is scrolled.
+ *
+ * Held as coloured runs rather than JSX so each can be split into words and
+ * written in one at a time, the way the hero headline is -- a highlight span
+ * would otherwise be an atom the typing could not get inside.
+ */
+type Segment = { text: string; color?: string };
+
+const STATEMENTS: Segment[][] = [
+  [
+    {
+      text: "Accurate meeting notes, call summaries, and alerts mean your team stays perfectly aligned without the extra overhead –",
+    },
+    { text: "even if they weren’t able to attend live.", color: "#EFC9A6" },
+  ],
+  [
+    { text: "Every call offers" },
+    {
+      text: "real-time coaching moments and follow-up metrics with AI Scorecards",
+      color: "#A855F7",
+    },
+    { text: "that elevate performance across the board." },
+  ],
+  [
+    { text: "Smart AI-generated action items and" },
+    {
+      text: "call insights from every conversation automatically flow to your tools,",
+      color: "#F08A6C",
+    },
+    { text: "driving business forward without the manual updates." },
+  ],
 ];
+
+/** Gap between words landing, and how long one takes. */
+const WORD_STEP = 42;
+const WORD_MS = 460;
+
+/**
+ * One statement, written in a word at a time.
+ *
+ * The space between words sits outside the animated span: adjacent
+ * inline-blocks with nothing between them give the browser no break
+ * opportunity, and the paragraph would run off the stage rather than wrap.
+ */
+function TypedStatement({ segments }: { segments: Segment[] }) {
+  let n = 0;
+
+  return (
+    <>
+      {segments.map((seg, si) => {
+        const words = seg.text.split(" ").filter(Boolean);
+        return (
+          <span key={si} style={seg.color ? { color: seg.color } : undefined}>
+            {words.map((word, wi) => {
+              const delay = n++ * WORD_STEP;
+              return (
+                <Fragment key={wi}>
+                  <span
+                    className="inline-block"
+                    style={{
+                      animation: `word-in ${WORD_MS}ms cubic-bezier(0.22,1,0.36,1) both`,
+                      animationDelay: `${delay}ms`,
+                    }}
+                  >
+                    {word}
+                  </span>
+                  {wi < words.length - 1 ? " " : ""}
+                </Fragment>
+              );
+            })}
+            {si < segments.length - 1 ? " " : ""}
+          </span>
+        );
+      })}
+    </>
+  );
+}
 
 /**
  * "Make your team unstoppable" -- the product shot, then three claims that
@@ -81,6 +137,44 @@ export function UnstoppableSection() {
     };
   }, []);
 
+  /**
+   * Each statement owns a slice of the stage. d runs 0 to 1 across its own
+   * slice, so the text travels upward continuously instead of cutting between
+   * fixed positions.
+   *
+   * The first and last are clamped into their hold window outside their
+   * slice, so the stage never opens or closes on a CTA with no text above it.
+   */
+  const slices = useMemo(
+    () =>
+      STATEMENTS.map((_, i) => {
+        const d = p * STATEMENTS.length - i;
+        const held =
+          i === 0
+            ? Math.max(d, 0.15)
+            : i === STATEMENTS.length - 1
+              ? Math.min(d, 0.8)
+              : d;
+        return { vis: phase(held), y: (held - 0.5) * -90 };
+      }),
+    [p],
+  );
+
+  /* One counter per statement, bumped each time it comes back into view. */
+  const [runs, setRuns] = useState<number[]>(() => STATEMENTS.map(() => 0));
+  const onStage = useRef<boolean[]>(STATEMENTS.map(() => false));
+
+  useEffect(() => {
+    slices.forEach(({ vis }, i) => {
+      const showing = vis > 0.05;
+      if (showing === onStage.current[i]) return;
+      onStage.current[i] = showing;
+      if (showing) {
+        setRuns((r) => r.map((n, j) => (j === i ? n + 1 : n)));
+      }
+    });
+  }, [slices]);
+
   return (
     <>
       <section className="relative overflow-hidden px-10 pt-28 pb-20">
@@ -114,21 +208,8 @@ export function UnstoppableSection() {
           </div>
 
           <div className="relative flex w-full max-w-[900px] items-center justify-center">
-            {STATEMENTS.map((text, i) => {
-              /* Each statement owns a slice of the stage. d runs 0 to 1 across
-                 its own slice, so the text travels upward continuously instead
-                 of cutting between fixed positions.
-
-                 The first and last are clamped into their hold window outside
-                 their slice, so the stage never opens or closes on a CTA with
-                 no text above it. */
-              const d = p * STATEMENTS.length - i;
-              const held =
-                i === 0 ? Math.max(d, 0.15)
-                : i === STATEMENTS.length - 1 ? Math.min(d, 0.8)
-                : d;
-              const vis = phase(held);
-              const y = (held - 0.5) * -90;
+            {STATEMENTS.map((segments, i) => {
+              const { vis, y } = slices[i];
 
               return (
                 <p
@@ -142,7 +223,10 @@ export function UnstoppableSection() {
                     pointerEvents: vis > 0.6 ? "auto" : "none",
                   }}
                 >
-                  {text}
+                  {/* Keyed on the run counter: remounting is what restarts the
+                      CSS animation, so the claim writes itself in again each
+                      time it is scrolled back to. */}
+                  <TypedStatement key={runs[i]} segments={segments} />
                 </p>
               );
             })}

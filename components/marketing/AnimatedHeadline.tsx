@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 /**
  * Headline that writes itself in, a word at a time.
  *
@@ -28,19 +30,23 @@ export function AnimatedHeadline({
       {/* The plain string for anything not running our CSS. */}
       <span className="sr-only">{text}</span>
 
+      {/* The space between words sits outside the animated span: adjacent
+          inline-blocks with nothing between them give the browser no break
+          opportunity, so the line would refuse to wrap. */}
       <span aria-hidden="true">
         {words.map((word, i) => (
-          <span
-            key={`${word}-${i}`}
-            style={{
-              animation: `word-in ${WORD_MS}ms cubic-bezier(0.22, 1, 0.36, 1) both`,
-              animationDelay: `${i * STEP_MS}ms`,
-            }}
-            className="inline-block whitespace-pre"
-          >
-            {word}
+          <Fragment key={`${word}-${i}`}>
+            <span
+              style={{
+                animation: `word-in ${WORD_MS}ms cubic-bezier(0.22, 1, 0.36, 1) both`,
+                animationDelay: `${i * STEP_MS}ms`,
+              }}
+              className="inline-block"
+            >
+              {word}
+            </span>
             {i < words.length - 1 ? " " : ""}
-          </span>
+          </Fragment>
         ))}
       </span>
     </h1>
