@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Check, ChevronDown, Globe, Link2, Search, X } from "lucide-react";
 import { useMeeting } from "./MeetingProvider";
 import { Avatar } from "@/components/ui/Avatar";
@@ -13,6 +14,12 @@ import { formatClock } from "@/lib/types";
  * The clip selector is the one addition: the brief asks about sharing a clip
  * with someone who was not on the call, so a share can be scoped to a single
  * annotated moment rather than the whole recording.
+ *
+ * Rendered through a portal on document.body. Inline, it sat inside the detail
+ * page's fade-in wrapper, and an ancestor carrying a transform makes
+ * `position: fixed` resolve against that ancestor rather than the viewport --
+ * so the dialog centred on the full-height page and you had to scroll to the
+ * middle of it to find the modal.
  */
 export function ShareModal({ onClose }: { onClose: () => void }) {
   const { meeting, highlights } = useMeeting();
@@ -22,7 +29,18 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+
+    // Hold the page still behind the dialog.
+    const { overflow, paddingRight } = document.body.style;
+    const gap = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    if (gap > 0) document.body.style.paddingRight = `${gap}px`;
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+      document.body.style.paddingRight = paddingRight;
+    };
   }, [onClose]);
 
   const clip = highlights.find((h) => h.id === clipId);
@@ -37,9 +55,11 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4"
+      className="fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-4"
       onClick={onClose}
     >
       <div
@@ -149,6 +169,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
