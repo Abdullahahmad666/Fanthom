@@ -30,6 +30,7 @@ export async function upsertIntegration(
     account_email: string | null;
     access_token: string | null;
     refresh_token: string | null;
+    expires_at: string | null;
     scopes: string[];
   }>,
 ) {
