@@ -1,15 +1,16 @@
 import { ListLayout } from "@/components/layout/ListLayout";
-import { NotInPrototype } from "@/components/ui/NotInPrototype";
+import { TeamEdition } from "@/components/team/TeamEdition";
 
 export const metadata = {
   title: "Team Calls",
-  description: "Your team's recorded calls.",
+  description:
+    "Bring the productivity boost of Fathom to your entire team: shared call history, CRM automation and conversational analytics.",
 };
 
 export default function Page() {
   return (
     <ListLayout>
-      <NotInPrototype title="Team Calls" />
+      <TeamEdition />
     </ListLayout>
   );
 }

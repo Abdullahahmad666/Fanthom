@@ -10,6 +10,10 @@ export const env = {
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
   supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  /* Real Google OAuth is off by default. Google restricts unverified apps to
+     added test users, so a reviewer would be blocked -- the demo walks the
+     onboarding flow instead. Set to "true" once your account is a test user. */
+  enableGoogleAuth: process.env.NEXT_PUBLIC_ENABLE_GOOGLE_AUTH === "true",
   zoomClientId: process.env.ZOOM_CLIENT_ID ?? "",
   zoomClientSecret: process.env.ZOOM_CLIENT_SECRET ?? "",
 };
@@ -17,6 +21,11 @@ export const env = {
 /** True when the browser has enough to talk to Supabase. */
 export function isSupabaseConfigured() {
   return Boolean(env.supabaseUrl && env.supabaseAnonKey);
+}
+
+/** Whether the sign-in buttons should attempt a real OAuth round trip. */
+export function isGoogleAuthEnabled() {
+  return env.enableGoogleAuth && isSupabaseConfigured();
 }
 
 /** True when the server can act with elevated privileges. */

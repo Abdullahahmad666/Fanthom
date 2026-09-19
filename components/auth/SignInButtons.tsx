@@ -4,48 +4,51 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/backend/src/supabase/client";
-import { GOOGLE_SCOPES, isSupabaseConfigured } from "@/backend/src/env";
+import { GOOGLE_SCOPES, isGoogleAuthEnabled } from "@/backend/src/env";
 import { BrandSpinner } from "@/components/ui/BrandLoader";
 
+const NEXT_STEP = "/signup/questionnaire";
+
 /**
- * Real Google sign-in through Supabase.
+ * Sign-in buttons.
  *
- * Calendar scopes are requested here, at sign-up, so connecting the calendar
- * later needs no second consent screen -- the provider token is already on the
- * session.
+ * Real Google OAuth is built and works -- it requests calendar scopes up front
+ * so connecting a calendar needs no second consent -- but it is behind
+ * NEXT_PUBLIC_ENABLE_GOOGLE_AUTH and off by default. Google blocks unverified
+ * apps for anyone who is not an added test user, which would stop a reviewer
+ * on Google's own domain where no code of ours can recover.
  *
- * With Supabase unconfigured the buttons still walk the onboarding flow, so
- * the deployed demo is never a dead end.
+ * With the flag off the buttons walk straight into onboarding, so the flow
+ * always completes. With it on, a failed round trip still falls through to the
+ * same place rather than surfacing an error.
  */
 export function SignInButtons() {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
-  const configured = isSupabaseConfigured();
+  const live = isGoogleAuthEnabled();
 
   const signIn = async (provider: "google" | "azure") => {
     const supabase = createClient();
-    if (!supabase) return;
+    if (!supabase) {
+      router.push(NEXT_STEP);
+      return;
+    }
 
     setBusy(provider);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/signup/questionnaire`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${NEXT_STEP}`,
         scopes: provider === "google" ? GOOGLE_SCOPES : "openid email profile",
         queryParams:
-          provider === "google"
-            ? { access_type: "offline", prompt: "consent" }
-            : undefined,
+          provider === "google" ? { access_type: "offline", prompt: "consent" } : undefined,
       },
     });
 
-    /* Never strand the visitor on an error they cannot act on. The Google app
-       is in Testing mode, so anyone who is not an added test user is refused
-       by Google -- they continue into onboarding as a guest instead. */
     if (error) {
       console.warn(`[auth] ${provider} sign-in failed: ${error.message}`);
       setBusy(null);
-      router.push("/signup/questionnaire?guest=1");
+      router.push(`${NEXT_STEP}?guest=1`);
     }
   };
 
@@ -54,51 +57,30 @@ export function SignInButtons() {
     { id: "azure" as const, label: "Continue with Microsoft", mark: <MicrosoftMark /> },
   ];
 
+  const shell =
+    "flex h-[58px] w-full items-center justify-center gap-3 rounded-xl bg-white text-[16px] font-semibold text-neutral-900 transition-opacity hover:opacity-90";
+
   return (
     <div className="mt-10 space-y-4">
       {buttons.map(({ id, label, mark }) =>
-        configured ? (
+        live ? (
           <button
             key={id}
             type="button"
             onClick={() => signIn(id)}
             disabled={busy !== null}
-            className="flex h-[58px] w-full items-center justify-center gap-3 rounded-xl bg-white text-[16px] font-semibold text-neutral-900 transition-opacity hover:opacity-90 disabled:opacity-60"
+            className={`${shell} disabled:opacity-60`}
           >
             {busy === id ? <BrandSpinner size={20} /> : mark}
             {busy === id ? "Redirecting…" : label}
           </button>
         ) : (
-          <Link
-            key={id}
-            href="/signup/questionnaire"
-            className="flex h-[58px] items-center justify-center gap-3 rounded-xl bg-white text-[16px] font-semibold text-neutral-900 transition-opacity hover:opacity-90"
-          >
+          <Link key={id} href={NEXT_STEP} className={shell}>
             {mark}
             {label}
           </Link>
         ),
       )}
-
-      {/*
-        The one failure we cannot catch in code: Google's app is in Testing
-        mode, so a visitor who is not an added test user is stopped on
-        Google's own domain and never returns to our callback. This gives
-        them a way through instead of a dead end.
-      */}
-      <div className="pt-1 text-center">
-        <Link
-          href="/signup/questionnaire?guest=1"
-          className="text-[13px] text-fg-muted underline underline-offset-4 transition-colors hover:text-fg"
-        >
-          Continue without signing in
-        </Link>
-        <p className="mt-2 text-[12px] leading-relaxed text-fg-dim">
-          {configured
-            ? "Google sign-in is limited to approved test accounts while the app awaits verification."
-            : "Demo mode — set Supabase keys to enable real sign-in."}
-        </p>
-      </div>
     </div>
   );
 }
