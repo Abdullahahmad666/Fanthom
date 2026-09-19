@@ -5,7 +5,7 @@ import { Starfield } from "@/components/marketing/Starfield";
 import { HeroBubbles } from "@/components/marketing/HeroBubbles";
 import { FeatureCarousel } from "@/components/marketing/FeatureCarousel";
 import { TeamTabs } from "@/components/marketing/TeamTabs";
-import { PillarAccordion } from "@/components/marketing/PillarAccordion";
+import { PillarSection } from "@/components/marketing/PillarSection";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
@@ -154,18 +154,7 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      {/* Pillars */}
-      <section className="relative overflow-hidden px-10 py-28">
-        <Starfield />
-        <div
-          aria-hidden="true"
-          className="absolute top-1/2 -right-40 hidden h-[620px] w-[760px] -translate-y-1/2 rounded-[320px] lg:block"
-          style={{ background: "linear-gradient(180deg, #f0b6d0 0%, #c084fc 45%, #8b2ff5 100%)" }}
-        />
-        <div className="relative mx-auto max-w-[1560px]">
-          <PillarAccordion />
-        </div>
-      </section>
+      <PillarSection />
 
       {/* Light stats section */}
       <section className="bg-[#f8f5f5] px-10 py-32 text-neutral-900">
