@@ -1,11 +1,26 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { Check, Link2, MoreVertical, Play, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { AvatarStack } from "@/components/ui/Avatar";
+import { BrandSpinner } from "@/components/ui/BrandLoader";
 import { MenuItem, Popover } from "@/components/ui/Popover";
 import { formatDuration, type Meeting } from "@/lib/types";
+
+/**
+ * Feedback the instant a card is clicked, before the detail route resolves.
+ * Must live inside the <Link> -- useLinkStatus reports on its nearest ancestor.
+ */
+function PendingOverlay() {
+  const { pending } = useLinkStatus();
+  if (!pending) return null;
+  return (
+    <span className="absolute inset-0 flex items-center justify-center bg-black/55 backdrop-blur-[2px]">
+      <BrandSpinner size={40} />
+    </span>
+  );
+}
 
 /**
  * A call in the list. Measured at ~500px wide with a 16:9 poster and a 70px
@@ -123,6 +138,7 @@ export function CallCard({
         aria-label={`Open ${meeting.title}`}
       >
         <span className="sr-only">Open {meeting.title}</span>
+        <PendingOverlay />
       </Link>
     </div>
   );
