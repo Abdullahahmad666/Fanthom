@@ -21,6 +21,11 @@ import type {
 
 export type DetailTab = "summary" | "transcript" | "ask";
 
+/** How much room the recording takes. Full screen uses the Fullscreen API. */
+export type PlayerSize = "regular" | "expanded" | "fullscreen";
+
+export const PLAYBACK_RATES = [1, 1.2, 1.5, 2];
+
 type Ctx = {
   meeting: Meeting;
   /* playback */
@@ -29,7 +34,9 @@ type Ctx = {
   rate: number;
   seek: (t: number) => void;
   togglePlay: () => void;
-  cycleRate: () => void;
+  setRate: (r: number) => void;
+  playerSize: PlayerSize;
+  setPlayerSize: (s: PlayerSize) => void;
   /* annotations, mutable so the transcript can write into the rail */
   actionItems: ActionItem[];
   highlights: Highlight[];
@@ -53,8 +60,6 @@ export function useMeeting() {
   return ctx;
 }
 
-const RATES = [1, 1.2, 1.5, 2];
-
 /**
  * Shared state for the meeting detail page.
  *
@@ -76,6 +81,7 @@ export function MeetingProvider({
   const [playing, setPlaying] = useState(false);
   const [rate, setRate] = useState(1);
   const [tab, setTab] = useState<DetailTab>("summary");
+  const [playerSize, setPlayerSize] = useState<PlayerSize>("regular");
   const [actionItems, setActionItems] = useState<ActionItem[]>(meeting.actionItems);
   const [highlights, setHighlights] = useState<Highlight[]>(meeting.highlights);
 
@@ -121,11 +127,6 @@ export function MeetingProvider({
       return !p;
     });
   }, [currentTime, meeting.durationSec]);
-
-  const cycleRate = useCallback(
-    () => setRate((r) => RATES[(RATES.indexOf(r) + 1) % RATES.length]),
-    [],
-  );
 
   /**
    * Player keyboard control. Skipped while typing, so the transcript search
@@ -211,7 +212,9 @@ export function MeetingProvider({
       rate,
       seek,
       togglePlay,
-      cycleRate,
+      setRate,
+      playerSize,
+      setPlayerSize,
       actionItems,
       highlights,
       addActionItem,
@@ -225,7 +228,7 @@ export function MeetingProvider({
       setTemplate,
     }),
     [
-      meeting, currentTime, playing, rate, seek, togglePlay, cycleRate,
+      meeting, currentTime, playing, rate, seek, togglePlay, playerSize,
       actionItems, highlights, addActionItem, toggleActionItem, addHighlight,
       removeHighlight, renameHighlight, tab, template,
     ],

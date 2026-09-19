@@ -66,14 +66,22 @@ function TabAction() {
 }
 
 function Body() {
-  const { tab, setTab, actionItems, highlights } = useMeeting();
+  const { tab, setTab, actionItems, highlights, playerSize } = useMeeting();
 
   const counts: Partial<Record<DetailTab, number>> = {
     transcript: highlights.length,
   };
 
+  /* Expanded gives the recording the full container and drops the rail
+     beneath it, rather than just scaling the video inside its column. */
+  const expanded = playerSize !== "regular";
+
   return (
-    <div className="grid grid-cols-1 gap-7 pt-6 lg:grid-cols-[662px_minmax(0,1fr)]">
+    <div
+      className={`grid grid-cols-1 gap-7 pt-6 ${
+        expanded ? "" : "lg:grid-cols-[662px_minmax(0,1fr)]"
+      }`}
+    >
       <div className="min-w-0">
         <Player />
 

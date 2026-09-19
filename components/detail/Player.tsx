@@ -1,10 +1,19 @@
 "use client";
 
-import { useRef } from "react";
-import { Info, MicOff, Pause, PictureInPicture2, Play, Volume2 } from "lucide-react";
-import { useMeeting } from "./MeetingProvider";
+import { useEffect, useRef } from "react";
+import {
+  Expand, Info, Maximize, MicOff, Pause, PictureInPicture2, Play, Volume2,
+} from "lucide-react";
+import { PLAYBACK_RATES, useMeeting, type PlayerSize } from "./MeetingProvider";
+import { PlayerMenu } from "./PlayerMenu";
 import { VideoPoster } from "@/components/ui/VideoPoster";
 import { formatClock, formatDuration, HIGHLIGHT_META } from "@/lib/types";
+
+const SIZE_OPTIONS = [
+  { value: "regular" as const, label: "Regular", hint: "Default", icon: <PictureInPicture2 className="h-3.5 w-3.5" /> },
+  { value: "expanded" as const, label: "Expanded", hint: "Wide", icon: <Expand className="h-3.5 w-3.5" /> },
+  { value: "fullscreen" as const, label: "Full screen", hint: "F", icon: <Maximize className="h-3.5 w-3.5" /> },
+];
 
 /**
  * Recording player.
@@ -15,9 +24,60 @@ import { formatClock, formatDuration, HIGHLIGHT_META } from "@/lib/types";
  */
 export function Player() {
   const {
-    meeting, currentTime, playing, rate, seek, togglePlay, cycleRate, highlights,
+    meeting, currentTime, playing, rate, seek, togglePlay, setRate, highlights,
+    playerSize, setPlayerSize,
   } = useMeeting();
   const trackRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * "Full screen" is the real Fullscreen API, not a CSS trick, so it covers
+   * the OS chrome as a viewer expects. Leaving fullscreen by Escape or the
+   * browser's own control has to fall back to a normal size, hence the
+   * listener rather than trusting our own state.
+   */
+  const applySize = (next: PlayerSize) => {
+    const el = shellRef.current;
+    if (next === "fullscreen") {
+      el?.requestFullscreen?.().catch(() => setPlayerSize("expanded"));
+      setPlayerSize("fullscreen");
+      return;
+    }
+    if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+    setPlayerSize(next);
+  };
+
+  useEffect(() => {
+    const onChange = () => {
+      if (!document.fullscreenElement && playerSize === "fullscreen") {
+        setPlayerSize("regular");
+      }
+    };
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, [playerSize, setPlayerSize]);
+
+  /* F toggles full screen, which is what the menu's hint advertises. Skipped
+     while typing so transcript search keeps the key. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) {
+        return;
+      }
+      if (e.key !== "f" && e.key !== "F") return;
+      e.preventDefault();
+      if (document.fullscreenElement) {
+        document.exitFullscreen?.().catch(() => {});
+        setPlayerSize("regular");
+      } else {
+        shellRef.current?.requestFullscreen?.().catch(() => {});
+        setPlayerSize("fullscreen");
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [setPlayerSize]);
 
   const pct = (currentTime / meeting.durationSec) * 100;
   const owner = meeting.participants[0];
@@ -30,7 +90,12 @@ export function Player() {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl bg-content">
+    <div
+      ref={shellRef}
+      className={`overflow-hidden rounded-xl bg-content ${
+        playerSize === "fullscreen" ? "flex h-full flex-col justify-center" : ""
+      }`}
+    >
       {/* Header strip: start time, meeting code. Small, but very characteristic. */}
       <div className="flex items-center gap-2 px-4 py-2.5 text-[12px] text-fg-muted">
         <span>{meeting.startTime}</span>
@@ -147,17 +212,34 @@ export function Player() {
             />
           </div>
 
-          <button
-            type="button"
-            onClick={cycleRate}
-            className="shrink-0 text-[13px] font-semibold text-white"
-            aria-label={`Playback speed ${rate}x`}
-          >
-            {rate}
-            <span className="text-[12px] font-normal">×</span>
-          </button>
+          <PlayerMenu
+            label="Playback speed"
+            value={rate}
+            onChange={setRate}
+            options={PLAYBACK_RATES.map((r) => ({ value: r, label: `${r}×` }))}
+            trigger={
+              <span className="text-[13px] font-semibold">
+                {rate}
+                <span className="text-[12px] font-normal">×</span>
+              </span>
+            }
+          />
 
-          <PictureInPicture2 className="h-5 w-5 shrink-0 text-white" />
+          <PlayerMenu
+            label="Screen size"
+            value={playerSize}
+            onChange={applySize}
+            options={SIZE_OPTIONS}
+            trigger={
+              playerSize === "fullscreen" ? (
+                <Maximize className="h-5 w-5" />
+              ) : playerSize === "expanded" ? (
+                <Expand className="h-5 w-5" />
+              ) : (
+                <PictureInPicture2 className="h-5 w-5" />
+              )
+            }
+          />
         </div>
       </VideoPoster>
     </div>
