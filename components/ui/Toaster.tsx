@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Check, X } from "lucide-react";
+import { AlertCircle, Check, Info, X } from "lucide-react";
 import { dismissToast, useToasts } from "@/lib/toast";
 import { BrandSpinner } from "./BrandLoader";
 
@@ -33,6 +33,7 @@ export function Toaster() {
                   <Check className="h-3 w-3 text-black" strokeWidth={3} />
                 </span>
               )}
+              {t.status === "info" && <Info className="h-5 w-5 text-brand" strokeWidth={2} />}
               {t.status === "error" && <AlertCircle className="h-5 w-5 text-red-400" />}
             </span>
 

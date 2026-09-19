@@ -2,7 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 
-export type ToastStatus = "loading" | "success" | "error";
+/** "info" is for things the prototype deliberately does not do -- neither a
+    success nor a failure, so neither icon fits. */
+export type ToastStatus = "loading" | "success" | "info" | "error";
 
 export type Toast = {
   id: string;

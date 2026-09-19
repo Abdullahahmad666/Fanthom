@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
-  BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, LogOut, Search,
-  Settings, Star, Video,
+  Bug, BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, Lightbulb, LogOut,
+  MessageCircle, RotateCcw, Search, Settings, Star, Video,
 } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
-import { MenuItem, Popover } from "@/components/ui/Popover";
+import { Popover } from "@/components/ui/Popover";
+import { pushToast } from "@/lib/toast";
 
 type TopBarProps = {
   /** Controlled search text. Omit for an uncontrolled field. */
@@ -21,10 +22,23 @@ const ACTIONS: { label: string; Icon: typeof Gift; href?: string }[] = [
   { label: "Settings", Icon: Settings, href: "/settings" },
 ];
 
-/** Help & Feedback dropdown: four groups, the last one naming the account. */
-const HELP_GROUPS: { label: string; Icon?: typeof Gift; href?: string }[][] = [
+type MenuRow = { label: string; Icon?: typeof Gift; href?: string; note?: string };
+
+const ACCOUNT_EMAIL = "abdullahahmad5618@gmail.com";
+
+/**
+ * The account menu, on the avatar.
+ *
+ * Three groups and a footer naming the signed-in address -- the product hangs
+ * all of this off the avatar, not off Help & Feedback.
+ *
+ * "Replay onboarding" is ours, not Fathom's. It sits here because it is the
+ * only way back into the signup flow once you are past it, which a reviewer
+ * walking the build will want.
+ */
+const ACCOUNT_GROUPS: MenuRow[][] = [
   [
-    { label: "Start Test Call", Icon: Video },
+    { label: "Start Test Call", Icon: Video, note: "Starts a recorded test meeting in the real product." },
     { label: "Tutorial", Icon: BookOpen },
     { label: "FAQs", Icon: CircleHelp },
     { label: "Developers", Icon: Code2 },
@@ -36,8 +50,18 @@ const HELP_GROUPS: { label: string; Icon?: typeof Gift; href?: string }[][] = [
     { label: "System Status" },
   ],
   [
-    { label: "Download App", Icon: Download },
+    { label: "Download App", Icon: Download, note: "Ships the desktop recorder in the real product." },
+    { label: "Replay onboarding", Icon: RotateCcw, href: "/signup" },
     { label: "Logout", Icon: LogOut, href: "/" },
+  ],
+];
+
+/** Help & Feedback keeps the things that are actually feedback. */
+const HELP_GROUPS: MenuRow[][] = [
+  [
+    { label: "Contact Support", Icon: MessageCircle },
+    { label: "Request a Feature", Icon: Lightbulb },
+    { label: "Report a Bug", Icon: Bug },
   ],
 ];
 
@@ -126,41 +150,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
               </button>
             )}
           >
-            {(close) => (
-              <>
-                {HELP_GROUPS.map((group, gi) => (
-                  <div
-                    key={gi}
-                    className={gi > 0 ? "border-t border-white/10 py-2" : "py-2"}
-                  >
-                    {group.map(({ label, Icon, href }) => (
-                      <button
-                        key={label}
-                        type="button"
-                        onClick={() => {
-                          close();
-                          if (href) router.push(href);
-                        }}
-                        className="flex w-full items-center gap-3 px-5 py-2.5 text-left text-[14px] text-fg transition-colors hover:bg-white/5"
-                      >
-                        {Icon ? (
-                          <Icon className="h-5 w-5 shrink-0 text-fg-muted" strokeWidth={1.8} />
-                        ) : (
-                          <span className="w-5 shrink-0" />
-                        )}
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                ))}
-                <div className="border-t border-white/10 px-5 py-3">
-                  <p className="text-[13px] text-fg-dim">Logged in as</p>
-                  <p className="truncate text-[13px] text-fg-muted">
-                    abdullahahmad5618@gmail.com
-                  </p>
-                </div>
-              </>
-            )}
+            {(close) => <MenuGroups groups={HELP_GROUPS} close={close} />}
           </Popover>
         </div>
 
@@ -171,11 +161,13 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         </span>
 
         <Popover
-          trigger={({ toggle }) => (
+          className="min-w-[300px] bg-[#343435] py-0"
+          trigger={({ toggle, open }) => (
             <button
               type="button"
               onClick={toggle}
               aria-label="Account"
+              aria-expanded={open}
               className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-avatar text-[13px] font-semibold text-fg"
             >
               A
@@ -184,33 +176,65 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         >
           {(close) => (
             <>
-              <MenuItem
-                label="Settings"
-                description="Auto-record, calendar and integrations"
-                onClick={() => {
-                  close();
-                  router.push("/settings");
-                }}
-              />
-              <MenuItem
-                label="Replay onboarding"
-                description="Signup, calendar connect and preferences"
-                onClick={() => {
-                  close();
-                  router.push("/signup");
-                }}
-              />
-              <MenuItem
-                label="Sign out"
-                onClick={() => {
-                  close();
-                  router.push("/");
-                }}
-              />
+              <MenuGroups groups={ACCOUNT_GROUPS} close={close} />
+              <div className="border-t border-white/10 px-5 py-3">
+                <p className="text-[13px] text-fg-dim">Logged in as</p>
+                <p className="truncate text-[13px] text-fg-muted">{ACCOUNT_EMAIL}</p>
+              </div>
             </>
           )}
         </Popover>
       </div>
     </header>
+  );
+}
+
+/**
+ * Grouped menu rows, shared by the account and Help menus.
+ *
+ * Rows without an href say so instead of closing silently -- in the product
+ * they leave for Fathom's own site or a native app, neither of which this
+ * build has. A dead row that just dismisses reads as a bug.
+ */
+function MenuGroups({ groups, close }: { groups: MenuRow[][]; close: () => void }) {
+  const router = useRouter();
+
+  const run = ({ label, href, note }: MenuRow) => {
+    close();
+    if (href) {
+      router.push(href);
+      return;
+    }
+    pushToast({
+      title: label,
+      description: note ?? "Leaves for Fathom's own site in the real product.",
+      status: "info",
+      duration: 3500,
+    });
+  };
+
+  return (
+    <>
+      {groups.map((group, gi) => (
+        <div key={gi} className={gi > 0 ? "border-t border-white/10 py-2" : "py-2"}>
+          {group.map((row) => (
+            <button
+              key={row.label}
+              type="button"
+              role="menuitem"
+              onClick={() => run(row)}
+              className="flex w-full items-center gap-3 px-5 py-2.5 text-left text-[14px] text-fg transition-colors hover:bg-white/5"
+            >
+              {row.Icon ? (
+                <row.Icon className="h-5 w-5 shrink-0 text-fg-muted" strokeWidth={1.8} />
+              ) : (
+                <span className="w-5 shrink-0" />
+              )}
+              {row.label}
+            </button>
+          ))}
+        </div>
+      ))}
+    </>
   );
 }
