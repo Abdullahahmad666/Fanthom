@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
+/*
+ * Fathom design tokens.
+ * Values are measured from 2x screenshots at a 1606x971 CSS viewport --
+ * see docs/UI-SPEC.md 1.1. The product is dark-only; there is no light theme.
+ */
+@theme {
+  /* Surfaces, darkest to lightest.
+     Note the inversion: the detail page's content column (--color-content) is
+     BLACK, i.e. darker than the page canvas around it. Most dark UIs get
+     lighter as they nest; this one does the opposite. */
+  --color-content: #000000;
+  --color-popover: #111314;
+  --color-modalfoot: #141417;
+  --color-canvas: #1a1a1a;
+  --color-panel: #1b1b20;
+  --color-surface: #212124;
+  --color-raised: #26262a;
+  --color-field: #2d2c31;
+  --color-bubble: #4a4b4b;
+
+  /* Accents */
+  --color-brand: #02beff;
+  --color-accentsoft: #1f2a31;
+  --color-amber: #fdc72f;
+  --color-amberbg: #322809;
+  --color-avatar: #c2185b;
+  --color-success: #3fbf7f;
+
+  /* Text */
+  --color-fg: #ffffff;
+  --color-fg-muted: #969696;
+  --color-fg-dim: #6b6b70;
+
+  /* Hairlines. The app uses 1px lines and grey steps, never drop shadows. */
+  --color-line: #2a2a2e;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Measured chrome geometry, kept as custom properties so the layouts and the
+   sticky offsets can never drift apart. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --topbar-h: 63px;
+  --tabnav-h: 62px;
+  --rail-w: 400px;
+  --detail-max: 1120px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-canvas);
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The product ships no visible focus ring. Shipping without one is a real
+   accessibility defect rather than a style choice, so we add a brand-colored
+   ring and keep it off for mouse users. */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Section labels: ATTENDEES, ACTION ITEMS, PEOPLE WITH ACCESS. */
+@utility section-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fg-dim);
+}
+
+/* Uppercase in-page tabs: SUMMARY / TRANSCRIPT / ASK FATHOM. Distinct from the
+   sentence-case primary nav, which is larger and untracked. */
+@utility tab-label {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
