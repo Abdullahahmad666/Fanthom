@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/Toaster";
+import { SITE_URL } from "@/lib/siteUrl";
 
 /* The product uses a licensed neo-grotesque; Inter is the closest free match.
    See docs/UI-SPEC.md 1.3. */
@@ -10,7 +11,6 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const DESCRIPTION =
   "Fathom summarizes your meetings so you can focus on the conversation. Recordings, transcripts, AI summaries, action items and highlights from every call.";
 
