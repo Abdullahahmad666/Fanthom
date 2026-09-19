@@ -1,10 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ChevronDown, Settings2, Sparkles } from "lucide-react";
+import {
+  CalendarDays, Check, ChevronDown, LayoutList, MessageSquareText, Rocket,
+  RotateCcw, Settings2, Smile, Sparkles, TrendingUp, UserRoundPlus, Users,
+  Hand,
+} from "lucide-react";
+import type { TemplateIcon } from "@/lib/summaryTemplates";
 import { useMeeting } from "./MeetingProvider";
 import { CustomizeTemplateModal } from "./CustomizeTemplateModal";
 import { Popover } from "@/components/ui/Popover";
+
+/** One glyph per catalogue family, matching how the product groups them. */
+const TEMPLATE_ICONS: Record<TemplateIcon, typeof Check> = {
+  insights: MessageSquareText,
+  sales: TrendingUp,
+  cs: Smile,
+  candidate: UserRoundPlus,
+  demo: LayoutList,
+  oneonone: Users,
+  kickoff: Rocket,
+  update: CalendarDays,
+  qa: MessageSquareText,
+  retro: RotateCcw,
+  standup: Hand,
+};
 
 export function SummaryPanel() {
   const { templates, template, setTemplate, sections, generating, regenerate } = useMeeting();
@@ -22,6 +42,8 @@ export function SummaryPanel() {
         <div className="flex items-stretch overflow-hidden rounded-full ring-1 ring-line">
           <Popover
             align="left"
+            className="max-h-[70vh] w-[520px] max-w-[92vw] overflow-y-auto"
+            panelStyle={{ background: "#232327", paddingTop: 8, paddingBottom: 8 }}
             trigger={({ toggle }) => (
               <button
                 type="button"
@@ -29,29 +51,74 @@ export function SummaryPanel() {
                 className="flex items-center gap-2 bg-surface px-4 py-2 text-[13px] text-fg transition-colors hover:bg-raised"
               >
                 <Sparkles className="h-4 w-4 text-fg-muted" />
-                {current?.label ?? "Summary"}
+                {current?.name ?? "Summary"}
                 <ChevronDown className="h-4 w-4 text-fg-muted" />
               </button>
             )}
           >
             {(close) => (
-              <div className="py-1">
-                {templates.map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => {
-                      setTemplate(t.id);
-                      close();
-                    }}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-[13px] text-fg transition-colors hover:bg-surface"
-                  >
-                    <Check
-                      className={`h-4 w-4 ${t.id === template ? "text-brand" : "text-transparent"}`}
-                    />
-                    {t.label}
-                  </button>
-                ))}
+              <div>
+                {templates.map((t) => {
+                  const selected = t.id === template;
+                  const usable = t.sections !== null;
+                  const Icon = TEMPLATE_ICONS[t.icon];
+
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      disabled={!usable}
+                      title={
+                        usable
+                          ? undefined
+                          : "This template needs classification the prototype has no model for, so it is listed but not generated."
+                      }
+                      onClick={() => {
+                        setTemplate(t.id);
+                        close();
+                      }}
+                      className={`flex w-full items-start gap-3 px-4 py-2.5 text-left transition-colors ${
+                        selected ? "bg-[#2e3640]" : usable ? "hover:bg-white/5" : ""
+                      } ${usable ? "" : "opacity-40"}`}
+                    >
+                      <Icon
+                        className={`mt-1 h-4 w-4 shrink-0 ${
+                          selected ? "text-brand" : "text-fg-muted"
+                        }`}
+                        strokeWidth={1.8}
+                      />
+
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span
+                            className={`text-[15px] font-bold ${selected ? "text-brand" : "text-fg"}`}
+                          >
+                            {t.name}
+                          </span>
+                          {t.customized && (
+                            <span className="flex items-center gap-1 rounded-md bg-bubble px-2 py-0.5 text-[12px] text-fg">
+                              <Settings2 className="h-3 w-3" /> Customized
+                            </span>
+                          )}
+                          {!usable && (
+                            <span className="text-[11px] tracking-wide text-fg-dim uppercase">
+                              Not for this call
+                            </span>
+                          )}
+                        </span>
+                        <span
+                          className={`mt-0.5 block text-[13px] ${
+                            selected ? "text-brand" : "text-fg-muted"
+                          }`}
+                        >
+                          {t.description}
+                        </span>
+                      </span>
+
+                      {selected && <Check className="mt-1 h-4 w-4 shrink-0 text-success" />}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </Popover>
@@ -60,7 +127,7 @@ export function SummaryPanel() {
             type="button"
             onClick={() => setCustomising(true)}
             disabled={busy}
-            aria-label={`Customize ${current?.label ?? ""} template`}
+            aria-label={`Customize ${current?.name ?? ""} template`}
             className="border-l border-line bg-surface px-3 text-fg-muted transition-colors hover:bg-raised hover:text-fg disabled:opacity-40"
           >
             <Settings2 className="h-4 w-4" />
@@ -90,7 +157,7 @@ export function SummaryPanel() {
           )}
 
           <div className="space-y-7">
-            {sections.map((section) => (
+            {(sections ?? []).map((section) => (
               <section key={section.heading}>
                 <h3 className="mb-3 text-[17px] font-semibold text-fg">{section.heading}</h3>
                 {section.blocks.map((block, i) =>
@@ -122,7 +189,7 @@ export function SummaryPanel() {
 
       {customising && (
         <CustomizeTemplateModal
-          templateLabel={current?.label ?? "Summary"}
+          templateLabel={current?.name ?? "Summary"}
           onRegenerate={regenerate}
           onClose={() => setCustomising(false)}
         />

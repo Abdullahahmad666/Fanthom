@@ -16,11 +16,10 @@ import type {
   HighlightKind,
   Meeting,
   SummarySection,
-  TemplateId,
   TranscriptTurn,
 } from "@/lib/types";
-import { TEMPLATE_LABELS } from "@/lib/types";
 import { deriveSummary } from "@/lib/deriveSummary";
+import { resolveTemplates, type ResolvedTemplate } from "@/lib/summaryTemplates";
 
 export type DetailTab = "summary" | "transcript" | "ask";
 
@@ -29,8 +28,8 @@ export type PlayerSize = "regular" | "expanded" | "fullscreen";
 
 export const PLAYBACK_RATES = [1, 1.2, 1.5, 2];
 
-/** A template the summary tab can render, built-in or generated. */
-export type SummaryTemplate = { id: string; label: string; sections: SummarySection[] };
+/** A catalogue template resolved against this meeting, plus any rewrite. */
+export type SummaryTemplate = ResolvedTemplate & { customized: boolean };
 
 /** How long a regeneration takes to run its progress bar. */
 const REGEN_MS = 2200;
@@ -61,7 +60,7 @@ type Ctx = {
   templates: SummaryTemplate[];
   template: string;
   setTemplate: (id: string) => void;
-  sections: SummarySection[];
+  sections: SummarySection[] | null;
   /** 0-100 while a regeneration runs, null otherwise. */
   generating: number | null;
   regenerate: (instruction: string) => void;
@@ -100,31 +99,40 @@ export function MeetingProvider({
   const [actionItems, setActionItems] = useState<ActionItem[]>(meeting.actionItems);
   const [highlights, setHighlights] = useState<Highlight[]>(meeting.highlights);
 
-  /* Built-in templates come from the meeting; generated ones are appended as
-     the user asks for them, and both render through the same picker. */
-  const builtIns = useMemo<SummaryTemplate[]>(
-    () =>
-      (Object.keys(meeting.summaries) as TemplateId[]).map((id) => ({
-        id,
-        label: TEMPLATE_LABELS[id],
-        sections: meeting.summaries[id] ?? [],
-      })),
-    [meeting.summaries],
-  );
+  /**
+   * The catalogue resolved against this call: authored summaries where the
+   * meeting ships them, derived ones where a scanner can build them, and null
+   * where the template needs a model this prototype does not have.
+   */
+  const resolved = useMemo(() => resolveTemplates(meeting), [meeting]);
 
-  const [customs, setCustoms] = useState<SummaryTemplate[]>([]);
-  const [template, setTemplate] = useState<string>(builtIns[0]?.id ?? "general");
+  /** Rewrites, keyed by the template they were asked for. */
+  const [rewrites, setRewrites] = useState<Record<string, SummarySection[]>>({});
+  const [template, setTemplate] = useState<string>(
+    () => resolved.find((t) => t.sections)?.id ?? "enhanced",
+  );
   const [generating, setGenerating] = useState<number | null>(null);
   const regenTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const templates = useMemo(() => [...builtIns, ...customs], [builtIns, customs]);
+  /* A rewrite replaces its template rather than becoming a new row -- which
+     is why the picker marks it "Customized" instead of growing a list. */
+  const templates = useMemo<SummaryTemplate[]>(
+    () =>
+      resolved.map((t) => ({
+        ...t,
+        sections: rewrites[t.id] ?? t.sections,
+        customized: t.id in rewrites,
+      })),
+    [resolved, rewrites],
+  );
+
   const sections = useMemo(
-    () => templates.find((t) => t.id === template)?.sections ?? [],
+    () => templates.find((t) => t.id === template)?.sections ?? null,
     [templates, template],
   );
 
   /**
-   * Regeneration runs a progress bar and then swaps in the new template.
+   * Regeneration runs a progress bar and then swaps in the rewrite.
    *
    * The wait is presentation -- deriveSummary is synchronous -- but a summary
    * that appeared the instant you asked would not read as having been
@@ -144,24 +152,19 @@ export function MeetingProvider({
         if (regenTimer.current) clearInterval(regenTimer.current);
         regenTimer.current = null;
 
-        setCustoms((prev) => {
-          const base = [...builtIns, ...prev].find((t) => t.id === template)?.sections ?? [];
-          const others = builtIns.filter((t) => t.id !== template).map((t) => t.sections);
-          const { label, sections: next } = deriveSummary({
-            base,
-            others,
-            instruction,
-            index: prev.length,
-          });
-          const id = `custom-${prev.length + 1}`;
-          setTemplate(id);
-          return [...prev, { id, label, sections: next }];
+        setRewrites((prev) => {
+          const base = prev[template] ?? resolved.find((t) => t.id === template)?.sections ?? [];
+          const others = resolved
+            .filter((t) => t.id !== template && t.sections)
+            .map((t) => t.sections as SummarySection[]);
+          const { sections: next } = deriveSummary({ base, others, instruction, index: 0 });
+          return { ...prev, [template]: next };
         });
 
         setGenerating(null);
       }, 90);
     },
-    [builtIns, template],
+    [resolved, template],
   );
 
   useEffect(

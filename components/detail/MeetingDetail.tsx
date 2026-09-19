@@ -28,7 +28,7 @@ function TabAction() {
   const copy = () => {
     const text =
       tab === "summary"
-        ? sections
+        ? (sections ?? [])
             .map(
               (s) =>
                 `${s.heading}\n${s.blocks
