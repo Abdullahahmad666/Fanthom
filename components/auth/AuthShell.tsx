@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
+import { BRAND_LOGOS, G2Badge } from "@/components/marketing/BrandLogos";
 
 /**
  * Shared chrome for sign in and sign up.
@@ -10,8 +11,6 @@ import { FathomWordmark } from "@/components/brand/FathomMark";
  * heading and the line that swaps you to the other one. Keeping them in one
  * component is the only way they stay that way.
  */
-
-const LOGOS = ["HubSpot", "Adobe", "_zapier", "GRUBHUB", "EA", "Calendly"];
 
 export function AuthShell({
   title,
@@ -56,7 +55,7 @@ export function AuthShell({
         <Testimonial />
       </div>
 
-      <SocialProof logos={LOGOS} />
+      <SocialProof />
     </div>
   );
 }
@@ -97,20 +96,17 @@ function Testimonial() {
   );
 }
 
-function SocialProof({ logos }: { logos: string[] }) {
+function SocialProof() {
   return (
-    <div className="mt-20 flex flex-wrap items-center justify-center gap-x-7 gap-y-5 px-8 pb-10">
+    <div className="mt-20 flex scale-90 flex-wrap items-center justify-center gap-x-7 gap-y-5 px-8 pb-10">
       <div className="flex items-center gap-3">
-        <G2Mark />
+        <G2Badge size={38} />
         <div className="border-l border-line pl-3">
           <p className="flex items-center gap-1.5 text-[15px] font-semibold text-fg">
-            <span className="text-[13px] tracking-[0.1em] text-white">★★★★★</span>
+            <span className="text-[13px] tracking-[0.1em] text-[#f5a623]">★★★★★</span>
             5.0/5.0
           </p>
-          <p className="mt-0.5 flex items-center gap-2 text-[9px] text-fg-dim">
-            <span>#1 rated</span>
-            <span>• 6,500+ reviews</span>
-          </p>
+          <p className="mt-0.5 text-[9px] text-fg-dim">#1 rated • 6,500+ reviews</p>
         </div>
       </div>
 
@@ -120,35 +116,9 @@ function SocialProof({ logos }: { logos: string[] }) {
         290K+ companies
       </p>
 
-      {logos.map((l) => (
-        <span
-          key={l}
-          className="flex h-[62px] min-w-[150px] items-center justify-center rounded-lg bg-[#141414] px-6 text-[17px] font-bold text-fg-muted"
-        >
-          {l}
-        </span>
+      {BRAND_LOGOS.map(({ key, Logo }) => (
+        <Logo key={key} />
       ))}
     </div>
-  );
-}
-
-/** G2's ring-and-notch mark, simplified to a single arc plus the wordmark. */
-function G2Mark() {
-  return (
-    <svg viewBox="0 0 40 40" className="h-9 w-9 shrink-0" aria-label="G2">
-      <circle cx="20" cy="20" r="17" fill="none" stroke="#6b6b70" strokeWidth="3" />
-      <path d="M20 3a17 17 0 0 1 14.7 8.5L28 15.4A9.3 9.3 0 0 0 20 11Z" fill="#6b6b70" />
-      <text
-        x="20"
-        y="26"
-        textAnchor="middle"
-        fontSize="15"
-        fontWeight="700"
-        fill="#6b6b70"
-        fontFamily="inherit"
-      >
-        G2
-      </text>
-    </svg>
   );
 }

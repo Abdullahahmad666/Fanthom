@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Lock, X } from "lucide-react";
 import { FathomMark } from "@/components/brand/FathomMark";
 import { Starfield } from "@/components/marketing/Starfield";
+import { BRAND_LOGOS, G2Badge } from "@/components/marketing/BrandLogos";
 import { AnimatedHeadline } from "@/components/marketing/AnimatedHeadline";
 import { HeroBubbles } from "@/components/marketing/HeroBubbles";
 import { FeatureCarousel } from "@/components/marketing/FeatureCarousel";
@@ -12,8 +13,6 @@ import { UnstoppableSection } from "@/components/marketing/UnstoppableSection";
 import { WorksWhereYouMeet } from "@/components/marketing/WorksWhereYouMeet";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
-
-const LOGOS = ["HubSpot", "Adobe", "zapier", "GRUBHUB", "EA", "Calendly"];
 
 export const metadata = {
   title: "Fathom — AI notetaking that is out of this world",
@@ -91,32 +90,24 @@ export default function MarketingHomePage() {
       {/* Social proof */}
       <section className="relative overflow-hidden px-10 pb-28">
         <Starfield />
-        <div className="relative mx-auto flex max-w-[1560px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ff492c] text-[15px] font-bold text-white">
-              G2
-            </span>
+        <div className="relative mx-auto flex max-w-[1560px] flex-wrap items-center justify-center gap-x-9 gap-y-8">
+          <div className="flex items-center gap-4">
+            <G2Badge size={46} />
             <span>
-              <span className="block text-[18px] font-semibold">
-                <span className="text-amber">★★★★★</span> 5.0/5.0
+              <span className="flex items-center gap-2.5">
+                <span className="text-[20px] tracking-[0.06em] text-[#f5a623]">★★★★★</span>
+                <span className="text-[21px] font-semibold">5.0/5.0</span>
               </span>
-              <span className="block text-[14px] text-fg-muted">
-                #1 rated · 6,500+ reviews
-              </span>
+              <span className="mt-1 block text-[15px] text-fg">#1 rated · 6,500+ reviews</span>
             </span>
           </div>
 
-          <p className="max-w-[130px] text-[17px] leading-snug text-fg">
-            Used at over 290K+ companies
-          </p>
+          {/* Wraps to three lines in the product, which is what keeps the row
+              from stretching. */}
+          <p className="w-[120px] text-[17px] leading-[1.35] text-fg">Used at 300K+ companies</p>
 
-          {LOGOS.map((l) => (
-            <span
-              key={l}
-              className="flex h-[80px] w-[150px] items-center justify-center rounded-xl bg-[#262626] text-[17px] font-bold text-fg"
-            >
-              {l}
-            </span>
+          {BRAND_LOGOS.map(({ key, Logo }) => (
+            <Logo key={key} />
           ))}
         </div>
       </section>
