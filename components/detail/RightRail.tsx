@@ -66,8 +66,17 @@ export function RightRail() {
         >
           {(close) => (
             <>
-              <MenuItem label="Download transcript" onClick={close} />
-              <MenuItem label="Delete Recording" danger onClick={close} />
+              <MenuItem
+                icon={<Download className="h-4 w-4" />}
+                label="Download Video"
+                onClick={close}
+              />
+              <MenuItem
+                icon={<Trash2 className="h-4 w-4" />}
+                label="Delete Call"
+                danger
+                onClick={close}
+              />
             </>
           )}
         </Popover>
