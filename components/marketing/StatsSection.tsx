@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
 
 /** Height of one rung of the ladder, in px. */
-const STEP = 62;
+const STEP = 96;
 
 /** Decelerating arrival -- fast in, soft landing. */
 const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
@@ -114,7 +114,7 @@ export function StatsSection() {
 
       <div
         ref={gridRef}
-        className="mx-auto mt-28 grid min-h-[420px] max-w-[1080px] items-start gap-8 sm:grid-cols-3"
+        className="mx-auto mt-28 grid min-h-[460px] max-w-[1080px] items-start gap-8 sm:grid-cols-3"
       >
         {STATS.map((s, i) => {
           /* Sequential reveal: each column waits until the one to its left has
@@ -141,17 +141,17 @@ export function StatsSection() {
               >
                 <div
                   aria-hidden="true"
-                  className="absolute top-[58%] left-1/2 h-[260px] w-[150px] -translate-x-1/2"
+                  className="absolute top-[58%] left-1/2 h-[230px] w-[125px] -translate-x-1/2"
                   style={{
                     background: `linear-gradient(180deg, ${s.column} 0%, transparent 100%)`,
                   }}
                 />
                 <div
-                  className="relative flex h-[230px] w-[230px] flex-col items-center justify-center rounded-full px-7 text-center"
+                  className="relative flex h-[190px] w-[190px] flex-col items-center justify-center rounded-full px-6 text-center"
                   style={{ background: s.circle }}
                 >
-                  <p className="text-[19px] font-bold">{s.value}</p>
-                  <p className="mt-2 text-[14px] leading-snug">{s.body}</p>
+                  <p className="text-[17px] font-bold">{s.value}</p>
+                  <p className="mt-1.5 text-[13px] leading-snug">{s.body}</p>
                 </div>
               </div>
             </div>

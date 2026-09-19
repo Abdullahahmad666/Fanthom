@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FathomWordmark } from "@/components/brand/FathomMark";
+import { ClosingCta } from "./ClosingCta";
 
 const COLUMNS: { heading: string; links: string[] }[][] = [
   [
@@ -39,27 +40,10 @@ const COLUMNS: { heading: string; links: string[] }[][] = [
 
 const LEGAL = ["Terms of Service", "Privacy Policy", "Security & Compliance", "Status"];
 
-/**
- * The purple band that separates the page from the footer: vivid #820DFC with
- * dusty-pink diagonal stripes, measured at roughly 8px wide every 100px.
- */
-export function StripeDivider() {
-  return (
-    <div
-      aria-hidden="true"
-      className="h-[22px] w-full"
-      style={{
-        background:
-          "repeating-linear-gradient(115deg, #820DFC 0px, #820DFC 92px, #E2A0BE 92px, #E2A0BE 100px)",
-      }}
-    />
-  );
-}
-
 export function MarketingFooter() {
   return (
     <>
-      <StripeDivider />
+      <ClosingCta />
       <footer className="bg-[#191919] px-10 pt-14 pb-10">
         <div className="mx-auto max-w-[1560px]">
           <FathomWordmark />

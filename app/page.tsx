@@ -153,22 +153,6 @@ export default function MarketingHomePage() {
 
       <StatsSection />
 
-      {/* Closing */}
-      <section className="relative overflow-hidden px-10 py-36 text-center">
-        <Starfield />
-        <div className="relative">
-          <p className="text-[18px] text-[#73bfff]">
-            ✦ Shared understanding. Faster execution. Better results.
-          </p>
-          <h2 className="mt-5 text-[clamp(34px,5.4vw,66px)] leading-tight font-light">
-            Make your team unstoppable
-          </h2>
-          <Link href="/signup" className={`${CTA} mt-14 px-10 py-4`}>
-            Try Fathom for your team
-          </Link>
-        </div>
-      </section>
-
       <MarketingFooter />
     </div>
   );
