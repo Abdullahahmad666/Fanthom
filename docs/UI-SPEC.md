@@ -4,49 +4,37 @@ Derived from screenshots of the live product. All measurements are **CSS pixels*
 captures are 3213×1943 at 2× DPR, i.e. a **1606 × 971 CSS viewport**, so every pixel
 measurement below is the raw value halved.
 
+> **Revision 2.** A second batch of screenshots showed a real recorded meeting and its
+> tabs, menus and modals. That corrected several things Revision 1 had wrong — they are
+> listed in §10 so the earlier reasoning stays auditable.
+
 ---
 
 ## 0. Source inventory and confidence
 
-This matters more than usual, because the captured account is **empty**. Several
-surfaces in this spec were never photographed at full size, and the spec says so rather
-than filling the gap with invention.
-
 | Source | What it shows | Confidence |
 |---|---|---|
-| `fathom.video-home.png` | App shell, top bar, tab nav, **empty** My Calls, Ask Fathom rail | **High** — measured directly |
-| `fathom.video-playlists.png` | Playlists empty state + embedded preview of populated playlists | Medium |
-| `...-deals.png` | Deals table (behind paywall modal), pagination, filters, modal pattern | **High** for table/modal |
-| `...-onboarding-s.png` | Team Calls upsell + embedded preview of the **populated call grid** | Medium |
-| Home "Self-Guided Tutorial" thumbnail | **The real meeting detail page**, 605px wide in-source | Medium — layout certain, type sizes inferred |
-| `www.fathom.ai.png` carousel | A **newer redesign** of meeting detail (different tab set) | Medium |
-| `fathom.video-customize.png`, signup/onboarding shots | Auth and settings forms | Not central to this build |
+| `fathom.video-home534.png` | **Populated** My Calls: real card, overflow menu, Ask Fathom rail | **High** |
+| `...-calls-829810573.png` | Meeting detail, **Summary** tab | **High** |
+| `...-82981057323.png` | Meeting detail, **Transcript** tab | **High** |
+| `...-8298105732343242.png` | Meeting detail, **Ask Fathom** tab | **High** |
+| `...-829810573234324242342.png` | **Share Recording modal** | **High** |
+| `...-82981057323432424234243543543.png` | Transcript row **context menu** | **High** |
+| `...-829810573234324242342435435434323.png` | Transcript **multi-select** state | **High** |
+| `fathom.video-home.png` | Empty My Calls, top bar, tab nav | **High** |
+| `...-deals.png` | Deals table, pagination, paywall modal | High (screen is cut) |
+| `...-onboarding-s.png`, `-playlists.png` | Upsell pages + embedded previews | Medium |
+| Home "Self-Guided Tutorial" thumbnail | An **older** meeting detail UI | Low — superseded |
+| `www.fathom.ai.png` | Marketing; a **speculative redesign** of detail | Low — do not build |
 
-### Genuinely absent from every screenshot
+### Still not observed
 
-Do not treat anything below as observed. Each is marked where it appears in the spec.
-
-- **A populated My Calls list at full resolution.** Only the ~700px-wide preview inside
-  the Team Calls upsell.
-- **The Transcript tab's contents.** The tab label is visible; its panel never is.
-- **The share modal, search results, hover states, focus rings, loading states.**
-- **Any light theme.** The product is dark-only in every app capture.
-
-### One conflict worth deciding up front
-
-The screenshots contain **two generations** of the meeting detail page:
-
-| | Production app (tutorial thumbnail) | Marketing redesign (carousel) |
-|---|---|---|
-| Tabs | `SUMMARY` · `TRANSCRIPT` | `Summary` · `Action items 3` · `Comments 2` · `Transcript` · `Related` |
-| Layout | Player + tabs **left**, meta rail **right** | Tabs **left**, player + Ask Fathom **right** |
-| Attendees | Dedicated `ATTENDEES` rail section | Avatar stack in header only |
-| Highlights | Dedicated `ANNOTATIONS` rail section | Not present |
-
-**Build the production layout.** It is the one that actually appears in the app, and it
-is the only one that contains every element in the brief — participants, highlights,
-sharing and action items all have a home in it. Borrow just one thing from the redesign:
-the **count badges on tabs** (`Action items 3`), which are cheap and read as polished.
+- **Hover, focus and loading states.** Nothing in any capture. Still inferred (§7).
+- **A multi-speaker transcript.** The only recording has one speaker, so speaker
+  alternation and left/right bubble alignment are inferred.
+- **A meeting with attendees or highlights.** See the caveat in §5.4.
+- **Any viewport other than 1606px.** All responsive behavior is inferred.
+- **Any light theme.** The product is dark-only.
 
 ---
 
@@ -54,433 +42,453 @@ the **count badges on tabs** (`Action items 3`), which are cheap and read as pol
 
 ### 1.1 Color — measured
 
-Sampled as the dominant color over a region, so these are exact, not eyeballed.
-
 | Token | Hex | Use |
 |---|---|---|
-| `--bg-canvas` | `#1A1A1A` | Page background, Ask Fathom rail |
-| `--bg-panel` | `#1B1B20` | Raised section panel (the "Learn how to use Fathom" block) |
-| `--bg-surface` | `#212124` | Top bar, tab strip, composer, inputs |
-| `--bg-input` | `#2D2C31` | Search field |
-| `--bg-btn-secondary` | `#35353D` | Secondary / card buttons |
-| `--brand-cyan` | `#02BEFF` | Active tab, links, @mentions, timestamps |
-| `--amber` | `#FDC72F` | Streak counter, banner text, marketing bullets |
-| `--amber-bg` | `#312B1C` | Amber notice banner background |
-| `--avatar-pink` | `#C2185B` | Default avatar fill |
-| `--text-primary` | `#FFFFFF` | Body and headings |
-| `--text-muted` | `#969696` | Placeholder, secondary meta |
+| `--bg-canvas` | `#1A1A1A` | Page background |
+| `--bg-content` | `#000000` | **Detail page content panel** — darker than the canvas |
+| `--bg-panel` | `#1B1B20` | Raised section panel ("Learn how to use Fathom") |
+| `--bg-surface` | `#212124` | Top bar, tab strip, composer, empty-state cards |
+| `--bg-raised` | `#26262A` | Card footer, modal body, modal input |
+| `--bg-input` | `#2D2C31` | Global search field |
+| `--bg-muted` | `#4A4B4B` | Transcript bubble, circular icon buttons |
+| `--bg-popover` | `#111314` | Context menus and overflow menus |
+| `--bg-modal-footer` | `#141417` | Modal footer bar (two-tone modals) |
+| `--bg-accent-soft` | `#1F2A31` | `Share` button fill — a desaturated teal tint |
+| `--brand-cyan` | `#02BEFF` | Active tab, links, primary actions |
+| `--amber` | `#FDC72F` | Streak counter, notice text |
+| `--amber-bg` | `#322809` | Amber notice banner |
+| `--avatar-pink` | `#C2185B` | Avatar fill |
+| `--text-primary` | `#FFFFFF` | Body, headings |
+| `--text-muted` | `#969696` | Placeholders, meta, empty-state copy |
+
+Note the inversion worth remembering: **the detail page's content column is pure black
+while the page around it is `#1A1A1A`.** Most dark UIs get lighter as they nest; this one
+gets darker. Getting that backwards is the fastest way to look off.
 
 ### 1.2 Color — approximate
 
-Read off glyphs, so antialiasing makes them ±1 step. Fine for a prototype.
-
 | Token | Hex | Use |
 |---|---|---|
-| `--text-dim` | `~#6B6B70` | Uppercase section labels (`ATTENDEES`, `ACTION ITEMS`) |
-| `--border-subtle` | `~#2A2A2E` | Card and divider hairlines |
-| `--success` | `~#3FBF7F` | Deal status "Won", positive talk-time |
-| `--purple` | `~#A855F7` | "Product Feedback" annotation |
-| `--player-progress` | `~#F0B429` | Amber played-portion of the scrubber |
-
-The palette is deliberately narrow: **four greys, one cyan, one amber.** Resist adding
-more. Almost all apparent "elevation" is a 6–10 point lightness step between those greys,
-not a shadow.
+| `--text-dim` | `~#6B6B70` | Uppercase section labels |
+| `--border-subtle` | `~#2A2A2E` | Hairlines |
+| `--success` | `~#3FBF7F` | Deal status "Won" |
 
 ### 1.3 Typography
 
-The app UI is a neo-grotesque; marketing uses a geometric sans (Greycliff-like).
-**Use Inter for the rebuild** — it is the closest free match to the in-app text and
-avoids a licensed font. Sizes below are derived from cap-heights in the 2× captures, so
-treat them as ±1px.
+A neo-grotesque. **Use Inter** — closest free match, avoids licensing. Sizes are derived
+from cap-heights in the 2× captures, ±1px.
 
 | Role | Size / weight | Notes |
 |---|---|---|
-| Wordmark | 22px / 700, tracked +0.02em | "FATHOM" is uppercase, always with the logo glyph |
+| Wordmark | 22px / 700, tracking +0.02em | Uppercase + logo glyph |
 | Primary nav tab | 17px / 500 | Cyan + underline when active |
-| Page title (detail) | 20px / 600 | e.g. "Fathom <> ThinkBionics Demo" |
-| Section label | 11px / 600, uppercase, tracking +0.08em | `ATTENDEES`, `ACTION ITEMS`, `ANNOTATIONS` |
-| Card / row title | 14px / 600 | |
-| Body | 14px / 400, line-height 1.55 | Summary prose, transcript |
-| Meta / secondary | 12px / 400 | Dates, roles, durations |
-| Timestamp link | 12px / 500, cyan | `@24:36` |
-| Button label | 13–14px / 500 | |
+| Detail page title | 28px / 600 | "Impromptu Google Meet Meeting" |
+| Date group header | 20px / 600, **sentence case, white** | "Today" |
+| Card title | 16px / 600 | |
+| Content tab | 15px / 600, **uppercase**, tracking +0.04em | `SUMMARY` `TRANSCRIPT` `ASK FATHOM` |
+| Section label | 12px / 600, uppercase, tracking +0.08em | `ACTION ITEMS`, `PEOPLE WITH ACCESS` |
+| Summary h2 | 20px / 600 | "Meeting Purpose", "Key Takeaways" |
+| Body | 15px / 400, line-height 1.55 | Summary prose, transcript |
+| Meta | 14px / 400, muted | Dates, emails |
+| Empty-state copy | 15px / 400 **italic**, muted | "None detected…" |
+| Button label | 15px / 600 | |
 
 ### 1.4 Spacing, radius, borders, shadow
 
-- **Spacing scale:** 4 / 8 / 12 / 16 / 24 / 32. Section gaps are 24–32; intra-card 8–12.
-- **Radius:** 6px inputs and small buttons · 8px cards and panels · 12px video player ·
-  `9999px` pills (filter dropdowns, `Customize`, `Change Template`) · `50%` avatars.
-- **Borders:** 1px hairlines only, `--border-subtle`. The Ask Fathom rail is separated by
-  a **~2px `#212124` vertical rule** at x≈1047 — a divider, not a shadow.
-- **Shadows:** effectively **none** in the app chrome. The only shadow-like treatments are
-  the modal backdrop scrim and the amber onboarding tooltip. Do not add drop shadows to
-  cards; use the grey step instead. This is the single easiest way to make a Fathom clone
-  look wrong.
+- **Spacing scale:** 4 / 8 / 12 / 16 / 24 / 32.
+- **Radius:** 6px small buttons · 8px inputs, cards, bubbles, popovers · 12px modal and
+  player · `9999px` pills and circular icon buttons · `50%` avatars.
+- **Borders:** 1px hairlines only. The Ask Fathom rail on list pages is divided by a
+  **~2px `#212124` vertical rule**.
+- **Shadows:** **none in app chrome.** Only the modal backdrop scrim and popovers read as
+  floating, and popovers do it with a near-black fill (`#111314`), not a shadow. Do not
+  add drop shadows to cards.
 
 ---
 
-## 2. Global chrome
+## 2. Two distinct layouts
 
-Measured from `fathom.video-home.png`.
+This is the single most important structural fact, and Revision 1 got it wrong.
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│ FATHOM ▸   [ Search Call Recordings        ]    Refer ⚙ ? ★20 (A) │  63px  #212124
-├──────────────────────────────────────────────────────────────┤  1px  #1A1A1A
-│  My Calls   Team Calls   Playlists   Alerts   Deals          │  62px  #212124
-├──────────────────────────────────────────────┬───────────────┤
-│                                              │               │
-│  main content            #1A1A1A             │ ASK FATHOM    │  #1A1A1A
-│                                              │  ~557px       │
-└──────────────────────────────────────────────┴───────────────┘
-                                          x≈1047 ── 2px #212124 rule
-```
+| | **List pages** (`/`, Team Calls, Playlists…) | **Detail page** (`/calls/:id`) |
+|---|---|---|
+| Top bar | Yes | Yes |
+| Primary tab nav strip | **Yes** | **No — absent entirely** |
+| Ask Fathom | **Right rail**, account-scoped | **A tab**, meeting-scoped |
+| Content width | Full-bleed to the rail | **~1120px, centered** |
+| Content background | `#1A1A1A` | `#000000` panel on `#1A1A1A` |
 
-### 2.1 Top bar — 63px
+The detail page is not the list page with a rail swapped out. It drops the nav strip and
+becomes a centered document. Build them as two layouts.
 
-- Background `#212124`, full-bleed, fixed.
-- **Left:** wordmark + logo glyph, left inset ~24px.
-- **Center-left:** search input — **measured 400 × 38px**, background `#2D2C31`, radius
-  ~8px, magnifier icon 16px at 12px inset, placeholder "Search Call Recordings" in
-  `#969696`. Starts at x≈243, vertically centered (12.5px above and below).
-- **Right cluster,** ~24px apart: `Refer` (gift), `Settings` (gear), `Help & Feedback`
-  (lifebuoy) — each a 20px icon + 15px label; then the **streak pill** (amber star +
-  count `20` in `#FDC72F`); then a 34px circular avatar, `#C2185B` with a white initial.
-- Note the detail page's top bar differs: `Customize · Invite · Help · 445 · avatar`.
-  Treat the home variant as canonical and keep one top bar.
+### 2.1 Top bar — 63px, both layouts
 
-### 2.2 Primary tab nav — 62px
+- Background `#212124`, fixed, full-bleed.
+- **Left:** wordmark + logo glyph, ~24px inset.
+- **Center-left:** search input, **measured 400 × 38px**, `#2D2C31`, radius ~8px,
+  magnifier at 12px inset, placeholder "Search Call Recordings" in `#969696`. Starts at
+  x≈243, vertically centered.
+- **Right:** `Refer` · `Settings` · `Help & Feedback` (20px icon + 15px label, ~24px
+  apart), then an amber **streak pill** (star + count), then a 34px `#C2185B` avatar.
 
-- Same `#212124`, separated from the bar above by a 1px `#1A1A1A` line.
-- Tabs: **My Calls · Team Calls · Playlists · Alerts · Deals**, 17px/500, ~40px apart,
-  first tab at x≈38.
-- **Active:** text `#02BEFF` + a **2px cyan underline** flush to the strip's bottom edge,
-  spanning the label width only.
-- **Inactive:** `#FFFFFF`. Hover (inferred): `#02BEFF` at ~70% or a `#2D2C31` backplate.
+### 2.2 Primary tab nav — 62px, list pages only
 
-### 2.3 Ask Fathom rail
-
-- Observed **~557px wide at a 1606px viewport** (≈35%). That is wide; for the rebuild use
-  a **fixed 400px**, collapsible, hidden below 1280px.
-- Header: sparkle icon + `ASK FATHOM` (11px, uppercase, tracked) and a collapse chevron
-  button at the far right.
-- Optional amber notice banner: `#312B1C` background, `#FDC72F` text, 8px radius,
-  bold lead-in + inline underlined "Learn More".
-- Conversation area: user messages **right-aligned** in a `#2D2C31` rounded bubble; AI
-  replies **left-aligned** with a small Fathom glyph and **cyan inline citations carrying
-  `@mm:ss` timestamps** that seek the player.
-- Suggested-prompt chips: pill buttons, `#2D2C31`, 13px, wrapping right-to-left.
-- Composer: `#212124`, radius 8px, placeholder "Ask anything…", a scope dropdown
-  (`My Calls ⌄` / `All meetings ⌄`) bottom-left and a **circular send button** bottom-right.
+- `#212124`, separated from the bar above by a 1px `#1A1A1A` line.
+- **My Calls · Team Calls · Playlists · Alerts · Deals** — 17px/500, ~40px apart, first at x≈38.
+- Active: `#02BEFF` + a **2px cyan underline** spanning the label width, flush to the
+  strip's bottom edge. Inactive: `#FFFFFF`.
 
 ---
 
-## 3. My Calls — list
+## 3. My Calls — observed populated
 
-The populated layout comes from the preview embedded in the Team Calls upsell, so
-**medium confidence**.
+- **Date group header:** `Today` — **20px/600, white, sentence case**, ~24px above the grid.
+- **Call card — measured ~500px wide:**
+  - **16:9 thumbnail**, full-bleed at the card's top, 8px top radius. For an audio-only
+    call the poster is a **generated crimson radial gradient with a circular initial
+    avatar centered** and a faded play triangle — not a black rectangle. Worth copying;
+    it is a large part of the product's look.
+  - **Duration badge** `3 mins` — dark pill, bottom-**right**, ~12px inset.
+  - **Footer band, ~70px, `#26262A`, 16px padding:** title 16px/600 on the left, a **32px
+    circular `#4A4B4B` overflow button** (`⋮`) on the right.
+  - At 1606px the grid is **2-up** (≈500px card + ~20px gap in the ~1050px content area).
+- **Card overflow menu** — popover, `#111314`, 8px radius, opens below-right of the button:
+  - `🔗 Copy Share Link` (15px/600) with a muted sub-label "Anyone with the link can view"
+  - `🗑 Delete Recording` (15px/600)
+  - A **two-line menu item** (label + description) is a pattern worth keeping.
 
-- **Filter row** above the content: a left-aligned `All Calls ⌄` pill; right-aligned
-  `Role ⌄`, `Deal Stage ⌄`, `Deal Outcome ⌄`. All pills: `#2D2C31`, radius `9999px`,
-  13px, 12px horizontal padding, chevron.
-- **Date grouping** with sticky uppercase headers: `TODAY`, `YESTERDAY`, `LAST WEEK`.
-- **Call card**, 3 per row, ~16px gap:
-  - 16:9 thumbnail, 8px radius, showing the speaker's video still.
-  - **Talk-time badge bottom-left** (`11%` + a small donut) and **duration bottom-right**
-    (`18:03`), both on a translucent dark scrim.
-  - Below the thumbnail: a 20px company logo, then the title (14px/600) and the company
-    name (12px, muted) on a second line.
-- Hover (inferred): thumbnail scales ~1.02 or gains a 1px cyan ring; title goes cyan.
+### 3.1 Empty state — observed
 
-### 3.1 Empty state — observed exactly
+Centered: a 24px circle-slash icon and **"No call recordings"** at ~28px/400 muted. No
+illustration, no CTA. Below it the `LEARN HOW TO USE FATHOM` panel (`#1B1B20`, 12px from
+the left edge, ~32px padding, three thumbnail-plus-button cards) and `MEETING PREFERENCES`.
 
-Centered in the content column, well above the fold: a 24px circle-slash icon and
-**"No call recordings"** at ~28px/400 in a muted grey. Nothing else — no illustration,
-no call-to-action button. Below it, two sections separated by ~32px:
+The bottom-left onboarding video bubble is onboarding chrome — **skip it**.
 
-- `LEARN HOW TO USE FATHOM` — a `#1B1B20` panel starting **12px from the left edge** with
-  **~32px internal padding**, top edge at y≈362. Inside: three cards in a row, each a
-  16:9 thumbnail above a full-width secondary button (`#35353D`, radius 6px, icon + label):
-  *Self-Guided Tutorial* · *Start Test Call* · *Attend Tips & Tricks Webinar*.
-- `MEETING PREFERENCES` — plain prose lines about auto-recording, with an `Edit Settings`
-  link in cyan.
+### 3.2 Ask Fathom rail — list pages
 
-A circular video bubble sits bottom-left with a dark tooltip, "Start your onboarding here!".
-**Skip this in the rebuild** — it is onboarding chrome, not product surface.
+- Observed **~557px at a 1606px viewport**. For the rebuild use a **fixed 400px**,
+  collapsible, hidden below 1280px.
+- Header: sparkle + `ASK FATHOM` (12px uppercase, tracked) and a collapse chevron at the far right.
+- Optional amber banner: `#322809` fill, `#FDC72F` text, 8px radius, bold lead-in +
+  underlined "Learn More".
+- Suggestion chips: right-aligned pills, `#2D2C31`, wrapping.
+- Composer: `#212124`, radius 8px, "Ask anything…", a `My Calls ⌄` scope dropdown
+  bottom-left and a **circular send button** bottom-right.
 
 ---
 
 ## 4. Meeting detail — the centerpiece
 
-Two columns under the global chrome. Left ≈62%, right ≈38%, ~24px gutter.
+**Measured layout at 1606px:** container `#000000` content panel, left column
+**CSS 231 → 893 (662px)**, gap ~28px, right rail **CSS 921 → 1350 (429px)**. Container
+total ~1120px, roughly centered.
 
 ```
-┌───────────────────────────────────┬──────────────────────────┐
-│ ┌───────────────────────────────┐ │ Fathom <> ThinkBionics ✎ │
-│ │                               │ │ Jun 19, 2024             │
-│ │      VIDEO   ▶   [11 mins]    │ │ [Share 🔗][Sync ▾][⋮]    │
-│ │                               │ │                          │
-│ │ 🔇 0:16 ▬▬▬▬▬━━━━━━ 1.2× ⧉   │ │ ATTENDEES                │
-│ └───────────────────────────────┘ │  ◉ Anya Rose      in ⌁  │
-│ SUMMARY   TRANSCRIPT              │    CMO, ThinkBionics     │
-│ ─────────                         │  ◉ Dan Smith      in ⌁  │
-│ [General ⌄]      [Copy Summary ✉] │    Sales Engineer        │
-│                                   │                          │
-│ Meeting Purpose:                  │ ACTION ITEMS             │
-│ Discuss Fathom's vision…          │ [Copy for 📄][Copy Email]│
-│                                   │ ☐ Discuss Dan's previous │
-│ Key Takeaways                     │   work… 💬 @24:36 👤Dan  │
-│  • Fathom is focused on…          │ ☐ Send research updates… │
-│  • Fathom sees value in…          │                          │
-│                                   │ ANNOTATIONS              │
-│ Topics:                           │ ▸ Highlight · 45s        │
-│ Fathom's Vision and Strategy      │   Amanda explains how…   │
-│  • Fathom started with…           │ ▸ Product Feedback       │
-└───────────────────────────────────┴──────────────────────────┘
+┌─ left column 662px ──────────────┐  ┌─ right rail 429px ─────────┐
+│ 5:43 AM │ dkx-jgwp-yrx  ⓘ        │  │ Impromptu Google Meet      │
+│ ┌──────────────────────────────┐ │  │ Meeting                    │
+│ │      ⬤ A   (gradient)        │ │  │ Sep 19, 2026               │
+│ │        3 mins                │ │  │                            │
+│ │ 🔊 0:00 ━━━━━━━━━━ 1× ⧉  [📹]│ │  │ ┌────────────────┐ ┌───┐  │
+│ └──────────────────────────────┘ │  │ │ Share       🔗 │ │ ⋮ │  │
+│ SUMMARY  TRANSCRIPT  ASK FATHOM  │  │ └────────────────┘ └───┘  │
+│ ────────                         │  │                            │
+│ [Enhanced ⌄|⚙] [✨Auto ⌄]        │  │ ACTION ITEMS               │
+│                  [Copy Summary]  │  │ ┌────────────────────────┐ │
+│ ✨ NEW: Customize this summary…  │  │ │ None detected. Add     │ │
+│                                  │  │ │ manually on transcript │ │
+│ Meeting Purpose                  │  │ │ tab                    │ │
+│ Define the "One More Email"…     │  │ └────────────────────────┘ │
+│ Key Takeaways                    │  └────────────────────────────┘
+│  • Product: "One More Email,"…   │
+└──────────────────────────────────┘
 ```
 
-### 4.1 Player — left column, top
+### 4.1 Player
 
-- 16:9, 12px radius, large translucent white play triangle centered, duration chip
-  (`11 mins`) centered below it on the poster.
-- **Control bar** inset at the bottom on a dark scrim, left to right:
-  mute icon · **current time `0:16`** (13px, tabular) · scrubber · **`1.2×` speed** · PiP icon.
-- The scrubber is the distinctive part: a **thin track with an amber played portion**
-  (`~#F0B429`), a **blue playhead marker**, and **vertical tick marks along the track** —
-  these are highlight/annotation markers, not a waveform. Reproduce them; they are what
-  makes it read as Fathom.
+- **Header strip** above the video, ~34px: start time `5:43 AM`, a `│` divider, the
+  meeting code `dkx-jgwp-yrx`, and an ⓘ icon. All 13px muted. Small detail, very
+  characteristic — include it.
+- **Poster:** for audio-only, a crimson radial gradient with a centered circular initial
+  avatar (~72px). A large translucent play triangle and a `3 mins` duration label sit
+  centered while paused; both disappear on play.
+- **Notetaker PiP tile** bottom-right inside the video: a small dark tile captioned
+  "Abdullah's Fathom Notetaker" with a muted-mic glyph.
+- **Control bar,** inset bottom on a scrim, left to right:
+  - volume icon with the **speaker's name in ~10px beneath it**
+  - **current time** `0:34`, 15px tabular
+  - **scrubber** — grey track, lighter played portion, a **blue vertical playhead bar**
+    (a bar, not a dot). No annotation ticks in this build.
+  - `1×` speed toggle
+  - PiP icon
+- Correction: the amber scrubber in the old tutorial screenshot is **not** the current
+  design. Use grey + blue.
 
-### 4.2 Content tabs — below the player
+### 4.2 Content tabs
 
-- `SUMMARY` · `TRANSCRIPT` — **uppercase, ~12px, tracked +0.06em**, ~24px apart.
-  Active: cyan text + 2px cyan underline. Note these are *smaller and uppercase*, unlike
-  the sentence-case primary nav. Add `ACTION ITEMS 2` with a count badge from the
-  redesign if time allows.
-- **Summary toolbar:** a `General ⌄` template pill on the left; a **`Copy Summary`
-  primary button** on the right — cyan-tinted fill, 6px radius, with a trailing Gmail glyph.
-- **Summary body:** bold run-in headings (`Meeting Purpose:`, `Key Takeaways`, `Topics:`),
-  short paragraphs, and disc bullets at 14px/1.55 with ~8px between items. Sub-headings
-  (`Fathom's Vision and Strategy`) are 13px/600. The redesign adds cyan `@mentions` inline
-  and a row of ghost pills (`Change Template`, `Add Section`, `Update Style`) — optional.
+`SUMMARY` · `TRANSCRIPT` · `ASK FATHOM` — 15px/600 uppercase, tracked, ~28px apart.
+Active is `#02BEFF` with a **2px cyan underline**; inactive `#969696`. A 1px hairline runs
+under the whole row.
 
-### 4.3 Transcript — **not visible in any screenshot**
+A **contextual action button sits at the right end of the tab row** and changes per tab:
+`Copy Summary 📄` on Summary, `Copy Transcript 📋` on Transcript, nothing on Ask Fathom.
+Cyan label on `#1F2A31`, 8px radius.
 
-Only the tab label exists. Specified to match the system, not copied:
+### 4.3 Summary tab
 
-- Rows of `[mm:ss] Speaker — utterance`, timestamp in cyan/500, speaker in 13px/600,
-  text 14px/400, ~12px between turns.
-- Clicking a timestamp seeks the player; the active turn gets a `#212124` backplate.
-- A local search field filters turns and highlights matches with an amber background.
+- **Toolbar:** a segmented `Enhanced ⌄` dropdown with an attached **⚙ gear button** sharing
+  one pill outline; then a separate `✨ Auto ⌄` pill. Both `#212124`, radius `9999px`.
+- **Amber notice:** full-width `#322809` bar, radius 8px, `✨ NEW: Customize this summary
+  by clicking the ⚙ icon above` in `#FDC72F`.
+- **Body:** `Meeting Purpose` (20px/600) then a paragraph; `Key Takeaways` then disc
+  bullets that use a **bold run-in label** — `**Product:** "One More Email," an AI tool…`.
+  That run-in label pattern is what makes the summary read as structured; reproduce it.
 
-Keep it restrained. Inventing a richer transcript UI than the product has would
-contradict the source.
+### 4.4 Transcript tab — now fully observed
 
-### 4.4 Right rail
+- **Search overlay:** a `Search Transcript` input, ~250px, `#1D1E1F`, rounded, **pinned
+  top-right and floating over the content** (it visibly overlaps bubbles). Not a static row.
+- **Turns:** speaker name (`Abdullah`) 14px muted, **right-aligned** above the group; then
+  one **bubble per sentence**, `#4A4B4B`, 8px radius, ~14px padding, ~6px apart. The
+  single-speaker recording means alternation is unobserved — assume the other speaker
+  mirrors to the left.
+- **Left gutter, on hover:** a cyan **`⊕` circular button** at the far left (add
+  highlight / action item) and a **`⋯` circular button** just left of the bubble.
+- **`⋯` context menu** (`#111314`, 8px radius, caret pointing at the button):
+  `✏ Edit transcript` · `👤 Change speaker` · `✂ Trim this section` ·
+  `✂ Trim all sections after this section`. Icons 18px, labels 15px/600, ~16px apart.
+- **Multi-select:** selected turns get a **filled circular checkmark** in the gutter, the
+  group gains a light 1px outline, and the selected sentences **invert to a white fill
+  with black text**. Unselected content around it dims.
+- **`↓ Resume Auto-Scroll`** — a cyan pill floating at the bottom-center of the panel,
+  shown once the user scrolls away from the playhead.
 
-- **Title block:** meeting name 20px/600 with a trailing edit pencil; date 12px muted below.
-- **Action row:** `Share` (cyan-tinted fill + link glyph) · `Sync to Hubspot`
-  (same treatment + brand glyph) · `⋮` overflow. ~8px gap, 6px radius.
-- **`ATTENDEES`** — section label, then rows: 32px avatar, name 14px/600, "role, company"
-  12px muted, and right-aligned LinkedIn + CRM icon buttons that appear on row hover.
-- **`ACTION ITEMS`** — label, then two secondary buttons (`Copy for 📄`,
-  `Copy Follow-up Email ✉`), then checkbox rows: a square ~16px checkbox with 4px radius,
-  title 13px/600 wrapping to 2–3 lines, and a meta line of **cyan `@24:36` timestamp** plus
-  a `👤 Dan` owner chip. Checking an item should strike it through and dim it.
-- **`ANNOTATIONS`** (the brief's "highlights") — rows led by a **colored type icon and a
-  colored label**: `Highlight` cyan, `Product Feedback` purple, `Bookmark` blue. Label is
-  followed by `· 45s` or `@8:15`, with an italic muted description beneath. Clicking seeks.
+### 4.5 Ask Fathom tab
 
-### 4.5 Sharing
+Empty state, centered: a ~72px dark circle holding the cyan Fathom glyph; **"Hi, what can
+I tell you about this meeting?"** at 18px/600; then a **2×2 grid of suggestion cards**
+(`#212124`, 8px radius, 15px, left-aligned text, generous padding):
+*Detail all timelines discussed* · *Describe the key stakeholders?* ·
+*Who else should we speak to?* · *Why was this meeting scheduled?*
+Below, a full-width `Ask Fathom AI` input with a **square teal send button** inside its
+right edge.
 
-A `Share` button is visible; **the modal it opens is not.** Minimum believable version,
-consistent with the Deals modal already observed: centered dialog on a scrim, 8px radius,
-`#1B1B20` surface, a read-only link field with a `Copy` button, a visibility dropdown
-(Attendees only / Anyone with the link), and a `Done` primary button.
+### 4.6 Right rail
+
+- **Title** 28px/600, wrapping; **date** 14px muted beneath.
+- **Action row:** a **wide `Share` button** (fills the rail minus the overflow button) —
+  `#1F2A31` fill, cyan 15px/600 label left-aligned, **link glyph right-aligned inside**;
+  then a separate square `⋮` button.
+- **`ACTION ITEMS`** section label, then either the item list or the **empty state**:
+  a `#212124` rounded box, 16px padding, with *"None detected. Add manually on transcript
+  tab"* in muted italic. This box is the house empty-state pattern — reuse it.
+
+### 4.7 Attendees and highlights — a real gap
+
+The brief asks for participants and highlights. The **older** tutorial screenshot has
+dedicated `ATTENDEES` and `ANNOTATIONS` rail sections; **the current captures have
+neither.** Two readings: they were removed, or they are hidden because this meeting has
+one participant and no annotations. The `ACTION ITEMS` section renders even when empty,
+which mildly favors "removed".
+
+**Recommendation:** build both sections in the rail, styled exactly like `ACTION ITEMS`
+(section label + rows, or the italic empty box). It satisfies the brief, it is consistent
+with the observed system, and it is honest — flag in the README that this part follows the
+older UI because the current captures do not exercise it.
+
+### 4.8 Share modal — observed
+
+- Centered, ~660px wide, 12px radius, `#26252A`. Backdrop dims the page heavily (~75%).
+- **Header:** `Share Recording` 26px/600, `✕` close button right.
+- **Body:** a full-width `Add users and emails` search input (`#26252A`, magnifier, 8px
+  radius); the `PEOPLE WITH ACCESS` section label; then rows — name 16px/600, email 14px
+  muted below, role (`Owner`) muted right-aligned.
+- **Footer bar, `#141417`** (a distinctly darker band): left, a globe icon +
+  `Anyone with the link can view ⌄`; right, a **`🔗 Copy Link` outlined button** —
+  transparent fill, 1px cyan border, cyan label.
+- The **two-tone modal** (lighter body, darker footer) is the pattern to copy.
 
 ---
 
-## 5. Tables, modals, and other screens
+## 5. Other screens
 
-### 5.1 Deals table — observed, high confidence
+### 5.1 Deals table — observed, but **cut from the build**
 
-Worth reading even though **Deals is cut from the build**: it is the only real data table
-in the captures, so it defines the table style if one is needed.
+The only real table in the captures, so it defines table style if needed: header with a
+count pill (`145`) and right-aligned filter pills; 11px uppercase muted column headers
+with a sort caret; ~52px rows with a 1px bottom hairline, no zebra; footer with numeric
+pagination and `Show 15 per page ⌄`.
 
-- Header: `Deals` 20px/600 + a **count pill `145`** (`#2D2C31`, rounded); right-aligned
-  filter pills `All Reps ⌄`, `Open Deals ⌄`, `Any Close Date ⌄`.
-- Column headers 11px uppercase muted, with a **sort caret** on `CLOSE DATE`.
-- Rows ~52px, 1px `#2A2A2E` bottom hairline, no zebra striping.
-- Footer: numeric pagination `← 1 2 3 … 14 15` and a `Show 15 per page ⌄` control.
+### 5.2 Playlists — populated layout inferred from a preview
 
-### 5.2 Modal pattern — observed
+Groups titled `ThinkBionics - New Features` (16px/600) with a meta line
+`3 Highlights (18 min) · Last updated Nov 25`, above a row of highlight cards.
 
-From the Deals paywall: centered panel ~836px wide, 8px radius, dark surface, **the page
-behind stays visible and is dimmed**, content is centered — title ~28px/600, subtitle
-muted, an image, then a primary CTA. The trial CTA uses an unusual **outlined** style:
-transparent fill, 1px cyan border, cyan label. Useful for a secondary/ghost variant.
-
-### 5.3 Playlists — empty state observed, populated inferred from preview
-
-Populated: groups titled `ThinkBionics - New Features` (16px/600) with a meta line
-`3 Highlights (18 min) · Last updated Nov 25`, above a row of highlight cards. Each card:
-logo + company + date overlaid top-left on a 16:9 thumbnail, and a one-line caption
-beneath with a small play glyph.
-
-### 5.4 Auth / onboarding
-
-Signup, questionnaire and Zoom-connect screens exist in the captures. **All cut.** They
-cost hours and demonstrate nothing about the meeting experience being assessed.
+### 5.3 Auth / onboarding — **all cut.**
 
 ---
 
-## 6. States, motion, responsive
+## 6. Screen relationships
 
-### 6.1 Interaction states — all inferred; none captured
+```
+        ┌──────────── Top bar (both layouts) ────────────┐
+        │  search ──▶ filters the list in place          │
+        └────────────────────┬───────────────────────────┘
+                             │
+   ┌── LIST LAYOUT (+ tab nav, + Ask Fathom rail) ──┐
+   │  My Calls · Team Calls · Playlists · Alerts    │
+   │       │ card click            ⋮ ──▶ Copy link / Delete
+   └───────┼────────────────────────────────────────┘
+           ▼
+   ┌── DETAIL LAYOUT (no tab nav, no rail) ─────────┐
+   │  SUMMARY │ TRANSCRIPT │ ASK FATHOM             │
+   │     transcript ⊕ ──▶ creates an action item ───┼──▶ rail ACTION ITEMS
+   │     transcript ⋯ ──▶ edit / speaker / trim     │
+   │     Share ──▶ Share Recording modal            │
+   │     timestamp ──▶ seeks the player (no nav)    │
+   └────────────────────────────────────────────────┘
+```
 
-No hover, focus, or loading state appears in any screenshot. Keep them minimal and
-consistent:
+The load-bearing relationships:
 
-- **Hover:** surfaces lift one grey step (`#1A1A1A → #212124`, `#212124 → #2D2C31`);
-  text targets go cyan. 120ms ease-out.
-- **Active/pressed:** no transform, just one step darker.
-- **Focus-visible:** 2px `#02BEFF` outline at 2px offset. The product shows none, but
-  shipping without keyboard focus is a real accessibility defect — add it.
-- **Disabled:** 40% opacity, `cursor: not-allowed`.
+1. **List → detail** is the only true navigation.
+2. **Transcript `⊕` → rail action item** is the one cross-panel write in the product, and
+   it explains the empty state's own copy: *"Add manually on transcript tab."* Wiring this
+   makes the prototype feel alive for very little code.
+3. **Timestamp → player seek** — one shared callback, reused everywhere.
 
-### 6.2 Loading
+---
 
-Also unobserved. Use **skeletons, not spinners** — grey `#212124` blocks at the final
-geometry, with a subtle shimmer. The list needs a card skeleton; the detail page needs a
-player block plus three text lines. A prototype with real skeletons reads as far more
-finished than one with a centered spinner.
+## 7. States, motion, responsive
 
-### 6.3 Motion
+### 7.1 Observed states
 
-Nothing animated can be proven from stills. Infer conservatively:
+Popover/context menu, modal, transcript multi-select, and the italic empty-state box are
+all observed — see their sections.
 
-- 120–160ms ease-out on hover/color; 200ms on tab-underline slide.
-- Modal: 150ms fade + 4px rise; backdrop fades to ~60% black.
-- Rail collapse: 200ms width transition.
-- Respect `prefers-reduced-motion`. No parallax, no spring physics — the product is sober.
+### 7.2 Inferred states
 
-### 6.4 Responsive — entirely inferred
+No hover, focus or loading state appears in any capture.
 
-Every capture is a single 1606px viewport, so **no breakpoint behavior is observable.**
-A defensible ladder:
+- **Hover:** surfaces lift one step (`#1A1A1A→#212124`, `#212124→#26262A`); text targets go
+  cyan. Transcript rows reveal the `⊕` and `⋯` buttons. 120ms ease-out.
+- **Focus-visible:** 2px `#02BEFF` outline at 2px offset. The product shows none; ship it
+  anyway — its absence is a genuine accessibility defect, not a style choice.
+- **Disabled:** 40% opacity.
+
+### 7.3 Loading
+
+Unobserved. Use **skeletons, not spinners** — `#212124` blocks at final geometry. The
+detail page needs a player block plus three text lines; the list needs a card skeleton.
+
+### 7.4 Motion
+
+Nothing animated is provable from stills. Keep it sober: 120–160ms ease-out on hover,
+200ms on the tab-underline slide, 150ms fade + 4px rise for modals and popovers, 200ms for
+rail collapse. Respect `prefers-reduced-motion`.
+
+### 7.5 Responsive — entirely inferred
 
 | Width | Behavior |
 |---|---|
-| ≥1440 | Full layout; Ask Fathom rail open at 400px |
-| 1100–1439 | Rail collapses to an icon button; detail columns 60/40 |
-| 768–1099 | Detail becomes one column: player, then tabs, then rail content appended below; call grid 2-up |
-| <768 | Single column; primary nav becomes a horizontally scrolling tab strip; call grid 1-up; player sticky at top of the detail page |
-
----
-
-## 7. Screen relationships
-
-```
-                  ┌──────────────┐
-                  │   Top bar    │ search ──▶ filtered My Calls
-                  │   Tab nav    │
-                  └──────┬───────┘
-      ┌──────────┬───────┴────┬───────────┬─────────┐
-   My Calls   Team Calls   Playlists    Alerts    Deals
-      │            │            │       (cut)     (cut)
-      │  card click│            │ highlight click
-      └────────────┴──────┬─────┘
-                          ▼
-                 ┌─────────────────┐
-                 │ Meeting detail  │◀── Ask Fathom citation @mm:ss
-                 │                 │
-                 │ tabs: Summary / Transcript / Action items
-                 │ Share ──▶ share modal
-                 │ timestamp ──▶ seeks player (in-page, no nav)
-                 └─────────────────┘
-```
-
-The load-bearing relationships, and the ones worth spending time on:
-
-1. **List → detail** is the only true navigation in the product.
-2. **Timestamp → player seek** is the interaction that makes it feel real. Action items,
-   annotations, transcript rows and Ask Fathom citations all point at the same player.
-   Build this once as a shared seek callback and reuse it in four places.
-3. **Search** filters the list in place; it is not a separate results page.
+| ≥1440 | Detail container 1120px centered; list rail open at 400px |
+| 1100–1439 | Rail collapses to an icon button; detail columns compress, rail floor 360px |
+| 768–1099 | Detail stacks: player → tabs → rail content below. Card grid 1-up |
+| <768 | Primary nav becomes a scrolling tab strip; player sticky at top of detail |
 
 ---
 
 ## 8. Proposed build — smallest convincing set
 
-Scoped to one day. The rule applied: **anything that is not the meeting detail page, or
-the path to it, is cut.**
+**Rule: anything that is not the meeting detail page, or the path to it, is cut.**
 
-### 8.1 Routes — 3
+### 8.1 Routes — 2 (+1 optional)
 
 | Route | Purpose | Priority |
 |---|---|---|
-| `/` | My Calls. Date-grouped card grid, search filter, empty state. | P0 |
-| `/calls/[id]` | Meeting detail. The whole assignment lives here. | **P0 — half the day** |
-| `/playlists` | Playlist groups + highlight cards. Reuses the card component. | P2 — cut first |
+| `/` | My Calls — date groups, ~500px cards, overflow menu, search filter, empty state | P0 |
+| `/calls/[id]` | Meeting detail — three tabs, player, rail, share modal | **P0 — half the day** |
+| `/playlists` | Optional; reuses the card | P2 — cut first |
 
-`Team Calls` and `Alerts` render as the same list with different fixture data.
-`Deals` and `Settings` are **cut** — link them to a simple "not in this prototype" state
-rather than leaving dead tabs.
+`Team Calls` / `Alerts` reuse the list with different fixtures. `Deals` and `Settings` are
+cut — give them an honest "not in this prototype" state rather than dead tabs.
 
-### 8.2 Components — 16
+### 8.2 Components — 17
 
-**Shell (3)** · `AppShell` · `TopBar` (wordmark, search, right cluster) · `TabNav`
-(reused for both primary nav and in-page tabs via a `variant` prop — they differ only in
-case, size and tracking).
+**Layouts (3)** · `ListLayout` (top bar + tab nav + rail slot) · `DetailLayout` (top bar +
+centered 1120px container) · `TopBar`.
 
-**Primitives (5)** · `Button` (primary / secondary / ghost / outline) · `Pill`
-(filter dropdowns, count badges) · `Avatar` + `AvatarStack` · `EmptyState` · `Skeleton`.
+**Primitives (6)** · `Button` (primary / soft-accent / outline / ghost) · `Pill` ·
+`IconButton` (circular) · `Popover` (menus — one component serves the card menu and the
+transcript menu) · `EmptyBox` (the italic empty state) · `Skeleton`.
 
-**List (3)** · `CallCard` (thumbnail, talk-time badge, duration, logo, title) ·
-`DateGroup` (sticky header + grid) · `SearchInput`.
+**List (3)** · `CallCard` · `DateGroup` · `SearchInput`.
 
-**Detail (5)** · `VideoPlayer` (poster, play, scrubber with annotation ticks, time,
-speed) · `SummaryPanel` · `TranscriptPanel` (timestamp seek + local search) ·
-`ActionItemList` (checkboxes, owner, timestamp) · `AnnotationList`.
-Plus `AttendeeList` and `ShareModal`, which are small enough to fold into the detail page.
+**Detail (5)** · `VideoPlayer` · `SummaryPanel` · `TranscriptPanel` ·
+`ActionItemList` · `ShareModal`.
+
+`AskFathomPanel` does double duty: the meeting-scoped tab and the account-scoped rail are
+the same suggestion-grid-plus-composer component with different props.
 
 ### 8.3 Data
 
-One `fixtures/meetings.ts` — **3 meetings**, one of them richly populated (~40 transcript
-turns, 5 action items, 4 annotations, 3 attendees) and two thin ones for the list. Shape:
+One `fixtures/meetings.ts` — **3 meetings**, one richly populated:
 
 ```ts
 type Meeting = {
-  id, title, company, date, durationSec, thumbnailUrl, talkTimePct
-  attendees: { name, role, company, avatarUrl }[]
-  summary:   { heading, kind: 'para'|'bullets', body }[]
-  transcript:{ tSec, speaker, text }[]
+  id, title, date, startTime, meetingCode, durationSec
+  posterGradient: string          // audio-only calls render a gradient, not a still
+  speakers: { name, initial, color }[]
+  summary:    { heading, body }[] // body: paragraph | bullets with bold run-in labels
+  transcript: { tSec, speaker, sentences: string[] }[]
   actionItems:{ id, text, owner, tSec, done }[]
-  annotations:{ kind:'highlight'|'feedback'|'bookmark', label, tSec, note }[]
+  attendees:  { name, role, company }[]   // see §4.7
+  highlights: { kind, label, tSec, note }[]
 }
 ```
 
-Everything is derived from this one type — no backend, no API layer.
+### 8.4 The two things to get right
 
-### 8.4 The one thing to get right
-
-Use a **real `<video>` element** with a short public-domain clip, not a static poster.
-Wire `currentTime` into shared state so every timestamp in the UI seeks it and the
-transcript auto-highlights the active turn. That single mechanism is what will make the
-prototype feel like the product; a beautiful but inert page will not.
+1. **A real `<video>` with shared `currentTime`**, so every timestamp seeks it and the
+   transcript auto-highlights the active turn. A beautiful but inert page will not convince.
+2. **Transcript `⊕` → creates an action item in the rail.** One cross-panel interaction
+   that turns three static panels into a product.
 
 ### 8.5 Rough budget
 
 | Block | Hours |
 |---|---|
-| Tokens, Tailwind config, app shell, tab nav | 1.5 |
-| My Calls list + card + empty + search filter | 1.5 |
-| Meeting detail scaffold and right rail | 1.5 |
+| Tokens, Tailwind config, both layouts, top bar, tab nav | 1.5 |
+| My Calls: card, date groups, overflow popover, search, empty state | 1.5 |
+| Detail scaffold, right rail, share modal | 1.5 |
 | Player + shared seek state | 1.5 |
-| Summary + transcript panels | 1.5 |
-| Action items, annotations, share modal | 1.0 |
+| Summary tab | 1.0 |
+| Transcript tab (bubbles, search, ⊕/⋯, context menu) | 1.5 |
+| Ask Fathom tab (shared with rail) | 0.5 |
 | Skeletons, hover/focus, responsive pass | 1.0 |
-| Buffer | 0.5 |
 | **Total** | **10** |
 
-If the day runs short, cut in this order: **Playlists → share modal → Ask Fathom rail →
+Cut order if the day runs short: **Playlists → Ask Fathom → transcript multi-select →
 responsive below 768px.** Never cut the player seek wiring.
+
+---
+
+## 10. What Revision 1 got wrong
+
+Kept deliberately, since the errors came from reasoning off low-resolution previews and
+the corrections are the useful part.
+
+| # | Revision 1 said | Actually |
+|---|---|---|
+| 1 | Detail page carries the primary tab nav | It has **no** nav strip |
+| 2 | Ask Fathom is a right rail everywhere | A **rail on list pages, a tab on detail** |
+| 3 | Tabs are `SUMMARY` / `TRANSCRIPT` | Three: **+ `ASK FATHOM`** |
+| 4 | Detail is full-width two-column | **~1120px centered**, 662 / 429 |
+| 5 | Content panel is `#1A1A1A` | **`#000000`** — darker than the canvas |
+| 6 | Scrubber is amber with annotation ticks | **Grey track, blue playhead bar**, no ticks |
+| 7 | Date headers are uppercase muted | **Sentence case, 20px/600, white** |
+| 8 | Cards carry a company logo + talk-time badge | Those are **Team Calls**; My Calls cards are title + `⋮` |
+| 9 | Transcript design unknown, proposed generically | Observed: **bubbles, floating search, ⊕/⋯, multi-select** |
+| 10 | Share modal inferred | Observed, including the **two-tone footer** |
+| 11 | Build the 5-tab marketing redesign's badges | That UI is **speculative** — not in the product |
