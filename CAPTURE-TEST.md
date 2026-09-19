@@ -53,7 +53,7 @@ Three properties the script holds to, each of which would otherwise cause a real
 
 ## 3. Where the canaries landed
 
-Log directory: **`.agent-logs/`** in the repo root. Not gitignored — verified with `git check-ignore`, which reports it as not ignored. There is no `.gitignore` at the repo root at all.
+Log directory: **`.agent-logs/`** in the repo root. Not gitignored — verified with `git check-ignore`, which reports both `.agent-logs/` and `.claude/` as not ignored. (The repo root gained a `.gitignore` from the flatten described in §7; it is the stock Next.js one and contains no rule touching either directory.) All log files are tracked — confirmed with `git ls-files .agent-logs`.
 
 | Canary | File |
 |---|---|
