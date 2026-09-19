@@ -44,8 +44,9 @@ const STATS = [
  * state the capture shows.
  */
 export function StatsSection() {
-  const ref = useRef<HTMLElement>(null);
-  const [t, setT] = useState(0);
+  const gridRef = useRef<HTMLDivElement>(null);
+  /** Reveal progress, and a signed value for the parallax. */
+  const [{ t, q }, setProgress] = useState({ t: 0, q: 0 });
 
   /* Subscribed rather than read into state in an effect, so there is no
      render-then-correct flash and the server sees a stable false. */
@@ -57,38 +58,60 @@ export function StatsSection() {
 
   useEffect(() => {
     if (reduced) return;
-    const onScroll = () => {
-      const el = ref.current;
+    let frame = 0;
+
+    const measure = () => {
+      frame = 0;
+      const el = gridRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      // 0 as the section enters from below, 1 once it has fully passed up.
-      const progress = (vh - rect.top) / (vh + rect.height);
-      setT(Math.min(Math.max(progress, 0), 1));
+
+      /* Measured against the bubble row, not the whole section. Tracking the
+         section meant the reveal finished while the bubbles were still below
+         the fold, so by the time you could see them they had already settled
+         and the section looked static. */
+      const t = (vh - rect.top) / (vh * 0.75);
+
+      /* Signed distance of the row's centre from the viewport centre, in
+         viewport heights: negative below, zero when centred, positive above.
+         Drives the parallax, so the columns sit level when centred. */
+      const q = (vh / 2 - (rect.top + rect.height / 2)) / vh;
+
+      setProgress({ t: Math.min(Math.max(t, 0), 1), q: Math.min(Math.max(q, -1), 1) });
     };
-    onScroll();
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+
+    measure();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
+      if (frame) cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
   }, [reduced]);
 
   return (
-    <section ref={ref} className="overflow-hidden bg-[#f7f5f5] px-10 py-32 text-neutral-900">
+    <section className="overflow-hidden bg-[#f7f5f5] px-10 py-32 text-neutral-900">
       <h2 className="text-center text-[clamp(34px,5vw,62px)] leading-tight font-light">
         Fathom teams
         <br />
         work smarter
       </h2>
 
-      <div className="mx-auto mt-24 grid max-w-[1180px] gap-10 sm:grid-cols-3">
+      <div ref={gridRef} className="mx-auto mt-24 grid max-w-[1180px] gap-10 sm:grid-cols-3">
         {STATS.map((s, i) => {
-          // Staggered reveal, then a per-column parallax that settles at t=0.5.
-          const enter = reduced ? 1 : Math.min(Math.max((t - i * 0.08) / 0.3, 0), 1);
-          const rise = (1 - enter) * 70;
-          const parallax = reduced ? 0 : (t - 0.5) * (34 + i * 30);
+          /* Reveal: each column starts 18% of the way later than the one to its
+             left, and takes 42% of the travel to arrive. */
+          const enter = reduced ? 1 : Math.min(Math.max((t - i * 0.18) / 0.42, 0), 1);
+          const rise = (1 - enter) * 110;
+          /* Parallax: each column climbs faster than the last, so they staircase
+             on the way through and sit level when the row is centred. */
+          const parallax = reduced ? 0 : q * (70 + i * 55);
           const y = rise - parallax;
 
           return (
