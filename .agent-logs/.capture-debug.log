@@ -61,3 +61,7 @@
 2026-09-19T11:44:38.898Z [response] wrote RESPONSE num=8 (2784 chars) -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
 2026-09-19T11:44:42.232Z [prompt] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,hook_event_name,prompt
 2026-09-19T11:44:42.299Z [prompt] wrote PROMPT num=10 -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
+2026-09-19T11:48:50.227Z [response] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,effort,hook_event_name,stop_hook_active,last_assistant_message,background_tasks,session_crons
+2026-09-19T11:48:50.301Z [response] wrote RESPONSE num=9 (2195 chars) -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md
+2026-09-19T12:14:18.815Z [prompt] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,hook_event_name,prompt
+2026-09-19T12:14:18.895Z [prompt] wrote PROMPT num=11 -> 2026-09-19_10-36-27_c173e05c-78aa-412e-8238-b878d8c8843e.md

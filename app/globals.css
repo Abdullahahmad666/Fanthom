@@ -95,3 +95,9 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Marquee for the marketing page's "Move work forward faster" band. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
