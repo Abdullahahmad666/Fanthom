@@ -1,0 +1,19 @@
+2026-09-19T10:18:38.093Z [prompt] modelFromTranscript failed: ENOENT: no such file or directory, open 'C:\Users\User\.claude\projects\D--Work-Projects-Naano\5be450a5-d0d7-40a7-add2-03c46b99cc20.jsonl'
+2026-09-19T10:18:38.095Z [prompt] wrote PROMPT num=1 -> 2026-09-19_10-18-38_5be450a5-d0d7-40a7-add2-03c46b99cc20.md
+2026-09-19T10:19:01.791Z [prompt] modelFromTranscript failed: ENOENT: no such file or directory, open 'C:\Users\User\.claude\projects\D--Work-Projects-Naano\0258a7d1-c233-4f5a-8b65-9e6905702ba6.jsonl'
+2026-09-19T10:19:01.793Z [prompt] wrote PROMPT num=1 -> 2026-09-19_10-19-01_0258a7d1-c233-4f5a-8b65-9e6905702ba6.md
+2026-09-19T10:19:38.261Z [response] wrote RESPONSE num=1 (1713 chars) -> 2026-09-19_10-19-01_0258a7d1-c233-4f5a-8b65-9e6905702ba6.md
+2026-09-19T10:19:55.374Z [prompt] modelFromTranscript failed: ENOENT: no such file or directory, open 'C:\Users\User\.claude\projects\D--Work-Projects-Naano\c44f2661-c00d-4a7e-aced-d511cba74a14.jsonl'
+2026-09-19T10:19:55.380Z [prompt] wrote PROMPT num=1 -> 2026-09-19_10-19-55_c44f2661-c00d-4a7e-aced-d511cba74a14.md
+2026-09-19T10:19:57.883Z [response] wrote RESPONSE num=1 (80 chars) -> 2026-09-19_10-19-55_c44f2661-c00d-4a7e-aced-d511cba74a14.md
+2026-09-19T10:20:53.211Z [prompt] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,hook_event_name,prompt
+2026-09-19T10:20:53.212Z [prompt] modelFromTranscript failed: ENOENT: no such file or directory, open 'C:\Users\User\.claude\projects\D--Work-Projects-Naano\9d3dcd8c-e061-40ee-8b50-2ac2a652e8b7.jsonl'
+2026-09-19T10:20:53.214Z [prompt] wrote PROMPT num=1 -> 2026-09-19_10-20-53_9d3dcd8c-e061-40ee-8b50-2ac2a652e8b7.md
+2026-09-19T10:20:55.469Z [response] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,effort,hook_event_name,stop_hook_active,last_assistant_message,background_tasks,session_crons
+2026-09-19T10:20:55.472Z [response] wrote RESPONSE num=1 (2 chars) -> 2026-09-19_10-20-53_9d3dcd8c-e061-40ee-8b50-2ac2a652e8b7.md
+2026-09-19T10:21:55.769Z [prompt] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,hook_event_name,prompt
+2026-09-19T10:21:55.771Z [prompt] modelFromTranscript failed: ENOENT: no such file or directory, open 'C:\Users\User\.claude\projects\D--Work-Projects-Naano\caec5dd4-b69a-4862-a936-ec264fee2ce2.jsonl'
+2026-09-19T10:21:55.773Z [prompt] wrote PROMPT num=1 -> 2026-09-19_10-21-55_caec5dd4-b69a-4862-a936-ec264fee2ce2.md
+2026-09-19T10:21:57.994Z [response] payload keys: session_id,transcript_path,cwd,scratchpad_dir,prompt_id,permission_mode,effort,hook_event_name,stop_hook_active,last_assistant_message,background_tasks,session_crons
+2026-09-19T10:21:58.310Z [response] model resolved after 1 retry
+2026-09-19T10:21:58.311Z [response] wrote RESPONSE num=1 (2 chars) -> 2026-09-19_10-21-55_caec5dd4-b69a-4862-a936-ec264fee2ce2.md
