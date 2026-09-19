@@ -20,6 +20,10 @@ import type {
 } from "@/lib/types";
 import { deriveSummary } from "@/lib/deriveSummary";
 import { resolveTemplates, type ResolvedTemplate } from "@/lib/summaryTemplates";
+import { translateSections, type LangCode } from "@/lib/translations";
+
+/** "auto" follows the transcript; the rest are explicit choices. */
+export type SummaryLang = "auto" | LangCode;
 
 export type DetailTab = "summary" | "transcript" | "ask";
 
@@ -64,6 +68,12 @@ type Ctx = {
   /** 0-100 while a regeneration runs, null otherwise. */
   generating: number | null;
   regenerate: (instruction: string) => void;
+  /* Summary language. "auto" follows the transcript, which is English
+     here -- the product lists both, so they stay distinct states. */
+  language: SummaryLang;
+  setLanguage: (l: SummaryLang) => void;
+  /** Lines the dictionary could not translate in the current view. */
+  untranslated: number;
 };
 
 const MeetingCtx = createContext<Ctx | null>(null);
@@ -126,10 +136,17 @@ export function MeetingProvider({
     [resolved, rewrites],
   );
 
-  const sections = useMemo(
+  const [language, setLanguage] = useState<SummaryLang>("auto");
+
+  const raw = useMemo(
     () => templates.find((t) => t.id === template)?.sections ?? null,
     [templates, template],
   );
+
+  const { sections, untranslated } = useMemo(() => {
+    if (!raw) return { sections: null, untranslated: 0 };
+    return translateSections(raw, language === "auto" ? "en" : language);
+  }, [raw, language]);
 
   /**
    * Regeneration runs a progress bar and then swaps in the rewrite.
@@ -316,12 +333,15 @@ export function MeetingProvider({
       sections,
       generating,
       regenerate,
+      language,
+      setLanguage,
+      untranslated,
     }),
     [
       meeting, currentTime, playing, rate, seek, togglePlay, playerSize,
       actionItems, highlights, addActionItem, toggleActionItem, addHighlight,
       removeHighlight, renameHighlight, tab, templates, template, sections,
-      generating, regenerate,
+      generating, regenerate, language, untranslated,
     ],
   );
 

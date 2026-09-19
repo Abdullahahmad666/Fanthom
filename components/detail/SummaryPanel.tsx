@@ -7,6 +7,7 @@ import {
   Hand,
 } from "lucide-react";
 import type { TemplateIcon } from "@/lib/summaryTemplates";
+import { LANGUAGES } from "@/lib/translations";
 import { useMeeting } from "./MeetingProvider";
 import { CustomizeTemplateModal } from "./CustomizeTemplateModal";
 import { Popover } from "@/components/ui/Popover";
@@ -27,7 +28,10 @@ const TEMPLATE_ICONS: Record<TemplateIcon, typeof Check> = {
 };
 
 export function SummaryPanel() {
-  const { templates, template, setTemplate, sections, generating, regenerate } = useMeeting();
+  const {
+    templates, template, setTemplate, sections, generating, regenerate,
+    language, setLanguage, untranslated,
+  } = useMeeting();
   const [dismissed, setDismissed] = useState(false);
   const [customising, setCustomising] = useState(false);
 
@@ -134,11 +138,63 @@ export function SummaryPanel() {
           </button>
         </div>
 
-        <span className="flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-[13px] text-fg-muted ring-1 ring-line">
-          <Sparkles className="h-3.5 w-3.5" />
-          Auto
-        </span>
+        {/* Summary language. "Auto" means the transcript's own language, which
+            is what the product shows before you pick one. */}
+        <Popover
+          align="left"
+          className="w-[320px]"
+          panelStyle={{ background: "#232327", paddingTop: 8, paddingBottom: 8 }}
+          trigger={({ toggle }) => (
+            <button
+              type="button"
+              onClick={toggle}
+              className="flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-[13px] text-fg ring-1 ring-line transition-colors hover:bg-raised"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-fg-muted" />
+              {language === "auto" ? "Auto" : LANGUAGES.find((l) => l.code === language)?.name}
+              <ChevronDown className="h-4 w-4 text-fg-muted" />
+            </button>
+          )}
+        >
+          {(close) => (
+            <div>
+              {LANGUAGES.map((l) => (
+                <LangRow
+                  key={l.code}
+                  tag={l.tag}
+                  name={l.name}
+                  selected={language === l.code}
+                  onClick={() => {
+                    setLanguage(l.code);
+                    close();
+                  }}
+                />
+              ))}
+
+              <div className="my-2 h-px bg-white/10" />
+
+              <LangRow
+                icon
+                name="Auto"
+                hint="(transcript language)"
+                selected={language === "auto"}
+                onClick={() => {
+                  setLanguage("auto");
+                  close();
+                }}
+              />
+            </div>
+          )}
+        </Popover>
       </div>
+
+      {language !== "auto" && language !== "en" && untranslated > 0 && (
+        <p className="mb-5 rounded-lg bg-amberbg px-4 py-3 text-[13px] leading-snug text-amber">
+          Translated as far as the built-in dictionary reaches. {untranslated} line
+          {untranslated === 1 ? "" : "s"} stayed in English — machine translation is out of
+          scope for this prototype, so nothing here is machine-guessed.
+        </p>
+      )}
 
       {busy ? (
         <Generating pct={generating} />
@@ -195,6 +251,40 @@ export function SummaryPanel() {
         />
       )}
     </div>
+  );
+}
+
+/** One language row: the country tag, the name, and a tick when selected. */
+function LangRow({
+  tag,
+  name,
+  hint,
+  icon = false,
+  selected,
+  onClick,
+}: {
+  tag?: string;
+  name: string;
+  hint?: string;
+  icon?: boolean;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full items-center gap-3 px-4 py-2 text-left transition-colors hover:bg-white/5"
+    >
+      <span className="w-6 shrink-0 text-[11px] font-semibold tracking-wide text-fg-muted uppercase">
+        {icon ? <Sparkles className="h-4 w-4" /> : tag}
+      </span>
+      <span className="flex-1 text-[16px] text-fg">
+        {name}
+        {hint && <span className="ml-1.5 text-[14px] text-fg-muted">{hint}</span>}
+      </span>
+      {selected && <Check className="h-4 w-4 shrink-0 text-success" />}
+    </button>
   );
 }
 
