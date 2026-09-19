@@ -82,7 +82,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           onChange={(e) => (onList ? onQueryChange(e.target.value) : setLocal(e.target.value))}
           placeholder="Search Call Recordings"
           aria-label="Search call recordings"
-          className="h-[38px] w-[400px] max-w-[34vw] rounded-lg bg-field pr-3 pl-9 text-[15px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
+          className="h-[38px] w-[380px] max-w-[30vw] rounded-lg bg-field pr-3 pl-9 text-[14px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
         />
         {!onList && local.trim() && (
           <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[12px] text-fg-dim">
@@ -94,7 +94,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
       <div className="ml-auto flex items-center gap-4 lg:gap-6">
         {ACTIONS.map(({ label, Icon, href }) => {
           const active = href && pathname === href;
-          const classes = `hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[15px] transition-colors duration-150 lg:flex ${
+          const classes = `hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[14px] transition-colors duration-150 lg:flex ${
             active ? "bg-field text-fg" : "text-fg hover:text-brand"
           }`;
           return href ? (
@@ -117,7 +117,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
               <button
                 type="button"
                 onClick={toggle}
-                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[15px] transition-colors duration-150 ${
+                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[14px] transition-colors duration-150 ${
                   open ? "bg-field text-fg" : "text-fg hover:text-brand"
                 }`}
               >
@@ -167,7 +167,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         {/* Streak counter. Amber star + count, no surrounding pill. */}
         <span className="flex items-center gap-1.5" title="Streak">
           <Star className="h-5 w-5 fill-amber text-amber" />
-          <span className="text-[17px] font-semibold text-amber">25</span>
+          <span className="text-[16px] font-semibold text-amber">25</span>
         </span>
 
         <Popover

@@ -54,7 +54,7 @@ export default function MarketingHomePage() {
       </div>
 
       {/* Nav */}
-      <header className="relative z-20 mx-auto flex max-w-[1400px] items-center gap-8 px-8 py-6">
+      <header className="relative z-20 mx-auto flex max-w-[1240px] items-center gap-8 px-8 py-6">
         <Link href="/" aria-label="Fathom">
           <FathomWordmark />
         </Link>
@@ -91,9 +91,9 @@ export default function MarketingHomePage() {
       {/* Hero */}
       <section className="relative overflow-hidden px-8 pt-16 pb-24">
         <Starfield />
-        <div className="relative mx-auto grid max-w-[1400px] gap-8 lg:grid-cols-[1fr_0.95fr]">
+        <div className="relative mx-auto grid max-w-[1240px] gap-8 lg:grid-cols-[1fr_0.95fr]">
           <div>
-            <h1 className="max-w-[720px] text-[clamp(46px,7.2vw,92px)] leading-[1.02] font-light tracking-tight">
+            <h1 className="max-w-[720px] text-[clamp(44px,6.2vw,82px)] leading-[1.02] font-light tracking-tight">
               AI notetaking that is out of this world
             </h1>
 
@@ -121,7 +121,7 @@ export default function MarketingHomePage() {
       {/* Social proof */}
       <section className="relative overflow-hidden px-8 pb-24">
         <Starfield />
-        <div className="relative mx-auto flex max-w-[1400px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
+        <div className="relative mx-auto flex max-w-[1240px] flex-wrap items-center justify-center gap-x-10 gap-y-6">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ff492c] text-[15px] font-bold text-white">
               G2
@@ -160,7 +160,7 @@ export default function MarketingHomePage() {
             <span
               key={n}
               aria-hidden={n === 1}
-              className="animate-[marquee_26s_linear_infinite] pr-16 text-[clamp(48px,9vw,120px)] leading-none font-light"
+              className="animate-[marquee_26s_linear_infinite] pr-16 text-[clamp(44px,8vw,104px)] leading-none font-light"
             >
               Move{" "}
               <span className="bg-gradient-to-r from-[#f97316] to-[#fbbf24] bg-clip-text text-transparent">
@@ -251,7 +251,7 @@ export default function MarketingHomePage() {
       </section>
 
       <footer className="border-t border-white/10 px-8 py-10">
-        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-5">
+        <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-5">
           <FathomWordmark />
           <p className="text-[14px] text-fg-dim">
             Frontend prototype built for an assignment. Not affiliated with Fathom.

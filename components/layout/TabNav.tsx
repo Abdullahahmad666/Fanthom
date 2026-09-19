@@ -24,7 +24,7 @@ export function TabNav() {
   return (
     <nav
       aria-label="Primary"
-      className="sticky top-[var(--topbar-h)] z-30 flex h-[var(--tabnav-h)] shrink-0 items-stretch gap-10 overflow-x-auto border-t border-canvas bg-surface px-[38px]"
+      className="sticky top-[var(--topbar-h)] z-30 flex h-[var(--tabnav-h)] shrink-0 items-stretch gap-9 overflow-x-auto border-t border-canvas bg-surface px-8"
     >
       {TABS.map(({ label, href }) => {
         const active =
@@ -36,7 +36,7 @@ export function TabNav() {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className="group relative flex items-center whitespace-nowrap text-[17px] font-medium transition-colors duration-150"
+            className="group relative flex items-center whitespace-nowrap text-[16px] font-medium transition-colors duration-150"
           >
             <span className={active ? "text-brand" : "text-fg group-hover:text-brand"}>
               {label}

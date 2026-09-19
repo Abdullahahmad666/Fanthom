@@ -6,6 +6,7 @@ import { FileText, ListChecks, MessageSquareText, Users } from "lucide-react";
 import { CallCard } from "./CallCard";
 import { AvatarStack } from "@/components/ui/Avatar";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { LearnSection } from "./LearnSection";
 import { useSearchQuery } from "@/components/layout/ListLayout";
 import { groupByDate, MEETINGS } from "@/lib/fixtures";
 import { searchMeetings, type SearchHit } from "@/lib/search";
@@ -112,8 +113,8 @@ export function CallList() {
     const totalHits = results.reduce((n, r) => n + r.hits.length, 0);
 
     return (
-      <div className="px-8 pt-6">
-        <p className="mb-4 text-[14px] text-fg-muted">
+      <div className="mx-auto max-w-[1180px] px-8 pt-8">
+        <p className="mb-5 text-[14px] text-fg-muted">
           {results.length === 0
             ? "No matches"
             : `${totalHits} match${totalHits === 1 ? "" : "es"} across ${results.length} meeting${
@@ -134,14 +135,21 @@ export function CallList() {
     );
   }
 
-  if (meetings.length === 0) return <EmptyState label="No call recordings" />;
+  if (meetings.length === 0) {
+    return (
+      <div className="mx-auto max-w-[1180px] pb-12">
+        <EmptyState label="No call recordings" />
+        <LearnSection />
+      </div>
+    );
+  }
 
   return (
-    <div className="px-8 pt-6">
+    <div className="mx-auto max-w-[1180px] px-8 pt-8 pb-12">
       {groupByDate(meetings).map((group) => (
-        <section key={group.label} className="mb-10">
-          <h2 className="mb-4 text-[20px] font-semibold text-fg">{group.label}</h2>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,500px))] gap-5">
+        <section key={group.label} className="mb-12">
+          <h2 className="mb-5 text-[18px] font-semibold text-fg">{group.label}</h2>
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {group.meetings.map((m) => (
               <CallCard
                 key={m.id}
@@ -152,6 +160,8 @@ export function CallList() {
           </div>
         </section>
       ))}
+
+      <LearnSection />
     </div>
   );
 }

@@ -33,7 +33,7 @@ export function RightRail() {
 
   return (
     <aside className="pt-6">
-      <h1 className="text-[28px] leading-tight font-semibold text-fg">{meeting.title}</h1>
+      <h1 className="text-[26px] leading-tight font-semibold text-fg">{meeting.title}</h1>
       <p className="mt-1 text-[14px] text-fg-muted">
         {new Date(`${meeting.date}T00:00:00Z`).toLocaleDateString("en-US", {
           month: "short",

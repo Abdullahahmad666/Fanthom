@@ -16,6 +16,10 @@ export function useSearchQuery() {
  * Layout for list pages: top bar + primary tab nav + content, with the
  * account-scoped Ask Fathom rail pinned right.
  *
+ * The shell is viewport-height and does not scroll. The meeting list and the
+ * rail each own their scroll, so a long conversation in the rail never drags
+ * the list with it, and vice versa.
+ *
  * The detail page deliberately does NOT use this -- it has no tab nav and no
  * rail. See docs/UI-SPEC.md 2.
  */
@@ -31,11 +35,11 @@ export function ListLayout({
 
   return (
     <SearchContext.Provider value={query}>
-      <div className="flex min-h-screen flex-col bg-canvas">
+      <div className="flex h-screen flex-col overflow-hidden bg-canvas">
         <TopBar query={query} onQueryChange={setQuery} />
         <TabNav />
-        <div className="flex flex-1 items-stretch">
-          <main className="min-w-0 flex-1 pb-16">{children}</main>
+        <div className="flex min-h-0 flex-1">
+          <main className="min-w-0 flex-1 overflow-y-auto">{children}</main>
           <AskFathomRail />
         </div>
       </div>

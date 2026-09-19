@@ -21,10 +21,10 @@ export function FathomMark({ className = "" }: { className?: string }) {
 export function FathomWordmark({ className = "" }: { className?: string }) {
   return (
     <span className={`flex items-center gap-2 ${className}`}>
-      <span className="text-[22px] font-bold tracking-[0.02em] text-fg">
+      <span className="text-[20px] font-bold tracking-[0.02em] text-fg">
         FATHOM
       </span>
-      <FathomMark className="h-[19px] w-[23px] text-brand" />
+      <FathomMark className="h-[17px] w-[21px] text-brand" />
     </span>
   );
 }

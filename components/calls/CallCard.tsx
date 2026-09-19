@@ -44,7 +44,7 @@ export function CallCard({
         }}
       >
         <div className="absolute inset-0 flex items-center justify-center">
-          <AvatarStack participants={meeting.participants} max={4} size={56} />
+          <AvatarStack participants={meeting.participants} max={4} size={46} />
         </div>
 
         <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-150 group-hover:opacity-100">
@@ -63,9 +63,9 @@ export function CallCard({
         </span>
       </div>
 
-      <div className="flex h-[70px] items-center gap-3 px-4">
+      <div className="flex h-[62px] items-center gap-3 px-4">
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-[16px] font-semibold text-fg">
+          <span className="block truncate text-[15px] font-semibold text-fg">
             {meeting.title}
           </span>
           <span className="block truncate text-[13px] text-fg-muted">
