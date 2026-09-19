@@ -10,6 +10,7 @@ import {
 import { FathomWordmark } from "@/components/brand/FathomMark";
 import { Popover } from "@/components/ui/Popover";
 import { ReferCard } from "./ReferCard";
+import { StreakCard, STREAK_POINTS } from "./StreakCard";
 import { pushToast } from "@/lib/toast";
 
 type TopBarProps = {
@@ -178,11 +179,27 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           </Popover>
         </div>
 
-        {/* Streak counter. Amber star + count, no surrounding pill. */}
-        <span className="flex items-center gap-1.5" title="Streak">
-          <Star className="h-[18px] w-[18px] fill-amber text-amber" />
-          <span className="text-[14px] font-semibold text-amber">25</span>
-        </span>
+        {/* Streak counter. Amber star + count, opening the points card. */}
+        <Popover
+          openOnHover
+          className="rounded-xl bg-[#F0C62E] p-0 ring-[#F0C62E]"
+          trigger={({ toggle, open }) => (
+            <button
+              type="button"
+              onClick={toggle}
+              aria-expanded={open}
+              aria-label={`${STREAK_POINTS} points`}
+              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-colors ${
+                open ? "bg-[#33290a]" : ""
+              }`}
+            >
+              <Star className="h-[18px] w-[18px] fill-amber text-amber" />
+              <span className="text-[14px] font-semibold text-amber">{STREAK_POINTS}</span>
+            </button>
+          )}
+        >
+          {() => <StreakCard />}
+        </Popover>
 
         <Popover
           className="min-w-[300px] bg-[#343435] py-0"
