@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
-  Bug, BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, Lightbulb, LogOut,
-  MessageCircle, RotateCcw, Search, Settings, Star, Video,
+  BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, LogOut,
+  RotateCcw, Search, Settings, Star, Video,
 } from "lucide-react";
 import { FathomWordmark } from "@/components/brand/FathomMark";
 import { Popover } from "@/components/ui/Popover";
 import { ReferCard } from "./ReferCard";
 import { StreakCard, STREAK_POINTS } from "./StreakCard";
+import { SupportWidget } from "./SupportWidget";
 import { pushToast } from "@/lib/toast";
 
 type TopBarProps = {
@@ -57,15 +58,6 @@ const ACCOUNT_GROUPS: MenuRow[][] = [
   ],
 ];
 
-/** Help & Feedback keeps the things that are actually feedback. */
-const HELP_GROUPS: MenuRow[][] = [
-  [
-    { label: "Contact Support", Icon: MessageCircle },
-    { label: "Request a Feature", Icon: Lightbulb },
-    { label: "Report a Bug", Icon: Bug },
-  ],
-];
-
 /**
  * Global top bar. Measured at 63px tall with a 400x38 search field starting at
  * x=243 (docs/UI-SPEC.md 2.1). Present on both layouts, unlike the tab nav.
@@ -75,6 +67,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
   const router = useRouter();
   const onList = onQueryChange !== undefined;
   const [local, setLocal] = useState("");
+  const [supportOpen, setSupportOpen] = useState(false);
 
   const value = onList ? (query ?? "") : local;
 
@@ -159,25 +152,19 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           );
         })}
 
-        <div className="hidden lg:block">
-          <Popover
-            className="min-w-[320px] bg-[#343435] py-0"
-            trigger={({ toggle, open }) => (
-              <button
-                type="button"
-                onClick={toggle}
-                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 ${
-                  open ? "bg-field text-fg" : "text-fg hover:text-brand"
-                }`}
-              >
-                <LifeBuoy className="h-[18px] w-[18px]" strokeWidth={2} />
-                Help &amp; Feedback
-              </button>
-            )}
-          >
-            {(close) => <MenuGroups groups={HELP_GROUPS} close={close} />}
-          </Popover>
-        </div>
+        {/* Help & Feedback opens the support widget, not a menu -- in the
+            product it is a surface, not a list of links. */}
+        <button
+          type="button"
+          onClick={() => setSupportOpen((v) => !v)}
+          aria-expanded={supportOpen}
+          className={`hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors duration-150 lg:flex ${
+            supportOpen ? "bg-field text-brand" : "text-fg hover:text-brand"
+          }`}
+        >
+          <LifeBuoy className="h-[18px] w-[18px]" strokeWidth={2} />
+          Help &amp; Feedback
+        </button>
 
         {/* Streak counter. Amber star + count, opening the points card. */}
         <Popover
@@ -226,6 +213,8 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           )}
         </Popover>
       </div>
+
+      {supportOpen && <SupportWidget onClose={() => setSupportOpen(false)} />}
     </header>
   );
 }
