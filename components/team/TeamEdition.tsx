@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
 import { Check, ChevronDown, Search } from "lucide-react";
+import { CrmBadge, HubspotMark, SalesforceMark } from "@/components/ui/CrmMarks";
+import { TrialButton } from "@/components/ui/TrialButton";
 
 /**
  * Team Calls upsell.
@@ -51,12 +52,7 @@ function Pitch() {
         ))}
       </ul>
 
-      <button
-        type="button"
-        className="mt-9 rounded-full border border-brand px-7 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-brand hover:text-black"
-      >
-        Start 14-Day Trial
-      </button>
+      <TrialButton className="mt-9 rounded-full border border-brand px-7 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-brand hover:text-black" />
 
       <p className="mt-5 text-[13px] text-fg-dim">
         View features &amp; pricing at{" "}
@@ -246,32 +242,3 @@ function Dot({ color, name }: { color: string; name: string }) {
   );
 }
 
-function CrmBadge({ children }: { children: ReactNode }) {
-  return (
-    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white ring-4 ring-canvas">
-      {children}
-    </span>
-  );
-}
-
-function SalesforceMark() {
-  return (
-    <svg viewBox="0 0 24 17" className="h-4 w-5">
-      <path
-        fill="#00A1E0"
-        d="M9.9 1.9A4.2 4.2 0 0 1 16.8 3a5 5 0 0 1 2.1-.5 5 5 0 0 1 0 10 5 5 0 0 1-1-.1 3.6 3.6 0 0 1-4.8 1.5 4.2 4.2 0 0 1-7.7-.6 3.9 3.9 0 0 1-.8.1 3.8 3.8 0 0 1-1.9-7.1A4.4 4.4 0 0 1 9.9 1.9Z"
-      />
-    </svg>
-  );
-}
-
-function HubspotMark() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4">
-      <path
-        fill="#FF7A59"
-        d="M17.2 8.1V5.8a1.8 1.8 0 1 0-1.8-1.8v.1l-5.6 3.3a4 4 0 0 0-1.5-.6V2.3H6.5v4.5a4 4 0 1 0 2.9 7.3l4.8 3.6a2.4 2.4 0 1 0 1-1.3l-4.7-3.6a4 4 0 0 0 .3-1.3l5.7-3.4Zm2.1 8.8a1.6 1.6 0 1 1-1.6 1.6 1.6 1.6 0 0 1 1.6-1.6ZM8 13.4a2.4 2.4 0 1 1 2.4-2.4A2.4 2.4 0 0 1 8 13.4Z"
-      />
-    </svg>
-  );
-}
