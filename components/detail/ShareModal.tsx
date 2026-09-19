@@ -47,27 +47,30 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
         aria-modal="true"
         aria-label="Share Recording"
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-[660px] overflow-hidden rounded-xl bg-raised"
+        /* Capped to the viewport with a scrolling body, because a meeting with
+           eight attendees made the list tall enough to run off both ends of
+           the page. Header and footer stay put. */
+        className="flex max-h-[86vh] w-full max-w-[600px] flex-col overflow-hidden rounded-xl bg-raised"
       >
-        <div className="flex items-center justify-between px-7 pt-6 pb-5">
-          <h2 className="text-[22px] font-semibold text-fg">Share Recording</h2>
+        <div className="flex shrink-0 items-center justify-between px-6 pt-5 pb-4">
+          <h2 className="text-[20px] font-semibold text-fg">Share Recording</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
             className="rounded-md p-1 text-fg-muted transition-colors hover:text-fg"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="px-7 pb-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-5">
           <div className="relative">
             <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-fg-muted" />
             <input
               placeholder="Add users and emails"
               aria-label="Add users and emails"
-              className="h-[52px] w-full rounded-lg bg-[#2d2c31] pr-4 pl-11 text-[14px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              className="h-[46px] w-full rounded-lg bg-[#2d2c31] pr-4 pl-11 text-[14px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             />
           </div>
 
@@ -105,11 +108,11 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
             </div>
           )}
 
-          <p className="section-label mt-7 mb-3">People with access</p>
-          <ul className="space-y-4">
+          <p className="section-label mt-6 mb-3">People with access</p>
+          <ul className="space-y-3">
             {meeting.participants.map((p) => (
               <li key={p.id} className="flex items-center gap-3">
-                <Avatar participant={p} size={36} />
+                <Avatar participant={p} size={32} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[14px] font-semibold text-fg">
                     {p.name}
@@ -126,7 +129,7 @@ export function ShareModal({ onClose }: { onClose: () => void }) {
           </ul>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 bg-modalfoot px-7 py-4">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 bg-modalfoot px-6 py-3.5">
           <button
             type="button"
             className="flex items-center gap-2 text-[13px] text-fg transition-colors hover:text-brand"
