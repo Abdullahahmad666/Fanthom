@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { FileText, ListChecks, MessageSquareText, Users } from "lucide-react";
+import { FileText, ListChecks, MessageSquareText, Upload, Users } from "lucide-react";
 import { CallCard } from "./CallCard";
 import { AvatarStack } from "@/components/ui/Avatar";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -143,10 +143,31 @@ export function CallList({ meetings: all }: { meetings: Meeting[] }) {
     );
   }
 
+  /* An empty account is the first thing most people see, so it is a
+     beginning rather than an apology: it names the one action that fills it. */
   if (meetings.length === 0) {
     return (
-      <div className="mx-auto max-w-[1180px] pb-12">
-        <EmptyState label="No call recordings" />
+      <div className="mx-auto max-w-[1180px] px-8 pb-12">
+        <div className="mt-16 flex flex-col items-center text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-lg bg-raised">
+            <Upload className="h-6 w-6 text-faint" strokeWidth={1.5} />
+          </span>
+          <h2 className="mt-5 font-display text-[28px] leading-tight text-text">
+            No meetings yet
+          </h2>
+          <p className="mt-2 max-w-[46ch] text-[15px] leading-relaxed text-muted">
+            Cue reads the transcript your conferencing tool already made and finds
+            the notes inside it. Bring one over and you will have a searchable
+            meeting in a few seconds.
+          </p>
+          <Link
+            href="/import"
+            className="mt-6 flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-hover"
+          >
+            <Upload className="h-4 w-4" />
+            Import a transcript
+          </Link>
+        </div>
         <LearnSection />
       </div>
     );

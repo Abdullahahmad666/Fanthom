@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Plus } from "lucide-react";
 
 const TABS = [
   { label: "My Calls", href: "/calls" },
@@ -47,6 +48,21 @@ export function TabNav() {
           </Link>
         );
       })}
+
+      {/* Importing is how a meeting gets into Cue, so it lives in the primary
+          navigation rather than behind a menu. */}
+      <Link
+        href="/import"
+        aria-current={pathname === "/import" ? "page" : undefined}
+        className={`my-auto ml-auto flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors ${
+          pathname === "/import"
+            ? "bg-accent text-on-accent"
+            : "bg-raised text-text hover:bg-overlay"
+        }`}
+      >
+        <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+        Import
+      </Link>
     </nav>
   );
 }

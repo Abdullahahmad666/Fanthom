@@ -36,7 +36,21 @@ export type TranscriptTurn = {
 
 export type SummaryBlock =
   | { kind: "para"; text: string }
-  | { kind: "bullets"; items: { label?: string; text: string }[] };
+  | {
+      kind: "bullets";
+      items: {
+        label?: string;
+        text: string;
+        /**
+         * The moments this line came from.
+         *
+         * Cue's whole argument: a generated claim carries its sources, so it
+         * can be checked by playing them rather than believed. Optional only
+         * because the authored seed summaries predate it.
+         */
+        cues?: number[];
+      }[];
+    };
 
 export type SummarySection = {
   heading: string;
