@@ -8,7 +8,7 @@ import {
   removeFromPlaylist,
   usePlaylists,
 } from "@/lib/playlists";
-import { getMeeting } from "@/lib/fixtures";
+import { posterFor } from "@/lib/poster";
 import { formatClock, HIGHLIGHT_META, type HighlightKind } from "@/lib/types";
 
 /**
@@ -74,7 +74,6 @@ export function PlaylistsView() {
 
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {p.items.map((item) => {
-                const meeting = getMeeting(item.meetingId);
                 const meta = HIGHLIGHT_META[item.kind as HighlightKind] ?? HIGHLIGHT_META.highlight;
                 return (
                   <div
@@ -88,9 +87,9 @@ export function PlaylistsView() {
                       <span
                         className="relative flex aspect-video w-full items-center justify-center"
                         style={{
-                          background: meeting
-                            ? `linear-gradient(140deg, ${meeting.poster[0]}, ${meeting.poster[1]})`
-                            : "#26262a",
+                          background: `linear-gradient(140deg, ${
+                            posterFor(item.meetingId)[0]
+                          }, ${posterFor(item.meetingId)[1]})`,
                         }}
                       >
                         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-black/45 backdrop-blur-sm">

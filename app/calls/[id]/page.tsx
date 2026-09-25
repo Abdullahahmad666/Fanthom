@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { DetailLayout } from "@/components/layout/DetailLayout";
 import { MeetingDetail } from "@/components/detail/MeetingDetail";
 import { ClipView } from "@/components/clip/ClipView";
-import { getMeeting, MEETINGS } from "@/lib/fixtures";
+import { getMeetingBySlug } from "@/backend/src/repositories/meetings";
 import { HIGHLIGHT_META, type Meeting } from "@/lib/types";
 
 /** First value of a search param, which Next hands over as string | string[]. */
@@ -25,7 +25,7 @@ function getClip(meeting: Meeting, id: string | undefined) {
 /** Per-meeting title, so a shared link reads as the meeting not the app. */
 export async function generateMetadata({ params, searchParams }: PageProps<"/calls/[id]">) {
   const { id } = await params;
-  const meeting = getMeeting(id);
+  const meeting = await getMeetingBySlug(id);
   if (!meeting) return { title: "Meeting" };
 
   const clip = getClip(meeting, one((await searchParams).clip));
@@ -42,19 +42,8 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/cal
   };
 }
 
-export function generateStaticParams() {
-  return MEETINGS.map((m) => ({ id: m.id }));
-}
-
-/**
- * Deliberate pause before the meeting renders.
- *
- * There is nothing to fetch -- the meetings are fixtures in memory, so this
- * route would otherwise resolve instantly and the branded loader would flash
- * by unseen. The pause gives the transition a beat and lets the loader do its
- * job. It is presentation, not latency: set to 0 to remove it.
- */
-const OPEN_DELAY_MS = 650;
+/* No generateStaticParams: meetings are per-user rows behind row level
+   security, so there is no build-time list to prerender. */
 
 export default async function MeetingDetailPage({
   params,
@@ -63,12 +52,10 @@ export default async function MeetingDetailPage({
   const { id } = await params;
   const { t, clip: clipId } = await searchParams;
 
-  const meeting = getMeeting(id);
+  /* No artificial delay any more: this is a real query against Postgres, so
+     the branded loader has genuine latency to cover. */
+  const meeting = await getMeetingBySlug(id);
   if (!meeting) notFound();
-
-  if (OPEN_DELAY_MS > 0) {
-    await new Promise((resolve) => setTimeout(resolve, OPEN_DELAY_MS));
-  }
 
   /* A clip link opens the clip on its own -- no transcript, no rail, and a
      player bounded to the highlight. */

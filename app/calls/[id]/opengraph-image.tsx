@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { getMeeting } from "@/lib/fixtures";
+import { getMeetingBySlug } from "@/backend/src/repositories/meetings";
 import { formatDuration } from "@/lib/types";
 
 export const alt = "Meeting recap on Fathom";
@@ -14,7 +14,7 @@ export const contentType = "image/png";
  */
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const meeting = getMeeting(id);
+  const meeting = await getMeetingBySlug(id);
 
   const title = meeting?.title ?? "Meeting recap";
   const people = meeting?.participants ?? [];

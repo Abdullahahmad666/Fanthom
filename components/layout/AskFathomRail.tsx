@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { ArrowUp, ChevronDown, PanelRightClose, PanelRightOpen, Sparkles } from "lucide-react";
 import { FathomMark } from "@/components/brand/FathomMark";
-import { MEETINGS } from "@/lib/fixtures";
+import type { Meeting } from "@/lib/types";
 import { formatClock } from "@/lib/types";
 
 const SUGGESTIONS = [
@@ -27,7 +27,7 @@ type Msg = {
  * As on the detail page, there is no model here. Answers are retrieved from
  * the seeded transcripts and cited with real timestamps.
  */
-export function AskFathomRail() {
+export function AskFathomRail({ meetings = [] }: { meetings?: Meeting[] }) {
   const [open, setOpen] = useState(true);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
@@ -41,7 +41,7 @@ export function AskFathomRail() {
       .split(/\s+/)
       .filter((w) => w.length > 4);
 
-    const cites = MEETINGS.flatMap((m) =>
+    const cites = meetings.flatMap((m) =>
       m.transcript.flatMap((t) =>
         t.sentences
           .filter((s) => words.some((w) => s.text.toLowerCase().includes(w)))
@@ -54,7 +54,7 @@ export function AskFathomRail() {
     ).slice(0, 4);
 
     const text = cites.length
-      ? `Across your ${MEETINGS.length} recorded meetings, here is where that came up.`
+      ? `Across your ${meetings.length} recorded meetings, here is where that came up.`
       : "Nothing across your meetings matches that closely yet. Try wording it the way someone would have said it on a call.";
 
     setMessages((m) => [...m, { role: "user", text: question }, { role: "ai", text, cites }]);

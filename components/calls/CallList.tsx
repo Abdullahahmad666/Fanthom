@@ -8,7 +8,7 @@ import { AvatarStack } from "@/components/ui/Avatar";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LearnSection } from "./LearnSection";
 import { useSearchQuery } from "@/components/layout/ListLayout";
-import { groupByDate, MEETINGS } from "@/lib/fixtures";
+import { groupByDate } from "@/lib/grouping";
 import { searchMeetings, type SearchHit } from "@/lib/search";
 import { formatClock, formatDuration, type Meeting } from "@/lib/types";
 
@@ -97,13 +97,21 @@ function ResultRow({ meeting, hits, term }: { meeting: Meeting; hits: SearchHit[
   );
 }
 
-export function CallList() {
+/**
+ * The meeting list.
+ *
+ * Rows arrive from Postgres through the server component above; this stays a
+ * client component only because it filters as you type. Deleting is local
+ * state until the delete endpoint lands, so the row disappears immediately
+ * rather than waiting on a round trip.
+ */
+export function CallList({ meetings: all }: { meetings: Meeting[] }) {
   const query = useSearchQuery();
   const [deleted, setDeleted] = useState<string[]>([]);
 
   const meetings = useMemo(
-    () => MEETINGS.filter((m) => !deleted.includes(m.id)),
-    [deleted],
+    () => all.filter((m) => !deleted.includes(m.id)),
+    [all, deleted],
   );
 
   const term = query.trim();
