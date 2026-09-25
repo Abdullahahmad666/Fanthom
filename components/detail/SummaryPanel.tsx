@@ -11,6 +11,7 @@ import { LANGUAGES } from "@/lib/translations";
 import { useMeeting } from "./MeetingProvider";
 import { CustomizeTemplateModal } from "./CustomizeTemplateModal";
 import { Popover } from "@/components/ui/Popover";
+import { CueSources } from "./CueSources";
 
 /** One glyph per catalogue family, matching how the product groups them. */
 const TEMPLATE_ICONS: Record<TemplateIcon, typeof Check> = {
@@ -232,6 +233,12 @@ export function SummaryPanel() {
                             <strong className="font-semibold text-fg">{item.label}: </strong>
                           )}
                           {item.text}
+                          {/* The receipts. An extracted line carries the
+                              moments it came from, so the claim can be
+                              checked rather than believed. */}
+                          {item.cues && item.cues.length > 0 && (
+                            <CueSources cues={item.cues} />
+                          )}
                         </li>
                       ))}
                     </ul>

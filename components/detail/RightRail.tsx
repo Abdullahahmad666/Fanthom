@@ -5,6 +5,7 @@ import {
   Check, Download, Link2, ListPlus, Lock, MoreVertical, Play, Trash2,
 } from "lucide-react";
 import { useMeeting } from "./MeetingProvider";
+import { CueSources } from "./CueSources";
 import { ShareModal } from "./ShareModal";
 import { AddToPlaylistDialog } from "./AddToPlaylistDialog";
 import { canRenderVideo, downloadMeetingVideo } from "@/lib/downloadVideo";
@@ -202,15 +203,12 @@ export function RightRail() {
                     >
                       {item.text}
                     </span>
-                    <span className="mt-0.5 block text-[12px]">
-                      <button
-                        type="button"
-                        onClick={() => jump(item.tSec)}
-                        className="font-medium text-brand hover:underline"
-                      >
-                        @{formatClock(item.tSec)}
-                      </button>
-                      <span className="text-fg-muted"> · {owner?.name ?? "Unassigned"}</span>
+                    <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px]">
+                      {/* The same receipt as a summary line: an action item is
+                          also a claim about what was said, so it is checked
+                          the same way rather than with a bare link. */}
+                      <CueSources cues={[item.tSec]} />
+                      <span className="text-fg-muted">{owner?.name ?? "Unassigned"}</span>
                       {item.manual && (
                         <span className="ml-2 rounded bg-surface px-1.5 py-0.5 text-[11px] text-fg-muted">
                           added by you

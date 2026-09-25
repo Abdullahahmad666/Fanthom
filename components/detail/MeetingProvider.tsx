@@ -45,6 +45,25 @@ type Ctx = {
   playing: boolean;
   rate: number;
   seek: (t: number) => void;
+  /**
+   * Seek, and tell the transcript to come with you.
+   *
+   * Plain seek moves the playhead; following it only happens while playing,
+   * which is right for a scrubber and wrong for a cue. Checking a citation
+   * from a paused summary has to land you on the line, so this carries a
+   * nonce the transcript watches -- jumping to the same second twice still
+   * counts as two jumps.
+   */
+  jumpTo: (t: number) => void;
+  /**
+   * The jump in flight, or null.
+   *
+   * Owned here rather than in the transcript because "we just arrived from a
+   * citation" is a fact about the meeting view, not about one panel -- and
+   * keeping it here means the panel only reads it, instead of setting state
+   * inside an effect to track something it did not cause.
+   */
+  jumpTarget: { tSec: number; nonce: number } | null;
   togglePlay: () => void;
   setRate: (r: number) => void;
   playerSize: PlayerSize;
@@ -223,6 +242,29 @@ export function MeetingProvider({
     [meeting.durationSec],
   );
 
+  const [jumpTarget, setJumpTarget] = useState<{ tSec: number; nonce: number } | null>(null);
+  const jumpCount = useRef(0);
+  const jumpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* The nonce means jumping to the same second twice still reads as two
+     separate arrivals, which is what checking a cue repeatedly should do. */
+  const jumpTo = useCallback(
+    (t: number) => {
+      seek(t);
+      setJumpTarget({ tSec: t, nonce: ++jumpCount.current });
+      if (jumpTimer.current) clearTimeout(jumpTimer.current);
+      jumpTimer.current = setTimeout(() => setJumpTarget(null), 1600);
+    },
+    [seek],
+  );
+
+  useEffect(
+    () => () => {
+      if (jumpTimer.current) clearTimeout(jumpTimer.current);
+    },
+    [],
+  );
+
   const togglePlay = useCallback(() => {
     setPlaying((p) => {
       // Restarting from the end rather than sitting stuck there.
@@ -314,6 +356,8 @@ export function MeetingProvider({
       playing,
       rate,
       seek,
+      jumpTo,
+      jumpTarget,
       togglePlay,
       setRate,
       playerSize,
@@ -338,7 +382,7 @@ export function MeetingProvider({
       untranslated,
     }),
     [
-      meeting, currentTime, playing, rate, seek, togglePlay, playerSize,
+      meeting, currentTime, playing, rate, seek, jumpTo, jumpTarget, togglePlay, playerSize,
       actionItems, highlights, addActionItem, toggleActionItem, addHighlight,
       removeHighlight, renameHighlight, tab, templates, template, sections,
       generating, regenerate, language, untranslated,

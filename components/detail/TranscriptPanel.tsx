@@ -149,7 +149,7 @@ const READ_LINE = 96;
 
 export function TranscriptPanel() {
   const {
-    meeting, currentTime, seek, highlights, removeHighlight, playing,
+    meeting, currentTime, seek, highlights, removeHighlight, playing, jumpTarget,
   } = useMeeting();
   const [q, setQ] = useState("");
   const [autoScroll, setAutoScroll] = useState(true);
@@ -197,6 +197,25 @@ export function TranscriptPanel() {
     }, 700);
     return () => clearTimeout(t);
   }, [activeTurnId, autoScroll, playing, term]);
+
+  /**
+   * Arriving from a cue.
+   *
+   * Following the playhead only happens while playing, which is right for a
+   * scrubber and wrong for a citation: checking one from a paused summary has
+   * to land you on the line. Only DOM work and refs here -- the "landed" mark
+   * is read from the provider rather than mirrored into local state, so this
+   * effect sets nothing.
+   */
+  useEffect(() => {
+    if (!jumpTarget) return;
+    programmatic.current = true;
+    activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+    const clear = setTimeout(() => {
+      programmatic.current = false;
+    }, 700);
+    return () => clearTimeout(clear);
+  }, [jumpTarget]);
 
   useEffect(
     () => () => {
@@ -289,7 +308,9 @@ export function TranscriptPanel() {
               key={turn.id}
               ref={isActive ? activeRef : undefined}
               data-t={turn.tSec}
-              className="group/turn relative py-3"
+              className={`group/turn relative rounded-md py-3 transition-colors duration-500 ${
+                jumpTarget !== null && isActive ? "bg-mark-soft" : ""
+              }`}
             >
               {hl && meta && (
                 <div className="mb-2 flex items-center gap-2 pl-10">

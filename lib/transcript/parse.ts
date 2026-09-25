@@ -213,13 +213,27 @@ function toTurns(cues: ParsedCue[]): ParsedTurn[] {
        same speaker, so a monologue does not become one unreadable block. */
     const newThought = last && cue.tSec - (last.sentences.at(-1)?.tSec ?? last.tSec) > 45;
 
+    /**
+     * Two sentences inside one caption cue are not said at the same instant.
+     *
+     * Giving them both the cue's start time was accurate enough to play but
+     * not to cite: a citation would resolve to whichever sentence came first
+     * in the block rather than the one actually quoted. Spreading them across
+     * the cue's own span keeps every sentence individually addressable, which
+     * is what the whole provenance idea rests on.
+     */
+    const parts = sentencesOf(cue.text);
+    const span = Math.max(0, (cue.endSec ?? cue.tSec + parts.length * 3) - cue.tSec);
+    const at = (i: number) =>
+      parts.length > 1 ? Math.round(cue.tSec + (span * i) / parts.length) : cue.tSec;
+
     if (last && last.speaker === speaker && !newThought) {
-      for (const s of sentencesOf(cue.text)) last.sentences.push({ tSec: cue.tSec, text: s });
+      parts.forEach((text, i) => last.sentences.push({ tSec: at(i), text }));
     } else {
       turns.push({
         speaker,
         tSec: cue.tSec,
-        sentences: sentencesOf(cue.text).map((text) => ({ tSec: cue.tSec, text })),
+        sentences: parts.map((text, i) => ({ tSec: at(i), text })),
       });
     }
   }
