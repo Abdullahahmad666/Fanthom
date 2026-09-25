@@ -1,90 +1,243 @@
 @import "tailwindcss";
 
 /*
- * Fathom design tokens.
- * Values are measured from 2x screenshots at a 1606x971 CSS viewport --
- * see docs/UI-SPEC.md 1.1. The product is dark-only; there is no light theme.
+ * Cue design tokens.
+ *
+ * Five decisions this palette encodes, each of them a departure from the
+ * product we were cloning:
+ *
+ *  1. Light and dark are both first class. The reference ships dark only,
+ *     which is a brand choice that costs users -- meeting notes get read at
+ *     2pm next to a document. Dark stays the default; light is not an
+ *     afterthought.
+ *
+ *  2. The surfaces are warm, not neutral black. A transcript is long-form
+ *     reading, and maximum contrast is the wrong setting for reading. The
+ *     near-black carries a little magenta, the light theme is paper rather
+ *     than white.
+ *
+ *  3. One accent, and it only ever means interaction -- a control you can
+ *     use, or the thing you are on. The reference accents tabs, links,
+ *     chips and icons alike, and when everything is accented nothing is.
+ *
+ *  4. A second colour is reserved exclusively for provenance: timestamps,
+ *     citations, the moment now playing. That is the product thesis made
+ *     visible -- every generated line is a receipt, and receipts have their
+ *     own colour. It is amber, after the cue light on a studio wall.
+ *
+ *  5. Pills are for status, not for everything. A consistent radius scale
+ *     reads as a tool; rounded-full everywhere reads as a landing page.
+ *
+ * The legacy token names (canvas, fg, brand, surface...) are kept and remapped
+ * onto the new values, so the whole app re-skins at once rather than needing
+ * six thousand lines of class edits before anything can be seen.
  */
-@theme {
-  /* Surfaces, darkest to lightest.
-     Note the inversion: the detail page's content column (--color-content) is
-     BLACK, i.e. darker than the page canvas around it. Most dark UIs get
-     lighter as they nest; this one does the opposite. */
-  --color-content: #000000;
-  --color-popover: #111314;
-  --color-modalfoot: #141417;
-  --color-canvas: #1a1a1a;
-  --color-panel: #1b1b20;
-  --color-surface: #212124;
-  --color-raised: #26262a;
-  --color-field: #2d2c31;
-  --color-bubble: #4a4b4b;
 
-  /* Accents */
-  --color-brand: #02beff;
-  --color-accentsoft: #1f2a31;
-  --color-amber: #fdc72f;
-  --color-amberbg: #322809;
-  --color-avatar: #c2185b;
-  --color-success: #3fbf7f;
+:root {
+  color-scheme: dark;
 
-  /* Text */
-  --color-fg: #ffffff;
-  --color-fg-muted: #969696;
-  --color-fg-dim: #6b6b70;
+  /* Surfaces, deepest to highest. */
+  --cue-bg: #121013;
+  --cue-sunken: #0c0b0d;
+  --cue-surface: #1a181c;
+  --cue-raised: #232026;
+  --cue-overlay: #2b272f;
+  --cue-field: #2a262e;
 
-  /* Hairlines. The app uses 1px lines and grey steps, never drop shadows. */
-  --color-line: #2a2a2e;
+  /* Text. */
+  --cue-text: #f4f1f4;
+  --cue-muted: #a49fa7;
+  --cue-faint: #6f6a74;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Hairlines. */
+  --cue-line: #2e2a32;
+  --cue-line-strong: #3d3843;
+
+  /* Interaction only. */
+  --cue-accent: #7c86ff;
+  --cue-accent-hover: #939cff;
+  --cue-accent-soft: #1e1d3a;
+  --cue-on-accent: #0d0b16;
+
+  /* Provenance only: timestamps, citations, the moment playing. */
+  --cue-mark: #e8b44c;
+  --cue-mark-soft: #2f2413;
+
+  /* Status. */
+  --cue-positive: #57c98a;
+  --cue-caution: #e0a33c;
+  --cue-critical: #f2706b;
+
+  /* Shape. A scale, rather than a pill for everything. */
+  --cue-r-sm: 6px;
+  --cue-r-md: 10px;
+  --cue-r-lg: 14px;
+  --cue-r-xl: 20px;
+
+  /* Motion. Two speeds: one for state, one for movement. */
+  --cue-fast: 140ms;
+  --cue-slow: 420ms;
+  --cue-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Measured chrome geometry, kept as custom properties so the layouts and the
-   sticky offsets can never drift apart. */
-:root {
-  --topbar-h: 52px;
-  --tabnav-h: 48px;
-  --rail-w: 360px;
-  --detail-max: 1120px;
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --cue-bg: #faf8f5;
+  --cue-sunken: #efece6;
+  --cue-surface: #ffffff;
+  --cue-raised: #f4f1ec;
+  --cue-overlay: #ffffff;
+  --cue-field: #efebe4;
+
+  --cue-text: #1a171c;
+  --cue-muted: #5f5a63;
+  --cue-faint: #8b8590;
+
+  --cue-line: #e4ded6;
+  --cue-line-strong: #d3ccc2;
+
+  --cue-accent: #4f46e5;
+  --cue-accent-hover: #4038d4;
+  --cue-accent-soft: #eceafc;
+  --cue-on-accent: #ffffff;
+
+  --cue-mark: #a76a12;
+  --cue-mark-soft: #f8eeda;
+
+  --cue-positive: #1f8a55;
+  --cue-caution: #9a6a12;
+  --cue-critical: #c0362f;
+}
+
+@theme inline {
+  /* --- Cue's own names, used by everything built from here on. --- */
+  --color-bg: var(--cue-bg);
+  --color-sunken: var(--cue-sunken);
+  --color-overlay: var(--cue-overlay);
+  --color-text: var(--cue-text);
+  --color-muted: var(--cue-muted);
+  --color-faint: var(--cue-faint);
+  --color-line-strong: var(--cue-line-strong);
+  --color-accent: var(--cue-accent);
+  --color-accent-hover: var(--cue-accent-hover);
+  --color-on-accent: var(--cue-on-accent);
+  --color-mark: var(--cue-mark);
+  --color-mark-soft: var(--cue-mark-soft);
+  --color-positive: var(--cue-positive);
+  --color-caution: var(--cue-caution);
+  --color-critical: var(--cue-critical);
+
+  --radius-sm: var(--cue-r-sm);
+  --radius-md: var(--cue-r-md);
+  --radius-lg: var(--cue-r-lg);
+  --radius-xl: var(--cue-r-xl);
+
+  /* --- Legacy names, remapped so the existing app re-skins in place. --- */
+  --color-content: var(--cue-sunken);
+  --color-popover: var(--cue-overlay);
+  --color-modalfoot: var(--cue-raised);
+  --color-canvas: var(--cue-bg);
+  --color-panel: var(--cue-surface);
+  --color-surface: var(--cue-surface);
+  --color-raised: var(--cue-raised);
+  --color-field: var(--cue-field);
+  --color-bubble: var(--cue-line-strong);
+  --color-brand: var(--cue-accent);
+  --color-accentsoft: var(--cue-accent-soft);
+  --color-amber: var(--cue-mark);
+  --color-amberbg: var(--cue-mark-soft);
+  --color-avatar: #b4508a;
+  --color-success: var(--cue-positive);
+  --color-fg: var(--cue-text);
+  --color-fg-muted: var(--cue-muted);
+  --color-fg-dim: var(--cue-faint);
+  --color-line: var(--cue-line);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), Georgia, serif;
 }
 
 html {
-  background: var(--color-canvas);
-  color-scheme: dark;
+  background: var(--cue-bg);
 }
 
 body {
-  background: var(--color-canvas);
-  color: var(--color-fg);
+  background: var(--cue-bg);
+  color: var(--cue-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-/* The product ships no visible focus ring. Shipping without one is a real
-   accessibility defect rather than a style choice, so we add a brand-colored
-   ring and keep it off for mouse users. */
+/*
+ * Theme changes are instant on purpose.
+ *
+ * Transitioning every colour on a theme flip looks expensive and feels slow:
+ * you watch the page repaint instead of just reading it in the other theme.
+ * Individual components still animate their own state.
+ */
+:root[data-theme-switching] * {
+  transition: none !important;
+}
+
+/* The reference ships no visible focus ring, which is an accessibility defect
+   rather than a style choice. Keyboard users get one; mouse users do not. */
 :focus-visible {
-  outline: 2px solid var(--color-brand);
+  outline: 2px solid var(--cue-accent);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--cue-accent);
+  color: var(--cue-on-accent);
 }
 
 /* Section labels: ATTENDEES, ACTION ITEMS, PEOPLE WITH ACCESS. */
 @utility section-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-fg-dim);
+  color: var(--cue-faint);
 }
 
-/* Uppercase in-page tabs: SUMMARY / TRANSCRIPT / ASK FATHOM. Distinct from the
-   sentence-case primary nav, which is larger and untracked. */
 @utility tab-label {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/**
+ * A cue: a timestamp you can play.
+ *
+ * The product's smallest unit and the reason for the second accent. Every
+ * generated claim carries one, so it has to be legible at 11px, obviously
+ * clickable, and never mistaken for a normal link.
+ */
+@utility cue-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--cue-r-sm);
+  background: var(--cue-mark-soft);
+  color: var(--cue-mark);
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: filter var(--cue-fast) var(--cue-ease);
+}
+
+@utility cue-chip-interactive {
+  cursor: pointer;
+}
+
+/* Long-form reading: the transcript and the summary both want a measure. */
+@utility measure {
+  max-width: 68ch;
 }
 
 @media (prefers-reduced-motion: reduce) {

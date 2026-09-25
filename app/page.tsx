@@ -15,10 +15,13 @@ import { RoleCards } from "@/components/marketing/RoleCards";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 
+/* The body of this page is still the cloned marketing site; step 7 rebuilds
+   it in the Cue language. The metadata is corrected now so the brand is not
+   contradicted in the browser tab and in link previews. */
 export const metadata = {
-  title: "Fathom — AI notetaking that is out of this world",
+  title: "Cue — meeting notes with receipts",
   description:
-    "Fathom summarizes your meetings so you can focus on the conversation. Now available bot-free.",
+    "Every line Cue writes carries the moment it came from, so you can play the proof instead of trusting the summary.",
 };
 
 const CTA =

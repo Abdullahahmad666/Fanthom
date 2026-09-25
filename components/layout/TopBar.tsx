@@ -7,7 +7,8 @@ import {
   BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, LogOut,
   RotateCcw, Search, Settings, Star, Video,
 } from "lucide-react";
-import { FathomWordmark } from "@/components/brand/FathomMark";
+import { CueWordmark } from "@/components/brand/CueMark";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Popover } from "@/components/ui/Popover";
 import { ReferCard } from "./ReferCard";
 import { StreakCard, STREAK_POINTS } from "./StreakCard";
@@ -32,15 +33,32 @@ const ACTIONS: { label: string; Icon: typeof Gift; href?: string }[] = [
  * -- which is how the amber points card ended up rendering black text on the
  * default near-black panel.
  */
-const SHADOW = "0 24px 60px -20px rgba(0,0,0,0.8)";
+const SHADOW = "0 24px 60px -20px rgb(0 0 0 / 0.45)";
 
+/* Token references rather than hex: these panels have to follow the theme,
+   and a hard-coded grey is invisible on paper. */
 const PANEL = {
-  /** The grey menus: account, and anything else with rows. */
-  menu: { background: "#343435", paddingTop: 0, paddingBottom: 0, boxShadow: SHADOW },
-  /** The referral card. */
-  card: { background: "#2c2c30", padding: 0, borderRadius: 14, boxShadow: SHADOW },
-  /** The points card, which takes the counter's own colour. */
-  amber: { background: "#F0C62E", padding: 0, borderRadius: 14, boxShadow: SHADOW },
+  menu: {
+    background: "var(--cue-overlay)",
+    paddingTop: 0,
+    paddingBottom: 0,
+    boxShadow: SHADOW,
+    border: "1px solid var(--cue-line)",
+  },
+  card: {
+    background: "var(--cue-overlay)",
+    padding: 0,
+    borderRadius: "var(--cue-r-lg)",
+    boxShadow: SHADOW,
+    border: "1px solid var(--cue-line)",
+  },
+  /** The points card keeps the provenance colour it is named after. */
+  amber: {
+    background: "var(--cue-mark)",
+    padding: 0,
+    borderRadius: "var(--cue-r-lg)",
+    boxShadow: SHADOW,
+  },
 } as const;
 
 type MenuRow = { label: string; Icon?: typeof Gift; href?: string; note?: string };
@@ -105,7 +123,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
   return (
     <header className="sticky top-0 z-40 flex h-[var(--topbar-h)] shrink-0 items-center bg-surface px-4 sm:px-6">
       <Link href="/calls" className="shrink-0" aria-label="My Calls">
-        <FathomWordmark />
+        <CueWordmark size={17} />
       </Link>
 
       <form onSubmit={submit} className="relative ml-4 hidden sm:block lg:ml-7">
@@ -117,8 +135,8 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           type="search"
           value={value}
           onChange={(e) => (onList ? onQueryChange(e.target.value) : setLocal(e.target.value))}
-          placeholder="Search Call Recordings"
-          aria-label="Search call recordings"
+          placeholder="Search every meeting"
+          aria-label="Search every meeting"
           className="h-[34px] w-[320px] max-w-[28vw] rounded-lg bg-field pr-3 pl-8 text-[13px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
         />
         {!onList && local.trim() && (
@@ -197,6 +215,12 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
           <LifeBuoy className="h-[18px] w-[18px]" strokeWidth={2} />
           Help &amp; Feedback
         </button>
+
+        {/* Theme is a first-class control, not a setting three pages deep:
+            this product is read in both, so switching has to be one click. */}
+        <span className="hidden md:block">
+          <ThemeToggle compact />
+        </span>
 
         {/* Streak counter. Amber star + count, opening the points card. */}
         <Popover
