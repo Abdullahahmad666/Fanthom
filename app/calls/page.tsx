@@ -16,7 +16,7 @@ export default async function MyCallsPage({ searchParams }: PageProps<"/calls">)
   const meetings = await listMeetingsFull();
 
   return (
-    <ListLayout initialQuery={initialQuery} meetings={meetings}>
+    <ListLayout initialQuery={initialQuery}>
       <CallList meetings={meetings} />
     </ListLayout>
   );

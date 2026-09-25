@@ -4,7 +4,6 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import { TopBar } from "./TopBar";
 import { TabNav } from "./TabNav";
 import { AskFathomRail } from "./AskFathomRail";
-import type { Meeting } from "@/lib/types";
 
 const SearchContext = createContext("");
 
@@ -27,14 +26,11 @@ export function useSearchQuery() {
 export function ListLayout({
   children,
   initialQuery = "",
-  meetings = [],
   rail = true,
 }: {
   children: ReactNode;
   /** Seeded from ?q= so searches from other pages land filtered. */
   initialQuery?: string;
-  /** Passed to the rail so it can cite across the account's real meetings. */
-  meetings?: Meeting[];
   /**
    * Ask Fathom answers over your calls, so it is dropped on the tabs that
    * have none to answer over -- Team Calls, Deals and Alerts. An assistant
@@ -51,7 +47,7 @@ export function ListLayout({
         <TabNav />
         <div className="flex min-h-0 flex-1">
           <main className="min-w-0 flex-1 overflow-y-auto">{children}</main>
-          {rail && <AskFathomRail meetings={meetings} />}
+          {rail && <AskFathomRail />}
         </div>
       </div>
     </SearchContext.Provider>
