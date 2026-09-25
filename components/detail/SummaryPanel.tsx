@@ -12,6 +12,7 @@ import { useMeeting } from "./MeetingProvider";
 import { CustomizeTemplateModal } from "./CustomizeTemplateModal";
 import { Popover } from "@/components/ui/Popover";
 import { CueSources } from "./CueSources";
+import { Reveal } from "@/components/ui/Reveal";
 
 /** One glyph per catalogue family, matching how the product groups them. */
 const TEMPLATE_ICONS: Record<TemplateIcon, typeof Check> = {
@@ -214,8 +215,8 @@ export function SummaryPanel() {
           )}
 
           <div className="space-y-7">
-            {(sections ?? []).map((section) => (
-              <section key={section.heading}>
+            {(sections ?? []).map((section, si) => (
+              <Reveal as="section" key={section.heading} delay={Math.min(si, 6) * 55}>
                 <h3 className="mb-3 text-[17px] font-semibold text-fg">{section.heading}</h3>
                 {section.blocks.map((block, i) =>
                   block.kind === "para" ? (
@@ -244,7 +245,7 @@ export function SummaryPanel() {
                     </ul>
                   ),
                 )}
-              </section>
+              </Reveal>
             ))}
           </div>
         </>

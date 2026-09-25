@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * "More ways to get started with Fathom".
@@ -45,8 +46,9 @@ export function MoreWays() {
           </h2>
 
           {WAYS.map((w, i) => (
-            <div
+            <Reveal
               key={w.title}
+              delay={i * 90}
               className={`px-8 text-center ${i > 0 ? "lg:border-l lg:border-white/12" : ""}`}
             >
               <p className="text-[24px]" aria-hidden>
@@ -60,7 +62,7 @@ export function MoreWays() {
               >
                 {w.cta}
               </Link>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

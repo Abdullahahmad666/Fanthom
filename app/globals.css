@@ -33,7 +33,16 @@
  * six thousand lines of class edits before anything can be seen.
  */
 
-:root {
+/*
+ * The dark palette is also available as a class, for a surface that is dark
+ * by design rather than by preference -- the marketing pages paint their own
+ * black canvas, so they must not inherit a light theme's near-black text and
+ * render it on top of that. `:root[data-theme="light"]` only ever matches the
+ * html element, so this never fights it: it simply re-roots the tokens for
+ * its own subtree.
+ */
+:root,
+.on-dark {
   color-scheme: dark;
 
   /* Surfaces, deepest to highest. */
@@ -245,7 +254,20 @@ body {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    /* Without this, a looping animation does not stop -- it runs its whole
+       cycle every 0.01ms, forever. Collapsing the duration alone turns the
+       marquee and the skeleton shimmer into a strobe for exactly the people
+       the rule exists to protect. */
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Purely decorative loops are switched off rather than fast-forwarded, so
+     they rest where they started instead of at the end of one cycle. */
+  .marquee-track,
+  .skeleton {
+    animation: none !important;
   }
 }
 
@@ -364,4 +386,96 @@ body {
 @keyframes float-bob {
   0%, 100% { transform: translate3d(0, 0, 0); }
   50% { transform: translate3d(0, var(--bob, -10px), 0); }
+}
+
+/* ------------------------------------------------------------------ motion
+ *
+ * Cue's motion rule: an animation reports a change of state -- something
+ * arrived, something is loading, you were taken somewhere -- and never
+ * decorates. Anything that moves without telling you something is noise you
+ * have to look past to read a transcript.
+ *
+ * Two durations, from the token scale: --cue-fast for a control responding to
+ * you, --cue-slow for content arriving.
+ */
+
+/* Content entering the viewport. Travel is small on purpose: it reads as
+   settling into place rather than flying in from somewhere else. */
+@keyframes cue-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The turn you were sent to by a citation. A ring rather than a fill, so the
+   text stays readable while it is marked. */
+@keyframes cue-landed {
+  0% {
+    box-shadow: 0 0 0 0 var(--cue-mark);
+    background-color: var(--cue-mark-soft);
+  }
+  70% {
+    box-shadow: 0 0 0 3px transparent;
+    background-color: var(--cue-mark-soft);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    background-color: transparent;
+  }
+}
+
+/* A skeleton is waiting, not breathing: a sweep travels across it in the
+   reading direction, which says "arriving" where a pulse only says "busy". */
+@keyframes cue-shimmer {
+  from { background-position: -160% 0; }
+  to   { background-position: 160% 0; }
+}
+
+@utility skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--cue-surface) 0%,
+    var(--cue-raised) 45%,
+    var(--cue-surface) 90%
+  );
+  background-size: 220% 100%;
+  animation: cue-shimmer 1.4s linear infinite;
+}
+
+/* Applied by the Reveal component once its target has been seen. */
+@utility revealed {
+  animation: cue-reveal var(--cue-slow) var(--cue-ease) both;
+}
+
+/* Something that arrives on top of the page rather than in the flow of it.
+   It scales from very slightly small, which reads as coming toward you --
+   the opposite of the reveal, which settles into a place it already had. */
+@keyframes cue-lift {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility lifted {
+  animation: cue-lift var(--cue-slow) var(--cue-ease) both;
+}
+
+/* Pressable things acknowledge the press. Scale only -- no colour change, so
+   it reads on every surface and in both themes. */
+@utility press {
+  transition: transform var(--cue-fast) var(--cue-ease);
+}
+
+.press:active {
+  transform: scale(0.97);
 }

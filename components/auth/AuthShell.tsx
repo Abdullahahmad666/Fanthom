@@ -27,13 +27,13 @@ export function AuthShell({
   children: ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-content">
+    <div className="on-dark flex min-h-screen flex-col bg-content">
       <div className="flex justify-center pt-8 pb-12">
         <FathomWordmark size={27} />
       </div>
 
       <div className="mx-auto grid w-full max-w-[1340px] flex-1 grid-cols-1 gap-16 px-8 lg:grid-cols-[500px_1fr] lg:items-center">
-        <div className="rounded-3xl bg-[#1c1c1c] px-10 pt-14 pb-11 ring-1 ring-white/5 sm:px-20">
+        <div className="lifted rounded-3xl bg-[#1c1c1c] px-10 pt-14 pb-11 ring-1 ring-white/5 sm:px-20">
           <h1 className="text-center text-[30px] font-bold text-fg">{title}</h1>
 
           {children}
@@ -65,7 +65,10 @@ export function AuthShell({
 
 function Testimonial() {
   return (
-    <div className="hidden max-w-[620px] lg:block">
+    <div
+      style={{ animation: "fade-rise 620ms var(--cue-ease) 220ms both" }}
+      className="hidden max-w-[620px] lg:block"
+    >
       <span
         aria-hidden
         className="block text-[104px] leading-[0.7] font-bold text-white/10"

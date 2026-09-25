@@ -53,7 +53,7 @@ function TabAction() {
     <button
       type="button"
       onClick={copy}
-      className="ml-auto flex shrink-0 items-center gap-2 rounded-lg bg-accentsoft px-4 py-2 text-[13px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+      className="press ml-auto flex shrink-0 items-center gap-2 rounded-lg bg-accentsoft px-4 py-2 text-[13px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
     >
       {copied ? "Copied" : tab === "summary" ? "Copy Summary" : "Copy Transcript"}
       {copied ? (

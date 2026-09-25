@@ -6,6 +6,7 @@ import { Check, Download, ExternalLink, Link2, Star } from "lucide-react";
 import { MadLibSelect } from "@/components/ui/MadLibSelect";
 import { Toggle } from "./parts";
 import { SettingsExtras } from "./SettingsExtras";
+import { Reveal } from "@/components/ui/Reveal";
 
 const RECORD = ["All meetings", "Only external meetings", "Only meetings I host", "No meetings"];
 const SHARE = ["Summary & recording", "Summary only", "Nothing"];
@@ -90,11 +91,16 @@ export function SettingsView({
         <p className="section-label mb-4">Video conferencing</p>
 
         <div className="space-y-4">
-          {INTEGRATIONS.map((it) => {
+          {INTEGRATIONS.map((it, i) => {
             const liveEntry = connectedMap.get(it.id);
             const live = Boolean(liveEntry);
             return (
-            <section key={it.id} className="relative rounded-xl bg-surface p-6">
+            <Reveal
+              key={it.id}
+              as="section"
+              delay={i * 55}
+              className="relative rounded-xl bg-surface p-6"
+            >
               {it.starred && (
                 <Star className="absolute -top-2 -right-2 h-6 w-6 fill-amber text-amber" />
               )}
@@ -132,7 +138,7 @@ export function SettingsView({
                      out until their provider apps exist. */
                   <a
                     href={it.id === "zoom" ? "/api/integrations/zoom/start" : "#"}
-                    className="flex shrink-0 items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[14px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+                    className="press flex shrink-0 items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[14px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
                   >
                     {it.action.label}
                     {it.action.icon === "link" ? (
@@ -171,13 +177,13 @@ export function SettingsView({
                   )}
                 </div>
               ))}
-            </section>
+            </Reveal>
             );
           })}
         </div>
 
         <p className="section-label mt-12 mb-4">Calendar</p>
-        <section className="rounded-xl bg-surface p-6">
+        <Reveal as="section" className="rounded-xl bg-surface p-6">
           <div className="flex flex-wrap items-center gap-4">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#4285F4] text-[17px] font-bold text-white">
               G
@@ -202,13 +208,13 @@ export function SettingsView({
             ) : (
               <a
                 href="/signup"
-                className="flex items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[14px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+                className="press flex items-center gap-2 rounded-lg bg-accentsoft px-5 py-3 text-[14px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
               >
                 Connect <Link2 className="h-4 w-4" />
               </a>
             )}
           </div>
-        </section>
+        </Reveal>
 
         <SettingsExtras />
       </main>

@@ -105,7 +105,7 @@ export function RightRail() {
         <button
           type="button"
           onClick={() => setSharing(true)}
-          className="flex flex-1 items-center justify-between rounded-lg bg-accentsoft px-4 py-3 text-[13px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+          className="press flex flex-1 items-center justify-between rounded-lg bg-accentsoft px-4 py-3 text-[13px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
         >
           Share
           <Link2 className="h-4 w-4" />

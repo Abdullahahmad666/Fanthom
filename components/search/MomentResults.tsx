@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { FileText, Loader2, Search as SearchIcon } from "lucide-react";
 import type { Moment, SearchResults } from "@/backend/src/repositories/search";
 import { formatClock } from "@/lib/types";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * Search results.
@@ -107,7 +108,9 @@ export function MomentResults({ query }: { query: string }) {
           <p className="section-label mb-3">Moments</p>
           <ol className="space-y-2.5">
             {results.moments.map((m, i) => (
-              <MomentRow key={`${m.meetingSlug}-${m.tSec}-${i}`} moment={m} />
+              <Reveal key={`${m.meetingSlug}-${m.tSec}-${i}`} delay={Math.min(i, 8) * 40}>
+                <MomentRow moment={m} />
+              </Reveal>
             ))}
           </ol>
         </section>

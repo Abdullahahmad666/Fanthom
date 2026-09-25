@@ -5,15 +5,13 @@ import { Starfield } from "@/components/marketing/Starfield";
 import { BRAND_LOGOS, G2Badge } from "@/components/marketing/BrandLogos";
 import { AnimatedHeadline } from "@/components/marketing/AnimatedHeadline";
 import { HeroBubbles } from "@/components/marketing/HeroBubbles";
-import { FeatureCarousel } from "@/components/marketing/FeatureCarousel";
-import { TeamTabs } from "@/components/marketing/TeamTabs";
-import { PillarSection } from "@/components/marketing/PillarSection";
-import { StatsSection } from "@/components/marketing/StatsSection";
-import { UnstoppableSection } from "@/components/marketing/UnstoppableSection";
-import { WorksWhereYouMeet } from "@/components/marketing/WorksWhereYouMeet";
-import { RoleCards } from "@/components/marketing/RoleCards";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
+import {
+  DeferredFeatureCarousel,
+  DeferredRest,
+  DeferredTeamTabs,
+} from "@/components/marketing/DeferredSections";
 
 /* The body of this page is still the cloned marketing site; step 7 rebuilds
    it in the Cue language. The metadata is corrected now so the brand is not
@@ -29,7 +27,7 @@ const CTA =
 
 export default function MarketingHomePage() {
   return (
-    <div className="min-h-screen bg-black text-fg">
+    <div className="on-dark min-h-screen bg-black text-fg">
       <AnnouncementBar />
 
       <MarketingHeader />
@@ -107,7 +105,7 @@ export default function MarketingHomePage() {
         </div>
       </section>
 
-      <FeatureCarousel />
+      <DeferredFeatureCarousel />
 
       {/* Marquee */}
       <section className="overflow-hidden bg-black py-16">
@@ -116,7 +114,7 @@ export default function MarketingHomePage() {
             <span
               key={n}
               aria-hidden={n === 1}
-              className="animate-[marquee_26s_linear_infinite] pr-16 text-[clamp(44px,8vw,104px)] leading-none font-light"
+              className="marquee-track animate-[marquee_26s_linear_infinite] pr-16 text-[clamp(44px,8vw,104px)] leading-none font-light"
             >
               Move{" "}
               <span className="bg-gradient-to-r from-[#f97316] to-[#fbbf24] bg-clip-text text-transparent">
@@ -144,20 +142,12 @@ export default function MarketingHomePage() {
             Whether you&apos;re a team of 1 or 1,000, Fathom&apos;s got your back
           </h2>
           <div className="mt-16">
-            <TeamTabs />
+            <DeferredTeamTabs />
           </div>
         </div>
       </section>
 
-      <PillarSection />
-
-      <StatsSection />
-
-      <UnstoppableSection />
-
-      <WorksWhereYouMeet />
-
-      <RoleCards />
+      <DeferredRest />
 
       <MarketingFooter />
     </div>

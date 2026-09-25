@@ -1,6 +1,7 @@
 import { Check, ChevronDown, Search } from "lucide-react";
 import { CrmBadge, HubspotMark, SalesforceMark } from "@/components/ui/CrmMarks";
 import { TrialButton } from "@/components/ui/TrialButton";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * Team Calls upsell.
@@ -42,17 +43,17 @@ function Pitch() {
       </h1>
 
       <ul className="mt-8 space-y-4">
-        {BULLETS.map((text) => (
-          <li key={text} className="flex items-start gap-3">
+        {BULLETS.map((text, i) => (
+          <Reveal key={text} as="li" delay={i * 70} className="flex items-start gap-3">
             <span className="mt-0.5 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-amber">
               <Check className="h-3.5 w-3.5 text-black" strokeWidth={3} />
             </span>
             <span className="text-[15px] leading-[1.5] text-fg-muted">{text}</span>
-          </li>
+          </Reveal>
         ))}
       </ul>
 
-      <TrialButton className="mt-9 rounded-full border border-brand px-7 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-brand hover:text-black" />
+      <TrialButton className="press mt-9 rounded-full border border-brand px-7 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-brand hover:text-black" />
 
       <p className="mt-5 text-[13px] text-fg-dim">
         View features &amp; pricing at{" "}

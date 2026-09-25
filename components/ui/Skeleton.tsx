@@ -1,9 +1,19 @@
 /**
  * Skeletons rather than spinners: grey blocks at the final geometry, so the
- * page does not reflow when content lands (docs/UI-SPEC.md 7.3).
+ * page does not reflow when content lands.
+ *
+ * A sweep travelling in the reading direction rather than a pulse. A pulse
+ * says "busy"; a sweep says "arriving", and it points the eye at where the
+ * first line is about to appear.
  */
-export function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-md bg-surface ${className}`} />;
+export function Skeleton({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return <div className={`skeleton rounded-md ${className}`} style={style} />;
 }
 
 export function CallCardSkeleton() {

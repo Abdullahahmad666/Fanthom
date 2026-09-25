@@ -308,8 +308,12 @@ export function TranscriptPanel() {
               key={turn.id}
               ref={isActive ? activeRef : undefined}
               data-t={turn.tSec}
-              className={`group/turn relative rounded-md py-3 transition-colors duration-500 ${
-                jumpTarget !== null && isActive ? "bg-mark-soft" : ""
+              /* A ring that fades rather than a fill that stays: the text has
+                 to stay readable while the line is being pointed at. */
+              className={`group/turn relative rounded-md px-2 py-3 ${
+                jumpTarget !== null && isActive
+                  ? "animate-[cue-landed_1.6s_var(--cue-ease)_both]"
+                  : ""
               }`}
             >
               {hl && meta && (
@@ -393,7 +397,7 @@ export function TranscriptPanel() {
             setAutoScroll(true);
             activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
           }}
-          className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-brand px-4 py-2 text-[13px] font-semibold text-black shadow-lg"
+          className="press absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-brand px-4 py-2 text-[13px] font-semibold text-black shadow-lg"
         >
           <ArrowDown className="h-4 w-4" /> Resume Auto-Scroll
         </button>

@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { Upload } from "lucide-react";
 import { CallCard } from "./CallCard";
 import { MomentResults } from "@/components/search/MomentResults";
+import { Reveal } from "@/components/ui/Reveal";
 import { LearnSection } from "./LearnSection";
 import { useSearchQuery } from "@/components/layout/ListLayout";
 import { groupByDate } from "@/lib/grouping";
@@ -64,7 +65,7 @@ export function CallList({ meetings: all }: { meetings: Meeting[] }) {
           </p>
           <Link
             href="/import"
-            className="mt-6 flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-hover"
+            className="press mt-6 flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-hover"
           >
             <Upload className="h-4 w-4" />
             Import a transcript
@@ -79,14 +80,19 @@ export function CallList({ meetings: all }: { meetings: Meeting[] }) {
     <div className="mx-auto max-w-[1180px] px-8 pt-8 pb-12">
       {groupByDate(meetings).map((group) => (
         <section key={group.label} className="mb-12">
-          <h2 className="mb-5 text-[15px] font-semibold text-fg">{group.label}</h2>
+          <Reveal as="h2" className="mb-5 text-[15px] font-semibold text-fg">
+            {group.label}
+          </Reveal>
+          {/* Cards arrive in reading order as the day scrolls into view, so a
+              long history feels paged rather than dumped. */}
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {group.meetings.map((m) => (
-              <CallCard
-                key={m.id}
-                meeting={m}
-                onDelete={(id) => setDeleted((d) => [...d, id])}
-              />
+            {group.meetings.map((m, i) => (
+              <Reveal key={m.id} delay={Math.min(i, 8) * 45}>
+                <CallCard
+                  meeting={m}
+                  onDelete={(id) => setDeleted((d) => [...d, id])}
+                />
+              </Reveal>
             ))}
           </div>
         </section>

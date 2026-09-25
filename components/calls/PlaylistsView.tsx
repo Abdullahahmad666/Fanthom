@@ -9,6 +9,7 @@ import {
   usePlaylists,
 } from "@/lib/playlists";
 import { posterFor } from "@/lib/poster";
+import { Reveal } from "@/components/ui/Reveal";
 import { formatClock, HIGHLIGHT_META, type HighlightKind } from "@/lib/types";
 
 /**
@@ -23,7 +24,7 @@ export function PlaylistsView() {
   if (populated.length === 0) {
     return (
       <div className="mx-auto max-w-[1180px] px-8 pt-16">
-        <div className="mx-auto max-w-[620px] text-center">
+        <Reveal className="mx-auto max-w-[620px] text-center">
           <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-surface">
             <ListPlus className="h-6 w-6 text-brand" />
           </span>
@@ -37,11 +38,11 @@ export function PlaylistsView() {
           </p>
           <Link
             href="/calls/q3-launch-readiness"
-            className="mt-7 inline-flex rounded-lg bg-accentsoft px-5 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
+            className="press mt-7 inline-flex rounded-lg bg-accentsoft px-5 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-[#27404d]"
           >
             Open a meeting with annotations
           </Link>
-        </div>
+        </Reveal>
       </div>
     );
   }
@@ -51,7 +52,7 @@ export function PlaylistsView() {
       {populated.map((p) => {
         const mins = Math.max(1, Math.round(playlistDuration(p) / 60));
         return (
-          <section key={p.id} className="mb-12">
+          <Reveal key={p.id} as="section" className="mb-12">
             <div className="mb-4 flex items-baseline gap-3">
               <h2 className="text-[17px] font-semibold text-fg">{p.name}</h2>
               <span className="text-[13px] text-fg-muted">
@@ -73,11 +74,14 @@ export function PlaylistsView() {
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {p.items.map((item) => {
+              {p.items.map((item, i) => {
                 const meta = HIGHLIGHT_META[item.kind as HighlightKind] ?? HIGHLIGHT_META.highlight;
                 return (
-                  <div
+                  <Reveal
                     key={item.id}
+                    /* Capped so a long playlist does not keep animating after
+                       you have already started reading it. */
+                    delay={Math.min(i, 8) * 45}
                     className="group relative overflow-hidden rounded-lg bg-raised"
                   >
                     <Link
@@ -121,11 +125,11 @@ export function PlaylistsView() {
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
-                  </div>
+                  </Reveal>
                 );
               })}
             </div>
-          </section>
+          </Reveal>
         );
       })}
     </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronUp, Info } from "lucide-react";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * The five-plan feature comparison.
@@ -153,9 +154,9 @@ export function FeatureMatrix() {
   return (
     <section className="mx-auto w-full max-w-[1400px] px-6 pb-24">
       <p className="text-center text-[15px] text-[#EDEFA6]">✦ Features</p>
-      <h2 className="mt-3 text-center text-[clamp(30px,4.4vw,56px)] leading-tight font-light text-fg">
+      <Reveal as="h2" className="mt-3 text-center text-[clamp(30px,4.4vw,56px)] leading-tight font-light text-fg">
         Meet your brilliant AI meeting partner
-      </h2>
+      </Reveal>
 
       <div className="mt-12 overflow-x-auto">
         <div className="min-w-[900px]">

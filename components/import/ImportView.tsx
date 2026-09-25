@@ -9,6 +9,7 @@ import { parseTranscript, TranscriptParseError } from "@/lib/transcript/parse";
 import { extractNotes } from "@/lib/transcript/extract";
 import { formatClock, formatDuration } from "@/lib/types";
 import { Cue } from "@/components/ui/Cue";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * Transcript import.
@@ -111,14 +112,14 @@ export function ImportView() {
 
   return (
     <div className="mx-auto w-full max-w-[860px] px-6 py-12">
-      <header>
+      <Reveal as="header">
         <h1 className="font-display text-[38px] leading-tight text-text">Import a transcript</h1>
         <p className="mt-3 max-w-[58ch] text-[15px] leading-relaxed text-muted">
           Cue does not sit in your meetings. Export the transcript your conferencing
           tool already made — Zoom, Google Meet and Teams all produce one — and Cue
           finds the notes inside it, with the moment each line came from.
         </p>
-      </header>
+      </Reveal>
 
       {!preview ? (
         <>
@@ -286,8 +287,8 @@ function PreviewPane({
         </p>
 
         <div className="mt-5 space-y-6">
-          {preview.keep.map((section) => (
-            <section key={section.heading}>
+          {preview.keep.map((section, si) => (
+            <Reveal key={section.heading} as="section" delay={si * 60}>
               <h2 className="text-[15px] font-semibold text-text">{section.heading}</h2>
               <ul className="mt-2 space-y-2.5">
                 {section.items.slice(0, 4).map((item, i) => (
@@ -307,7 +308,7 @@ function PreviewPane({
                   </li>
                 )}
               </ul>
-            </section>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -317,7 +318,7 @@ function PreviewPane({
           type="button"
           onClick={onSave}
           disabled={saving}
-          className="flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-hover disabled:opacity-60"
+          className="press flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-hover disabled:opacity-60"
         >
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
           {saving ? "Importing…" : "Import meeting"}

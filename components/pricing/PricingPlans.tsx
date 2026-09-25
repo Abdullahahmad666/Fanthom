@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * The plan picker: audience tabs, the billing switch, the free-plan strip and
@@ -199,8 +200,13 @@ export function PricingPlans() {
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        {plans.map((p) => (
-          <PlanCard key={`${audience}-${p.name}`} plan={p} annual={annual} />
+        {plans.map((p, i) => (
+          /* Keyed on the audience too, so switching between Individuals and
+             Teams remounts these and the new plans arrive rather than
+             silently swapping their contents. */
+          <Reveal key={`${audience}-${p.name}`} delay={i * 80} className="flex">
+            <PlanCard plan={p} annual={annual} />
+          </Reveal>
         ))}
       </div>
 
@@ -221,7 +227,7 @@ function PlanCard({ plan, annual }: { plan: Plan; annual: boolean }) {
   return (
     <article
       style={{ borderColor: plan.edge }}
-      className="flex flex-col rounded-2xl border bg-[#0d0d0f] px-7 pt-6 pb-8"
+      className="flex flex-1 flex-col rounded-2xl border bg-[#0d0d0f] px-7 pt-6 pb-8"
     >
       <p className="text-[12px] font-semibold tracking-[0.1em] text-fg-muted uppercase">
         {plan.audience}

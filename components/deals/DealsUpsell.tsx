@@ -25,7 +25,7 @@ export function DealsUpsell() {
 
       <div className="absolute inset-0">
         <div className="sticky top-0 flex h-[calc(100vh-var(--topbar-h)-var(--tabnav-h))] items-center justify-center px-6">
-          <div className="w-full max-w-[600px] rounded-2xl border border-line bg-[#15161a] px-9 pt-9 pb-8 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.95)]">
+          <div className="lifted w-full max-w-[600px] rounded-2xl border border-line bg-[#15161a] px-9 pt-9 pb-8 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.95)]">
             <h2 className="text-center text-[24px] leading-tight font-semibold text-fg">
               See deal momentum instantly
             </h2>

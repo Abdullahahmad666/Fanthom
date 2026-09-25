@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * "Ready to explore what's out there?"
@@ -38,7 +39,7 @@ export function ExploreCta() {
               room for it to break out. */}
           <Astronaut className="pointer-events-none absolute -top-24 left-2 hidden h-[300px] w-[240px] lg:block" />
 
-          <div className="lg:pl-[300px]">
+          <Reveal className="lg:pl-[300px]">
             <h2 className="text-[clamp(32px,4.2vw,52px)] leading-[1.1] font-light text-black">
               Ready to explore
               <br />
@@ -50,11 +51,11 @@ export function ExploreCta() {
             </p>
             <Link
               href="/signup"
-              className="mt-8 inline-flex rounded-full border border-black/70 px-8 py-3.5 text-[14px] font-semibold tracking-[0.06em] text-black uppercase transition-colors hover:bg-black hover:text-white"
+              className="press mt-8 inline-flex rounded-full border border-black/70 px-8 py-3.5 text-[14px] font-semibold tracking-[0.06em] text-black uppercase transition-colors hover:bg-black hover:text-white"
             >
               Contact sales
             </Link>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

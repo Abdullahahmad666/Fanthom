@@ -16,7 +16,7 @@ export const metadata = {
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-black text-fg">
+    <div className="on-dark min-h-screen bg-black text-fg">
       <AnnouncementBar />
       <MarketingHeader />
 
