@@ -19,7 +19,7 @@ export default function IntendedUsePage() {
     <OnboardingShell
       progress={45}
       eyebrow="Personalize your account"
-      title="How are you planning to use Fathom?"
+      title="How are you planning to use Cue?"
     >
       <div className="flex flex-wrap justify-center gap-5">
         {CHOICES.map(({ id, Icon, title, body }) => {

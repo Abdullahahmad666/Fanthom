@@ -46,7 +46,7 @@ export function ExploreCta() {
               what&apos;s out there?
             </h2>
             <p className="mt-6 max-w-[620px] text-[17px] leading-snug text-black/80">
-              Whether you&apos;d like to learn more about Fathom, how it works for your team, or
+              Whether you&apos;d like to learn more about Cue, how it works for your team, or
               which plan is the best fit – our sales team is here to help.
             </p>
             <Link

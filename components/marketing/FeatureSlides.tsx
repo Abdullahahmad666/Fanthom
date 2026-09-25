@@ -203,7 +203,7 @@ export function SummarySlide() {
           </div>
         </div>
 
-        {/* Rail: the recording, then Ask Fathom under it */}
+        {/* Rail: the recording, then Ask Cue under it */}
         <div className="flex min-w-0 flex-col gap-2">
           <div className="relative h-[68px] shrink-0 overflow-hidden rounded bg-gradient-to-br from-[#5c4a3e] to-[#15100d]">
             <Play className="absolute top-1/2 left-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 fill-white/80 text-white/80" />
@@ -213,7 +213,7 @@ export function SummarySlide() {
           </div>
 
           <p className="flex items-center gap-1 text-[7px] font-semibold tracking-wide text-fg">
-            <Sparkles className="h-2 w-2" /> ASK FATHOM
+            <Sparkles className="h-2 w-2" /> ASK CUE
           </p>
 
           <p className="ml-auto max-w-[90%] rounded bg-white/10 px-1.5 py-1 text-[6px] leading-snug text-fg">
@@ -331,7 +331,7 @@ export function AskSlide() {
       <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
         <Sparkles className="h-3 w-3" style={{ color: ACCENT }} />
         <p className="text-[10px] font-semibold tracking-wide text-fg">
-          ASK <span className="font-bold">FATHOM</span>
+          ASK <span className="font-bold">CUE</span>
         </p>
         <span className="ml-auto">
           <Pill>

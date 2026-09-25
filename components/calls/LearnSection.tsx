@@ -35,7 +35,7 @@ const CARDS = [
 export function LearnSection() {
   return (
     <section className="mx-3 mt-4 rounded-xl bg-panel px-9 pt-8 pb-10">
-      <h2 className="section-label mb-6">Learn how to use Fathom</h2>
+      <h2 className="section-label mb-6">Learn how to use Cue</h2>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {CARDS.map(({ kind, label, Icon, href, art }) => (
@@ -60,7 +60,7 @@ export function LearnSection() {
 
       <h2 className="section-label mt-12 mb-4">Meeting preferences</h2>
       <p className="max-w-[720px] text-[13px] leading-relaxed text-fg">
-        Fathom will auto-record starting with your next external meeting, and the
+        Cue will auto-record starting with your next external meeting, and the
         summary will be shared with attendees automatically.
       </p>
       <Link

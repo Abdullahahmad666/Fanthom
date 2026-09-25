@@ -135,7 +135,7 @@ export function Player() {
             <MicOff className="h-3 w-3 shrink-0 text-fg-muted" />
           </div>
           <span className="mt-2 block truncate text-[9px] text-fg-muted">
-            {owner?.name}&apos;s Fathom Notetaker
+            {owner?.name}&apos;s Cue Notetaker
           </span>
         </div>
 

@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Starfield } from "./Starfield";
 
 /**
- * "Fathom for your role" -- the horizontal strip of six role cards.
+ * "Cue for your role" -- the horizontal strip of six role cards.
  *
  * Three sit on screen at a time and the strip steps sideways, so the cut-off
  * fourth is what tells you there is more. The arrows disable at the ends
@@ -40,16 +40,16 @@ const ROLES: Role[] = [
   {
     title: "Sales",
     eyebrow: "Stay sharp, engage deeper, close faster",
-    body: "Fathom captures context, tracks engagement and updates your CRM, while you handle the close. AI Scorecards help managers coach with confidence, improving performance effortlessly.",
-    cta: "See Fathom for Sales",
+    body: "Cue captures context, tracks engagement and updates your CRM, while you handle the close. AI Scorecards help managers coach with confidence, improving performance effortlessly.",
+    cta: "See Cue for Sales",
     href: "/signup",
     Art: RocketArt,
   },
   {
     title: "Customer Success",
     eyebrow: "Stronger relationships, better retention",
-    body: "Fathom captures key moments, surfaces risks and opportunities, automates CRM updates and follow-ups, and spots trends across conversations — so your team can spend less time on admin and more time delivering value.",
-    cta: "See Fathom for CS",
+    body: "Cue captures key moments, surfaces risks and opportunities, automates CRM updates and follow-ups, and spots trends across conversations — so your team can spend less time on admin and more time delivering value.",
+    cta: "See Cue for CS",
     href: "/signup",
     Art: CompassArt,
   },
@@ -57,7 +57,7 @@ const ROLES: Role[] = [
     title: "Marketing",
     eyebrow: "Less clerical, more creative",
     body: "Spot trending feedback and changes in user sentiment, harvest invaluable insights for content, capture context, campaigns, brainstorms, project calls, and so much more.",
-    cta: "See Fathom for Marketing",
+    cta: "See Cue for Marketing",
     href: "/signup",
     Art: DishArt,
   },
@@ -72,7 +72,7 @@ const ROLES: Role[] = [
   {
     title: "HR & Talent",
     eyebrow: "Stronger, happier teams",
-    body: "Spot the patterns that predict success, streamline interviews and evaluate candidates with Ask Fathom. Highlights playlists give new employees the tools to flourish.",
+    body: "Spot the patterns that predict success, streamline interviews and evaluate candidates with Ask Cue. Highlights playlists give new employees the tools to flourish.",
     cta: "How it works",
     href: "/signup",
     Art: HelmetArt,

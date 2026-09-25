@@ -43,7 +43,7 @@ export function ClosingCta() {
           ✦ Never miss what matters
         </p>
         <h2 className="mt-6 text-[clamp(32px,3.4vw,48px)] leading-[1.18] font-light text-white">
-          Stop guessing. Ask Fathom.
+          Stop guessing. Ask Cue.
           <br />
           Start today, for free.
         </h2>

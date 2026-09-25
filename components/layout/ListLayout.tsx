@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { TopBar } from "./TopBar";
 import { TabNav } from "./TabNav";
-import { AskFathomRail } from "./AskFathomRail";
+import { AskCueRail } from "./AskCueRail";
 
 const SearchContext = createContext("");
 
@@ -14,7 +14,7 @@ export function useSearchQuery() {
 
 /**
  * Layout for list pages: top bar + primary tab nav + content, with the
- * account-scoped Ask Fathom rail pinned right.
+ * account-scoped Ask Cue rail pinned right.
  *
  * The shell is viewport-height and does not scroll. The meeting list and the
  * rail each own their scroll, so a long conversation in the rail never drags
@@ -32,7 +32,7 @@ export function ListLayout({
   /** Seeded from ?q= so searches from other pages land filtered. */
   initialQuery?: string;
   /**
-   * Ask Fathom answers over your calls, so it is dropped on the tabs that
+   * Ask Cue answers over your calls, so it is dropped on the tabs that
    * have none to answer over -- Team Calls, Deals and Alerts. An assistant
    * that can only say "no data" is worse than no assistant.
    */
@@ -47,7 +47,7 @@ export function ListLayout({
         <TabNav />
         <div className="flex min-h-0 flex-1">
           <main className="min-w-0 flex-1 overflow-y-auto">{children}</main>
-          {rail && <AskFathomRail />}
+          {rail && <AskCueRail />}
         </div>
       </div>
     </SearchContext.Provider>

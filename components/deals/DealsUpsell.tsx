@@ -41,12 +41,12 @@ export function DealsUpsell() {
               <p className="mt-5 text-[14px] text-fg-muted">
                 View features &amp; pricing at{" "}
                 <a
-                  href="https://fathom.video/pricing"
+                  href="/pricing"
                   target="_blank"
                   rel="noreferrer"
                   className="text-fg underline underline-offset-2 hover:text-brand"
                 >
-                  fathom.ai/pricing
+                  See plans
                 </a>
               </p>
             </div>
@@ -62,21 +62,21 @@ export function DealsUpsell() {
 const CALLS = [
   {
     when: "Today",
-    title: "Explore Fathom's meeting productivity capabilities",
+    title: "Explore Cue's meeting productivity capabilities",
     meta: "Project Kickoff · July 28, 2024",
     who: "Tim Kuvalis",
     pct: "34%",
     len: "21 min",
-    body: "Andrew Moyer (BioRev) demoed Fathom to Sam Saw (ThinkBionics) to discuss potential use cases. Discussed using Fathom for onboarding and knowledge sharing. Sam will sign up for a free trial; Andrew offered a follow-up call for configuration help.",
+    body: "Andrew Moyer (BioRev) demoed Cue to Sam Saw (ThinkBionics) to discuss potential use cases. Discussed using Cue for onboarding and knowledge sharing. Sam will sign up for a free trial; Andrew offered a follow-up call for configuration help.",
   },
   {
     when: null,
-    title: "Evaluate Fathom for internal meeting productivity",
+    title: "Evaluate Cue for internal meeting productivity",
     meta: "Check-in with ThinkBionics · July 28, 2024",
     who: "Anya Bridges",
     pct: "59%",
     len: "23 min",
-    body: "ThinkBionics explored Fathom's capabilities for automatically detecting action items, integrating with enterprise tools like Okta and JIRA, and influencing the product roadmap. Fathom demonstrated relevant features and committed to enabling them for Cruise's trial.",
+    body: "ThinkBionics explored Cue's capabilities for automatically detecting action items, integrating with enterprise tools like Okta and JIRA, and influencing the product roadmap. Cue demonstrated relevant features and committed to enabling them for Cruise's trial.",
   },
   {
     when: "Yesterday",
@@ -146,7 +146,7 @@ function DemoMock() {
                 <span className="h-[34px] w-[54px] shrink-0 rounded-[3px] bg-gradient-to-br from-[#4a3a4f] to-[#12161a]" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[8px] font-semibold text-fg">
-                    Launch Fathom for ThinkBionic employees
+                    Launch Cue for ThinkBionic employees
                   </span>
                   <span className="mt-0.5 block truncate text-[6px] text-fg-dim">
                     Rollout · July 22, 2024
@@ -180,23 +180,23 @@ function DemoMock() {
               <span className="pb-1 text-[7px] text-fg-dim">Recap</span>
               <span className="pb-1 text-[7px] text-fg-dim">Key People</span>
               <span className="relative pb-1 text-[7px] font-semibold text-brand">
-                Ask Fathom
+                Ask Cue
                 <span className="absolute inset-x-0 -bottom-px h-[1.5px] rounded-t bg-brand" />
               </span>
             </div>
 
             <div className="mt-2.5 space-y-2">
               <Question text="Summarize the meetings with this deal so far" />
-              <Answer text="ThinkBionics explored Fathom's capabilities for automatically detecting action items, integrating with enterprise tools like Okta and JIRA, and influencing the product roadmap. Fathom demonstrated relevant features and committed to enabling them for Cruise's trial." />
+              <Answer text="ThinkBionics explored Cue's capabilities for automatically detecting action items, integrating with enterprise tools like Okta and JIRA, and influencing the product roadmap. Cue demonstrated relevant features and committed to enabling them for Cruise's trial." />
 
               <Question text="What did Andrew discuss in the last meeting?" />
-              <Answer text="Andrew Moyer (BioRev) demoed Fathom to Sam Saw (ThinkBionics) to discuss potential use cases. Discussed using Fathom for onboarding and knowledge sharing. Sam will sign up for a free trial; Andrew offered a follow-up call for configuration help." />
+              <Answer text="Andrew Moyer (BioRev) demoed Cue to Sam Saw (ThinkBionics) to discuss potential use cases. Discussed using Cue for onboarding and knowledge sharing. Sam will sign up for a free trial; Andrew offered a follow-up call for configuration help." />
 
               <Citation text="The recent release of the AI-driven analytics module positively impacted user engagement @13:24" />
               <Citation text="The recent release of the AI-driven analytics module @15:45" />
 
-              <Question text="Did he also discuss about the new ask fathom feature?" />
-              <Answer text="Yes — Andrew walked through Ask Fathom near the end of the call." />
+              <Question text="Did he also discuss about the new ask cue feature?" />
+              <Answer text="Yes — Andrew walked through Ask Cue near the end of the call." />
             </div>
           </div>
         </div>

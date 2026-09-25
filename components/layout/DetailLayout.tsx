@@ -5,7 +5,7 @@ import { TopBar } from "./TopBar";
  * Layout for the meeting detail page.
  *
  * Structurally different from the list pages, not a variant of them: no
- * primary tab nav, no Ask Fathom rail (there it is a tab), and the content is
+ * primary tab nav, no Ask Cue rail (there it is a tab), and the content is
  * a ~1120px centered container rather than full-bleed.
  *
  * Measured at 1606px: left column 662px, gap ~28px, right rail 429px

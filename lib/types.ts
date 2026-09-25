@@ -20,7 +20,7 @@ export type Participant = {
   email?: string;
 };
 
-/** One sentence inside a speaker turn. Fathom bubbles each sentence separately. */
+/** One sentence inside a speaker turn. Cue bubbles each sentence separately. */
 export type TranscriptSentence = {
   id: string;
   tSec: number;

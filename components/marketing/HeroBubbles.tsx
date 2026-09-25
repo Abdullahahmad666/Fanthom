@@ -3,7 +3,7 @@ import {
   ArrowUp, Check, Headphones, Mic, MousePointer2, Plus, Sparkles, Text, Video,
   VideoOff,
 } from "lucide-react";
-import { FathomMark } from "@/components/brand/FathomMark";
+import { CueMark } from "@/components/brand/CueMark";
 
 /**
  * The floating product vignettes beside the hero headline.
@@ -86,13 +86,13 @@ export function HeroBubbles() {
         </Capsule>
       </div>
 
-      {/* Ask Fathom */}
+      {/* Ask Cue */}
       <div style={floatStyle(FLOATS.ask)} className="absolute top-[28px] right-0 w-[31%]">
         <Capsule gradient="from-white/25 to-white/5">
           <div className="flex items-center justify-center gap-2 py-5">
             <Sparkles className="h-4 w-4 text-fg" />
             <span className="text-[17px] tracking-wide text-fg-muted">
-              ASK <span className="font-bold text-fg">FATHOM</span>
+              ASK <span className="font-bold text-fg">CUE</span>
             </span>
           </div>
         </Capsule>
@@ -123,13 +123,13 @@ export function HeroBubbles() {
             </div>
 
             <p className="max-w-[72%] pt-1 text-[13px] leading-snug text-fg">
-              Fathom, what follow-ups did I commit to in my meetings this week?
+              Cue, what follow-ups did I commit to in my meetings this week?
               <span className="ml-[2px] inline-block h-[1em] w-px translate-y-[0.15em] bg-fg align-baseline" />
             </p>
             <div className="mt-4 flex items-center gap-2">
               <Plus className="h-3.5 w-3.5 text-fg-muted" />
               <span className="flex items-center gap-1 rounded bg-white/10 px-2 py-0.5 text-[11px] text-fg">
-                <FathomMark className="h-2 w-3 text-brand" /> Fathom
+                <CueMark className="h-2 w-3 text-brand" /> Cue
               </span>
               <Mic className="ml-auto h-3.5 w-3.5 text-fg-muted" />
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15">

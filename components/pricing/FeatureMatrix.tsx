@@ -93,9 +93,9 @@ const GROUPS: Group[] = [
     title: "Search, discovery & alerts",
     rows: [
       { label: "Attendee and keyword search in your meetings", cells: yes },
-      { label: "Ask Fathom: AI within a single call", info: true, cells: yes },
+      { label: "Ask Cue: AI within a single call", info: true, cells: yes },
       {
-        label: "Account-wide Ask Fathom: AI for all calls",
+        label: "Account-wide Ask Cue: AI for all calls",
         note: "(*Beta feature)",
         info: true,
         cells: teamUp,

@@ -1,52 +1,35 @@
-import { AnnouncementBar } from "@/components/marketing/AnnouncementBar";
-import { MarketingHeader } from "@/components/marketing/MarketingHeader";
-import { MarketingFooter } from "@/components/marketing/MarketingFooter";
-import { Starfield } from "@/components/marketing/Starfield";
-import { UnstoppableSection } from "@/components/marketing/UnstoppableSection";
-import { PricingPlans } from "@/components/pricing/PricingPlans";
-import { MoreWays } from "@/components/pricing/MoreWays";
-import { FeatureMatrix } from "@/components/pricing/FeatureMatrix";
-import { ExploreCta } from "@/components/pricing/ExploreCta";
+import { CueSiteHeader } from "@/components/marketing/cue/CueSiteHeader";
+import { CueSiteFooter } from "@/components/marketing/cue/CueSiteFooter";
+import { CuePlans } from "@/components/marketing/cue/CuePlans";
+import { PricingFaq } from "@/components/marketing/cue/PricingFaq";
+import { CueClosing } from "@/components/marketing/cue/CueClosing";
 
 export const metadata = {
-  title: "Pricing",
+  title: "Pricing — Cue",
   description:
-    "Pricing to supercharge every meeting. Free forever for individuals, with Team, Business and Enterprise plans for teams.",
+    "What Cue would charge for, and which of it exists today. Nothing is billed: this is a portfolio build with a real database behind it.",
 };
 
+/**
+ * Pricing, rebuilt.
+ *
+ * The page this replaces priced a different product: bot capture, CRM sync and
+ * conversational analytics, none of which Cue does. It also carried a feature
+ * matrix whose rows described the reference product's tiers.
+ *
+ * The replacement prices Cue, and marks every row for whether it is built or
+ * planned. That is the whole idea of the page -- a pricing table is where a
+ * product is most tempted to write in the future tense, and saying which half
+ * is which is the same commitment the rest of the site makes.
+ */
 export default function PricingPage() {
   return (
-    <div className="on-dark min-h-screen bg-black text-fg">
-      <AnnouncementBar />
-      <MarketingHeader />
-
-      <section className="relative overflow-hidden px-6 pt-16 pb-24">
-        <Starfield />
-
-        <div className="relative mx-auto max-w-[1400px]">
-          <h1 className="text-center text-[clamp(34px,5.4vw,66px)] leading-tight font-light">
-            Pricing to <span className="font-bold">supercharge every meeting</span>
-          </h1>
-
-          <div className="mt-12">
-            <PricingPlans />
-          </div>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden">
-        <Starfield />
-        <div className="relative">
-          <MoreWays />
-          <FeatureMatrix />
-        </div>
-      </section>
-
-      <ExploreCta />
-
-      <UnstoppableSection />
-
-      <MarketingFooter />
+    <div className="min-h-screen bg-bg">
+      <CueSiteHeader />
+      <CuePlans />
+      <PricingFaq />
+      <CueClosing />
+      <CueSiteFooter />
     </div>
   );
 }

@@ -135,12 +135,12 @@ export default function ConnectPage() {
       title={
         state === "done"
           ? "Your calendar is connected"
-          : "Fathom needs your calendar to know which meetings to join"
+          : "Cue needs your calendar to know which meetings to join"
       }
       note={
         <>
           <ThumbsUp className="h-5 w-5 shrink-0" />
-          Don&apos;t worry, Fathom will only join the meetings that you ask it to.
+          Don&apos;t worry, Cue will only join the meetings that you ask it to.
           You&apos;re in control here.
         </>
       }
@@ -181,7 +181,7 @@ export default function ConnectPage() {
       ) : (
         <div className="w-full max-w-[620px]">
           <div className="rounded-xl bg-raised p-5">
-            <p className="section-label mb-4">Upcoming — Fathom will join these</p>
+            <p className="section-label mb-4">Upcoming — Cue will join these</p>
             {note && (
               <div className="mb-4 rounded-lg bg-amberbg px-3 py-2.5">
                 <p className="text-[13px] leading-snug text-amber">{note}</p>

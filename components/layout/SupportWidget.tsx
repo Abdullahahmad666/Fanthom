@@ -7,10 +7,10 @@ import {
   Maximize2, Megaphone, MessageSquare, Minimize2, MonitorSmartphone, Phone, Puzzle,
   Search, Send, Settings as SettingsIcon, SquarePen, Star,
 } from "lucide-react";
-import { FathomMark } from "@/components/brand/FathomMark";
+import { CueMark } from "@/components/brand/CueMark";
 
 /**
- * The Fathom Support widget, opened from Help & Feedback.
+ * The Cue Support widget, opened from Help & Feedback.
  *
  * Light on a dark app, which is how the product ships it -- it is a support
  * surface bolted onto the page rather than part of it, and the contrast is
@@ -31,7 +31,7 @@ const INTENTS = [
   {
     label: "🤖 Ask AI - INSTANT",
     reply:
-      "Ask me anything about Fathom — recording modes, sharing, integrations or billing. I answer from the help centre.",
+      "Ask me anything about Cue — recording modes, sharing, integrations or billing. I answer from the help centre.",
   },
   {
     label: "✉️ Open a Ticket - <1 biz day",
@@ -40,7 +40,7 @@ const INTENTS = [
   },
   {
     label: "💡 Share Feedback",
-    reply: "Love to hear it. What would you change about Fathom?",
+    reply: "Love to hear it. What would you change about Cue?",
   },
 ];
 
@@ -57,7 +57,7 @@ const CATEGORIES: Category[] = [
   {
     name: "Product Updates",
     Icon: Megaphone,
-    articles: ["What's new in Fathom", "Bot-free capture is here", "Ask Fathom across meetings"],
+    articles: ["What's new in Cue", "Bot-free capture is here", "Ask Cue across meetings"],
   },
   {
     name: "Getting Started",
@@ -81,12 +81,12 @@ const CATEGORIES: Category[] = [
     ],
   },
   {
-    name: "Using Fathom on a Call",
+    name: "Using Cue on a Call",
     Icon: Phone,
     articles: ["Highlighting a moment live", "Switching capture mode mid-call"],
   },
   {
-    name: "Using Fathom After a Call",
+    name: "Using Cue After a Call",
     Icon: MonitorSmartphone,
     articles: [
       "Editing a summary",
@@ -117,8 +117,8 @@ const COUNTS: Record<string, number> = {
   "Product Updates": 3,
   "Getting Started": 23,
   Settings: 18,
-  "Using Fathom on a Call": 2,
-  "Using Fathom After a Call": 16,
+  "Using Cue on a Call": 2,
+  "Using Cue After a Call": 16,
   Integrations: 12,
   "Teams Pricing Plans": 32,
   "Billing & Account": 9,
@@ -178,16 +178,16 @@ export function SupportWidget({ onClose }: { onClose: () => void }) {
 
   return createPortal(
     <aside
-      aria-label="Fathom Support"
+      aria-label="Cue Support"
       style={{ top: "calc(var(--topbar-h) + 12px)" }}
       className={`fixed right-5 bottom-5 z-[250] flex flex-col overflow-hidden rounded-2xl bg-white text-neutral-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.75)] ${
         expanded ? "w-[520px]" : "w-[380px]"
       } max-h-[760px]`}
     >
       <header className="flex items-start gap-3 px-5 pt-5 pb-4">
-        <FathomMark className="mt-0.5 h-5 w-6 text-[#4ba3f0]" />
+        <CueMark className="mt-0.5 h-5 w-6 text-[#4ba3f0]" />
         <div className="min-w-0 flex-1">
-          <p className="text-[17px] font-bold">Fathom Support</p>
+          <p className="text-[17px] font-bold">Cue Support</p>
           <p className="text-[14px] text-neutral-500">We&apos;re here to help!</p>
         </div>
 
@@ -282,7 +282,7 @@ function Conversation({
 }) {
   return (
     <div className="pt-2">
-      <p className="text-[14px] font-semibold text-neutral-500">Fathom Support Bot</p>
+      <p className="text-[14px] font-semibold text-neutral-500">Cue Support Bot</p>
 
       <div className="mt-2 space-y-3">
         {thread.map((m, i) =>

@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { getMeetingBySlug } from "@/backend/src/repositories/meetings";
 import { formatDuration } from "@/lib/types";
 
-export const alt = "Meeting recap on Fathom";
+export const alt = "Meeting recap on Cue";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -22,7 +22,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     ? `${meeting.date} · ${formatDuration(meeting.durationSec)} · ${people.length} ${
         people.length === 1 ? "person" : "people"
       }`
-    : "Fathom";
+    : "Cue";
 
   return new ImageResponse(
     (
@@ -42,7 +42,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ display: "flex", fontSize: 30, fontWeight: 700, color: "#fff", letterSpacing: 2 }}>
-            FATHOM
+            CUE
           </div>
           <svg width="34" height="28" viewBox="0 0 32 26">
             <path d="M2 2h18.5L13 12.2H2V2Z" fill="#02BEFF" />

@@ -62,7 +62,7 @@ export function MockAppWindow() {
         </span>
         <span className="text-fg-muted">Transcript</span>
         <span className="flex items-center gap-1 text-fg-muted">
-          <Sparkles className="h-2.5 w-2.5" /> Ask Fathom
+          <Sparkles className="h-2.5 w-2.5" /> Ask Cue
         </span>
         <div className="ml-auto flex gap-1.5">
           {["Copy Recap", "Sync", "Followup"].map((l) => (

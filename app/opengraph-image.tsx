@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Fathom — AI notetaking that is out of this world";
+export const alt = "Cue — AI notetaking that is out of this world";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -38,7 +38,7 @@ export default async function Image() {
               display: "flex",
             }}
           >
-            FATHOM
+            CUE
           </div>
           <svg width="46" height="38" viewBox="0 0 32 26">
             <path d="M2 2h18.5L13 12.2H2V2Z" fill="#02BEFF" />

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
-import { FathomWordmark } from "@/components/brand/FathomMark";
+import { CueWordmark } from "@/components/brand/CueMark";
 import { BrandSpinner } from "@/components/ui/BrandLoader";
 
 /**
@@ -108,7 +108,7 @@ export function BookDemoModal({ onClose }: { onClose: () => void }) {
           )}
 
           <div className="flex min-h-0 flex-1 flex-col items-center px-8 pt-9 pb-5">
-            <FathomWordmark size={23} />
+            <CueWordmark size={23} />
 
             <div className="mt-10 w-full max-w-[620px] flex-1 overflow-y-auto">
               {step === 0 && (
@@ -123,7 +123,7 @@ export function BookDemoModal({ onClose }: { onClose: () => void }) {
               {step === 1 && (
                 <Card>
                   <Question n={1}>
-                    Thanks for your interest in Fathom! What is your business
+                    Thanks for your interest in Cue! What is your business
                     email?
                     <span className="text-fg-muted">*</span>
                   </Question>
@@ -159,14 +159,14 @@ export function BookDemoModal({ onClose }: { onClose: () => void }) {
               {step === 2 && (
                 <Card>
                   <Question n={2}>
-                    Who are you looking to explore Fathom for?
+                    Who are you looking to explore Cue for?
                   </Question>
 
                   <div className="relative mt-10">
                     <select
                       value={audience}
                       onChange={(e) => setAudience(e.target.value)}
-                      aria-label="Who are you exploring Fathom for"
+                      aria-label="Who are you exploring Cue for"
                       className="w-full appearance-none border-b-2 border-[#5b9bf8] bg-transparent pb-2.5 text-[22px] text-[#5b9bf8] focus:outline-none"
                     >
                       {AUDIENCES.map((a) => (
@@ -200,15 +200,15 @@ export function BookDemoModal({ onClose }: { onClose: () => void }) {
                     </h2>
                     <p className="mt-4 text-[17px] leading-relaxed text-fg">
                       Based on what you&apos;ve shared, you can get started
-                      right away with a Fathom trial. Want to explore more?
-                      Check out all of Fathom&apos;s plans and features at{" "}
+                      right away with a Cue trial. Want to explore more?
+                      Check out all of Cue&apos;s plans and features at{" "}
                       <a
-                        href="https://fathom.video/pricing"
+                        href="/pricing"
                         target="_blank"
                         rel="noreferrer"
                         className="underline underline-offset-2"
                       >
-                        fathom.ai/pricing
+                        See plans
                       </a>
                       .
                     </p>

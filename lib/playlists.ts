@@ -22,7 +22,12 @@ export type Playlist = {
   updatedAt: number;
 };
 
-const KEY = "fathom.playlists";
+const KEY = "cue.playlists";
+
+/* The key the product shipped under before the rename. Anything saved under it
+   is read once and carried over, because a rebrand is not a reason to throw
+   away someone's saved highlights. */
+const LEGACY_KEY = "fathom.playlists";
 
 /**
  * Playlists, persisted to localStorage.
@@ -49,7 +54,22 @@ function read(): Playlist[] {
   if (typeof window === "undefined") return SEED;
   try {
     const raw = window.localStorage.getItem(KEY);
-    cache = raw ? (JSON.parse(raw) as Playlist[]) : SEED;
+    if (raw) {
+      cache = JSON.parse(raw) as Playlist[];
+      return cache;
+    }
+
+    /* Nothing under the current key: adopt the pre-rename data if it is there,
+       and write it forward so this only ever happens once. */
+    const legacy = window.localStorage.getItem(LEGACY_KEY);
+    if (legacy) {
+      cache = JSON.parse(legacy) as Playlist[];
+      window.localStorage.setItem(KEY, legacy);
+      window.localStorage.removeItem(LEGACY_KEY);
+      return cache;
+    }
+
+    cache = SEED;
   } catch {
     cache = SEED;
   }

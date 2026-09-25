@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { useMeeting } from "./MeetingProvider";
-import { FathomMark } from "@/components/brand/FathomMark";
+import { CueMark } from "@/components/brand/CueMark";
 import { formatClock } from "@/lib/types";
 
 const SUGGESTIONS = [
@@ -16,13 +16,13 @@ const SUGGESTIONS = [
 type Msg = { role: "user" | "ai"; text: string; cites?: { label: string; tSec: number }[] };
 
 /**
- * Meeting-scoped Ask Fathom.
+ * Meeting-scoped Ask Cue.
  *
  * There is no model behind this. Rather than fake an answer, it retrieves real
  * transcript lines that match the question and cites them with timestamps that
  * seek the player -- so the citations are genuine even though the prose is not.
  */
-export function AskFathomPanel() {
+export function AskCuePanel() {
   const { meeting, seek, actionItems } = useMeeting();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
@@ -67,7 +67,7 @@ export function AskFathomPanel() {
       {messages.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center">
           <span className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-surface">
-            <FathomMark className="h-7 w-8 text-brand" />
+            <CueMark className="h-7 w-8 text-brand" />
           </span>
           <p className="mt-5 text-[15px] font-semibold text-fg">
             Hi, what can I tell you about this meeting?
@@ -97,7 +97,7 @@ export function AskFathomPanel() {
             ) : (
               <div key={i} className="flex gap-3">
                 <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface">
-                  <FathomMark className="h-3 w-4 text-brand" />
+                  <CueMark className="h-3 w-4 text-brand" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-[13px] leading-relaxed text-fg/90">{m.text}</p>
@@ -128,8 +128,8 @@ export function AskFathomPanel() {
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Ask Fathom AI"
-          aria-label="Ask Fathom AI"
+          placeholder="Ask Cue AI"
+          aria-label="Ask Cue AI"
           className="h-[52px] w-full rounded-lg bg-surface pr-16 pl-4 text-[13px] text-fg ring-1 ring-line placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         />
         <button

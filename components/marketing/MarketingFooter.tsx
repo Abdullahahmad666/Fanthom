@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FathomWordmark } from "@/components/brand/FathomMark";
+import { CueWordmark } from "@/components/brand/CueMark";
 import { ClosingCta } from "./ClosingCta";
 
 const COLUMNS: { heading: string; links: string[] }[][] = [
@@ -26,10 +26,10 @@ const COLUMNS: { heading: string; links: string[] }[][] = [
     {
       heading: "Competitors",
       links: [
-        "Competitor Overview", "Fathom vs. Fireflies", "Fathom vs. Granola",
-        "Fathom vs. Gong", "Fathom vs. Otter", "Fathom vs. Read AI",
-        "Fathom vs. ZoomMate", "Fathom vs. Google Meet's Gemini",
-        "Fathom vs. Built-In Solutions",
+        "Competitor Overview", "Cue vs. Fireflies", "Cue vs. Granola",
+        "Cue vs. Gong", "Cue vs. Otter", "Cue vs. Read AI",
+        "Cue vs. ZoomMate", "Cue vs. Google Meet's Gemini",
+        "Cue vs. Built-In Solutions",
       ],
     },
   ],
@@ -46,7 +46,7 @@ export function MarketingFooter() {
       <ClosingCta />
       <footer className="bg-[#191919] px-10 pt-14 pb-10">
         <div className="mx-auto max-w-[1560px]">
-          <FathomWordmark />
+          <CueWordmark />
 
           <div className="mt-14 flex flex-wrap gap-x-12 gap-y-12">
             {COLUMNS.map((stack, i) => (
@@ -73,7 +73,7 @@ export function MarketingFooter() {
                 href="/signup"
                 className="inline-flex rounded-full bg-gradient-to-r from-[#a9d5ff] to-[#73bfff] px-9 py-4 text-[16px] font-bold tracking-wide text-black uppercase transition-opacity hover:opacity-90"
               >
-                Try Fathom today
+                Try Cue today
               </Link>
             </div>
           </div>
@@ -88,12 +88,12 @@ export function MarketingFooter() {
               </span>
             ))}
             <p className="ml-auto text-[16px] text-fg">
-              Fathom © All Rights Reserved 2026
+              Cue © All Rights Reserved 2026
             </p>
           </div>
 
           <p className="mt-6 text-[14px] text-fg-dim">
-            Frontend prototype built for an assignment. Not affiliated with Fathom.{" "}
+            Frontend prototype built for an assignment. Not affiliated with Cue.{" "}
             <Link href="/calls" className="text-[#73bfff] hover:underline">
               Skip to the app →
             </Link>

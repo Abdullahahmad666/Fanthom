@@ -13,7 +13,7 @@ export default function OnboardingDonePage() {
     <OnboardingShell
       progress={100}
       eyebrow="You're all set"
-      title="Fathom will join your next meeting"
+      title="Cue will join your next meeting"
       footer={false}
     >
       <ul className="mb-12 space-y-3">

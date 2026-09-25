@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
-import { FathomMark } from "@/components/brand/FathomMark";
+import { CueMark } from "@/components/brand/CueMark";
 
 /**
  * The Superhuman acquisition bar.
@@ -23,10 +23,10 @@ export function AnnouncementBar() {
           S
         </span>
         <span className="text-[15px]">+</span>
-        <FathomMark className="h-4 w-5 text-black" />
+        <CueMark className="h-4 w-5 text-black" />
       </span>
       <span className="text-[14px] font-semibold tracking-wide">
-        FATHOM IS NOW PART OF SUPERHUMAN.
+        CUE IS NOW PART OF SUPERHUMAN.
       </span>
       <span className="text-[14px] font-semibold tracking-wide underline underline-offset-4">
         LEARN MORE →

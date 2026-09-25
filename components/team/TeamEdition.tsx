@@ -35,11 +35,11 @@ function Pitch() {
   return (
     <div>
       <p className="text-[12px] font-semibold tracking-[0.14em] text-amber uppercase">
-        Fathom Team Edition
+        Cue Team Edition
       </p>
 
       <h1 className="mt-4 text-[34px] leading-[1.18] font-semibold text-fg">
-        Bring the productivity boost of Fathom to your entire team
+        Bring the productivity boost of Cue to your entire team
       </h1>
 
       <ul className="mt-8 space-y-4">
@@ -57,13 +57,8 @@ function Pitch() {
 
       <p className="mt-5 text-[13px] text-fg-dim">
         View features &amp; pricing at{" "}
-        <a
-          href="https://fathom.video/for/teams"
-          target="_blank"
-          rel="noreferrer"
-          className="text-brand hover:underline"
-        >
-          fathom.video/for/teams
+        <a href="/pricing" className="text-brand hover:underline">
+          Cue pricing
         </a>
       </p>
     </div>
@@ -73,7 +68,7 @@ function Pitch() {
 /* ---------------------------------------------------------------- the mock */
 
 const TODAY = [
-  { who: "Anne Lee", color: "#c2185b", title: "Acme Corp <> Fathom", talk: "48%", dur: "31 min" },
+  { who: "Anne Lee", color: "#c2185b", title: "Acme Corp <> Cue", talk: "48%", dur: "31 min" },
   { who: "Cooper Dorsey", color: "#2f6f4f", title: "Northwind — Discovery", talk: "62%", dur: "44 min" },
 ];
 

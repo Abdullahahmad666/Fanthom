@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, LogOut,
   RotateCcw, Search, Settings, Star, Video,
@@ -71,7 +71,7 @@ const ACCOUNT_EMAIL = "abdullahahmad5618@gmail.com";
  * Three groups and a footer naming the signed-in address -- the product hangs
  * all of this off the avatar, not off Help & Feedback.
  *
- * "Replay onboarding" is ours, not Fathom's. It sits here because it is the
+ * "Replay onboarding" is ours, not Cue's. It sits here because it is the
  * only way back into the signup flow once you are past it, which a reviewer
  * walking the build will want.
  */
@@ -96,8 +96,11 @@ const ACCOUNT_GROUPS: MenuRow[][] = [
 ];
 
 /**
- * Global top bar. Measured at 63px tall with a 400x38 search field starting at
- * x=243 (docs/UI-SPEC.md 2.1). Present on both layouts, unlike the tab nav.
+ * Global top bar. Present on both layouts, unlike the tab nav.
+ *
+ * Height comes from --topbar-h rather than being measured off the product we
+ * were cloning: this bar carries a different set of controls, so copying the
+ * reference's 63px would only be a coincidence worth keeping.
  */
 export function TopBar({ query, onQueryChange }: TopBarProps) {
   const pathname = usePathname();
@@ -105,8 +108,36 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
   const onList = onQueryChange !== undefined;
   const [local, setLocal] = useState("");
   const [supportOpen, setSupportOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const value = onList ? (query ?? "") : local;
+
+  /**
+   * `/` focuses search from anywhere, Escape leaves it.
+   *
+   * Search is this product's main verb -- it is how you get to a moment -- so
+   * reaching it should not cost a trip to the mouse. Guarded against firing
+   * while you are typing into something else, which is what makes the
+   * shortcut safe to have at all.
+   */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement;
+      const typing =
+        el instanceof HTMLInputElement ||
+        el instanceof HTMLTextAreaElement ||
+        (el instanceof HTMLElement && el.isContentEditable);
+
+      if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      } else if (e.key === "Escape" && el === inputRef.current) {
+        inputRef.current?.blur();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
 
   /**
    * On the list page the field filters live. Everywhere else -- notably the
@@ -126,22 +157,37 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
         <CueWordmark size={17} />
       </Link>
 
+      {/* The field is bordered rather than a bare fill: on a bar that is the
+          same colour as the field, an unbordered input has no edges, which is
+          what made it read as clipped even once the bar had its height back. */}
       <form onSubmit={submit} className="relative ml-4 hidden sm:block lg:ml-7">
         <Search
-          className="pointer-events-none absolute top-1/2 left-3 h-[15px] w-[15px] -translate-y-1/2 text-fg-muted"
+          className="pointer-events-none absolute top-1/2 left-3 h-[15px] w-[15px] -translate-y-1/2 text-faint"
           strokeWidth={2.5}
         />
         <input
+          ref={inputRef}
           type="search"
           value={value}
           onChange={(e) => (onList ? onQueryChange(e.target.value) : setLocal(e.target.value))}
-          placeholder="Search every meeting"
-          aria-label="Search every meeting"
-          className="h-[34px] w-[320px] max-w-[28vw] rounded-lg bg-field pr-3 pl-8 text-[13px] text-fg placeholder:text-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-brand [&::-webkit-search-cancel-button]:hidden"
+          /* Moments, not meetings: step 5 made search return the line that was
+             said, so the field should not promise a list of titles. */
+          placeholder="Search every moment"
+          aria-label="Search every moment"
+          aria-keyshortcuts="/"
+          className="h-[38px] w-[420px] max-w-[34vw] rounded-lg border border-line bg-field pr-12 pl-9 text-[13.5px] text-text transition-colors placeholder:text-faint hover:border-line-strong focus:border-accent focus:outline-none [&::-webkit-search-cancel-button]:hidden"
         />
-        {!onList && local.trim() && (
-          <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[11px] text-fg-dim">
-            {pathname === "/" ? "" : "↵ search"}
+
+        {/* The hint retires once the field is in use, rather than sitting on
+            top of what is being typed. */}
+        {!value && (
+          <kbd className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 rounded border border-line bg-surface px-1.5 py-0.5 font-sans text-[11px] text-faint">
+            /
+          </kbd>
+        )}
+        {!onList && value.trim() && pathname !== "/" && (
+          <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[11px] text-faint">
+            ↵ search
           </span>
         )}
       </form>
@@ -280,7 +326,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
  * Grouped menu rows, shared by the account and Help menus.
  *
  * Rows without an href say so instead of closing silently -- in the product
- * they leave for Fathom's own site or a native app, neither of which this
+ * they leave for Cue's own site or a native app, neither of which this
  * build has. A dead row that just dismisses reads as a bug.
  */
 function MenuGroups({ groups, close }: { groups: MenuRow[][]; close: () => void }) {
@@ -294,7 +340,7 @@ function MenuGroups({ groups, close }: { groups: MenuRow[][]; close: () => void 
     }
     pushToast({
       title: label,
-      description: note ?? "Leaves for Fathom's own site in the real product.",
+      description: note ?? "Leaves for Cue's own site in the real product.",
       status: "info",
       duration: 3500,
     });

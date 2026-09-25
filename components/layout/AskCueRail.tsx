@@ -19,7 +19,7 @@ type Msg = {
 };
 
 /**
- * Account-scoped Ask Fathom rail, shown on list pages only.
+ * Account-scoped Ask Cue rail, shown on list pages only.
  *
  * The header, suggestions and composer stay put. The conversation area only
  * becomes scrollable once a thread exists, so an empty rail shows no scrollbar.
@@ -38,7 +38,7 @@ type Msg = {
  * It still does not invent an answer. It says where the thing came up and
  * lets the citations speak, which is the same promise the summaries make.
  */
-export function AskFathomRail() {
+export function AskCueRail() {
   const [open, setOpen] = useState(true);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
@@ -98,7 +98,7 @@ export function AskFathomRail() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Open Ask Fathom"
+          aria-label="Open Ask Cue"
           className="rounded-md p-1.5 text-fg-muted transition-colors hover:bg-surface hover:text-fg"
         >
           <PanelRightOpen className="h-[18px] w-[18px]" />
@@ -112,12 +112,12 @@ export function AskFathomRail() {
       <div className="flex shrink-0 items-center gap-2 px-5 pt-5 pb-3">
         <Sparkles className="h-[15px] w-[15px] text-fg" />
         <span className="section-label text-fg-muted">
-          Ask <span className="font-bold text-fg">Fathom</span>
+          Ask <span className="font-bold text-fg">Cue</span>
         </span>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          aria-label="Collapse Ask Fathom"
+          aria-label="Collapse Ask Cue"
           className="ml-auto rounded-md p-1 text-fg-muted transition-colors hover:bg-surface hover:text-fg"
         >
           <PanelRightClose className="h-[18px] w-[18px]" />
@@ -135,7 +135,7 @@ export function AskFathomRail() {
         {showBanner && (
           <div className="mb-4 rounded-lg bg-amberbg px-4 py-3 text-[12px] leading-relaxed text-amber">
             <span aria-hidden="true">🎁 </span>
-            <strong className="font-bold">Account-level Ask Fathom is here!</strong>{" "}
+            <strong className="font-bold">Account-level Ask Cue is here!</strong>{" "}
             We&apos;re gifting you unlimited use until Oct 1.{" "}
             <button
               type="button"
@@ -223,7 +223,7 @@ export function AskFathomRail() {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Ask anything..."
-          aria-label="Ask Fathom anything"
+          aria-label="Ask Cue anything"
           className="w-full bg-transparent text-[13px] text-fg placeholder:text-fg-muted focus:outline-none"
         />
         <div className="mt-5 flex items-center">

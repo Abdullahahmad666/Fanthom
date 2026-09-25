@@ -1,4 +1,4 @@
-import { FathomMark } from "@/components/brand/FathomMark";
+import { CueMark } from "@/components/brand/CueMark";
 
 /** Ring mask: keeps only the outer few px of the spinning conic gradient. */
 function ringStyle(thickness: number) {
@@ -7,7 +7,7 @@ function ringStyle(thickness: number) {
 }
 
 /**
- * Branded loading indicator: the Fathom glyph sitting inside a spinning
+ * Branded loading indicator: the Cue glyph sitting inside a spinning
  * brand-cyan arc, with a soft glow behind it.
  *
  * Used while a meeting detail page resolves. Preferred over a skeleton here
@@ -50,7 +50,7 @@ export function BrandLoader({
           }}
         />
 
-        <FathomMark className="relative h-[26px] w-[32px] text-brand" />
+        <CueMark className="relative h-[26px] w-[32px] text-brand" />
       </span>
 
       <p className="text-[13px] tracking-wide text-fg-muted">{label}</p>

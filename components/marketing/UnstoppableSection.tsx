@@ -236,7 +236,7 @@ export function UnstoppableSection() {
             href="/signup"
             className="relative mt-[260px] inline-flex rounded-full bg-gradient-to-r from-[#a9d5ff] to-[#73bfff] px-8 py-3.5 text-[14px] font-semibold tracking-wide text-black uppercase transition-opacity hover:opacity-90"
           >
-            Try Fathom for your team
+            Try Cue for your team
           </Link>
         </div>
       </section>

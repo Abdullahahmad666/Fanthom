@@ -6,14 +6,14 @@ import { MeetingProvider, useMeeting, type DetailTab } from "./MeetingProvider";
 import { Player } from "./Player";
 import { SummaryPanel } from "./SummaryPanel";
 import { TranscriptPanel } from "./TranscriptPanel";
-import { AskFathomPanel } from "./AskFathomPanel";
+import { AskCuePanel } from "./AskCuePanel";
 import { RightRail } from "./RightRail";
 import type { Meeting } from "@/lib/types";
 
 const TABS: { id: DetailTab; label: string }[] = [
   { id: "summary", label: "Summary" },
   { id: "transcript", label: "Transcript" },
-  { id: "ask", label: "Ask Fathom" },
+  { id: "ask", label: "Ask Cue" },
 ];
 
 /** Copy button at the right of the tab row; its label follows the active tab. */
@@ -117,7 +117,7 @@ function Body() {
 
           {tab === "summary" && <SummaryPanel />}
           {tab === "transcript" && <TranscriptPanel />}
-          {tab === "ask" && <AskFathomPanel />}
+          {tab === "ask" && <AskCuePanel />}
         </div>
 
         <p className="px-1 pt-3 text-[12px] text-fg-dim">

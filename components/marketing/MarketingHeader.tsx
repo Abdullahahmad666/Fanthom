@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { FathomWordmark } from "@/components/brand/FathomMark";
+import { CueWordmark } from "@/components/brand/CueMark";
 import { BookDemoModal } from "./BookDemoModal";
 
 const NAV: { label: string; menu?: string[] }[] = [
@@ -31,7 +31,7 @@ const NAV: { label: string; menu?: string[] }[] = [
     menu: [
       "What's New",
       "Resource Hub",
-      "Partner with Fathom",
+      "Partner with Cue",
       "Developer Hub",
       "Help Center",
     ],
@@ -65,12 +65,12 @@ export function MarketingHeader() {
       }`}
     >
       <div className="mx-auto flex max-w-[1560px] items-center gap-3 px-4 py-4 sm:gap-6 sm:px-6 xl:px-10 xl:py-5">
-        <Link href="/" aria-label="Fathom" className="shrink-0">
+        <Link href="/" aria-label="Cue" className="shrink-0">
           <span className="hidden sm:block">
-            <FathomWordmark size={26} />
+            <CueWordmark size={26} />
           </span>
           <span className="sm:hidden">
-            <FathomWordmark size={19} />
+            <CueWordmark size={19} />
           </span>
         </Link>
 

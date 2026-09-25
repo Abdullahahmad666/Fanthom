@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 
 /**
- * "More ways to get started with Fathom".
+ * "More ways to get started with Cue".
  *
  * The gradient edge is a bordered wrapper with the panel painted on top,
  * rather than a border-image: it keeps the 24px radius crisp, which
@@ -13,7 +13,7 @@ const WAYS = [
   {
     icon: "🚀",
     title: "Qualified Portfolio Program",
-    body: "Affiliated startups of select VCs & accelerators get up to 2 years free of Fathom Team.",
+    body: "Affiliated startups of select VCs & accelerators get up to 2 years free of Cue Team.",
     cta: "Check eligibility →",
   },
   {
@@ -25,7 +25,7 @@ const WAYS = [
   {
     icon: "🔀",
     title: "Switching from Gong?",
-    body: "Or something similar? Get Fathom Business free through your contract plus data migration.",
+    body: "Or something similar? Get Cue Business free through your contract plus data migration.",
     cta: "Switch now →",
   },
 ];
@@ -42,7 +42,7 @@ export function MoreWays() {
       >
         <div className="grid gap-8 rounded-[25px] bg-[#070708] px-10 py-10 lg:grid-cols-[minmax(0,0.9fr)_repeat(3,minmax(0,1fr))] lg:gap-0">
           <h2 className="self-center pr-8 text-[26px] leading-tight font-light text-fg">
-            More ways to get started with Fathom
+            More ways to get started with Cue
           </h2>
 
           {WAYS.map((w, i) => (

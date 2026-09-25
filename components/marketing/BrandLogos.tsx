@@ -4,7 +4,7 @@
  * Redrawn as inline SVG rather than shipped as images: they are small, they
  * are monochrome white on a dark tile, and six image requests on a hero
  * section is a worse trade than a few hundred bytes of path data. They are
- * approximations of the real marks, in the same spirit as the Fathom glyph.
+ * approximations of the real marks, in the same spirit as the Cue glyph.
  */
 
 const TILE =

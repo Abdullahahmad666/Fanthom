@@ -87,6 +87,25 @@
   --cue-fast: 140ms;
   --cue-slow: 420ms;
   --cue-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+}
+
+/*
+ * Shell geometry. Not part of the palette -- these do not change with theme,
+ * so they are declared once rather than in every colour block.
+ *
+ * The app shell referenced both of these before they existed, so
+ * `h-[var(--topbar-h)]` resolved to nothing and the top bar collapsed onto its
+ * tallest child: a 34px bar with the search field's top edge flush against the
+ * viewport and its focus ring clipped. The tab nav's sticky offset resolved to
+ * `auto` for the same reason, so it never parked under the bar either.
+ *
+ * 60px gives the field its 38px plus an 11px gutter above and below, which is
+ * what makes it read as sitting *in* the bar rather than being the bar.
+ */
+:root {
+  --topbar-h: 60px;
+  --tabnav-h: 46px;
 }
 
 :root[data-theme="light"] {

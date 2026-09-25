@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Gift } from "lucide-react";
 
 /**
@@ -10,21 +10,42 @@ import { Gift } from "lucide-react";
  * surfaces it without asking for a click.
  */
 
-const INVITE_URL = "https://fathom.video/invite/8_xrKQ";
-const PITCH = "I use Fathom to take notes in all my meetings — worth a look:";
+const REF_CODE = "8_xrKQ";
+const PATH = `/signup?ref=${REF_CODE}`;
+const PITCH = "I use Cue to take notes in all my meetings — worth a look:";
+
+/**
+ * The invite points at this deployment, not at an invented domain.
+ *
+ * A referral card whose link 404s is worse than no referral card, and the
+ * whole control is about handing someone a URL that works. Resolved on the
+ * client because the origin differs between local, preview and production.
+ */
+function inviteUrl() {
+  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  return `${origin}${PATH}`;
+}
+
+/* The origin is external state that never changes within a session, so there
+   is nothing to subscribe to -- but reading it through the external-store hook
+   is what lets the server render the relative path and the client swap in the
+   absolute one without an effect writing state after mount. */
+const noSubscribe = () => () => {};
+const serverUrl = () => PATH;
 
 export function ReferCard() {
   const [copied, setCopied] = useState(false);
+  const url = useSyncExternalStore(noSubscribe, inviteUrl, serverUrl);
 
   const copy = () => {
-    navigator.clipboard?.writeText(INVITE_URL).catch(() => {});
+    navigator.clipboard?.writeText(inviteUrl()).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
 
   const share = {
-    tweet: `https://twitter.com/intent/tweet?text=${encodeURIComponent(PITCH)}&url=${encodeURIComponent(INVITE_URL)}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(INVITE_URL)}`,
+    tweet: `https://twitter.com/intent/tweet?text=${encodeURIComponent(PITCH)}&url=${encodeURIComponent(url)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
   };
 
   return (
@@ -40,7 +61,7 @@ export function ReferCard() {
 
       <div className="mt-4 flex items-center overflow-hidden rounded-lg bg-content">
         <span className="min-w-0 flex-1 truncate px-3 py-2.5 text-[13px] text-fg-muted">
-          {INVITE_URL}
+          {url}
         </span>
         <button
           type="button"
@@ -74,15 +95,9 @@ export function ReferCard() {
           $
         </span>
         <p>
-          Agencies &amp; consultants: learn how you can grow with us through the{" "}
-          <a
-            href="https://fathom.video/partners"
-            target="_blank"
-            rel="noreferrer"
-            className="underline underline-offset-2"
-          >
-            Fathom Growth Partner Program
-          </a>
+          Agencies &amp; consultants: the{" "}
+          <span className="font-semibold">Cue Growth Partner Program</span> is not
+          part of this build.
         </p>
       </div>
     </div>

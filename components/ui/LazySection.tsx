@@ -55,8 +55,23 @@ export function LazySection({
     return () => io.disconnect();
   }, [rootMargin]);
 
+  /*
+   * The floor stays on after mounting, and that is the whole trick.
+   *
+   * Releasing it at `show` looks harmless and is not: `next/dynamic` renders
+   * nothing while its chunk is in flight, so the reserved height disappeared a
+   * moment before the content arrived to replace it. The page collapsed by the
+   * height of one section, which pulled the next section up into the observer's
+   * margin, which mounted it, which collapsed the page again -- measured, all
+   * five sections mounted on load without a single scroll, and the deferral
+   * that this component exists to provide was worth exactly zero bytes.
+   *
+   * As a permanent floor it cannot do that. min-height is inert once the real
+   * content is taller, and the values passed in are the smallest height each
+   * section takes across the widths it was measured at, so it never pads.
+   */
   return (
-    <div ref={ref} style={show ? undefined : { minHeight }}>
+    <div ref={ref} style={{ minHeight }}>
       {show ? children : null}
     </div>
   );

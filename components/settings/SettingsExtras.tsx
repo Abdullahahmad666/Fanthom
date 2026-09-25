@@ -44,7 +44,7 @@ function SectionLabel({ children, aside }: { children: string; aside?: React.Rea
 /* -------------------------------------------------------- premium features */
 
 function PremiumFeatures() {
-  const [botName, setBotName] = useState("Abdullah's Fathom Notetaker");
+  const [botName, setBotName] = useState("Abdullah's Cue Notetaker");
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(botName);
   const [autoActions, setAutoActions] = useState(true);
@@ -73,7 +73,7 @@ function PremiumFeatures() {
             <span className="text-fg-dim">-</span>
             <button
               type="button"
-              onClick={() => notWired("Free preview", "Pricing lives on Fathom's own site.")}
+              onClick={() => notWired("Free preview", "Pricing lives on Cue's own site.")}
               className="text-fg-muted underline underline-offset-2"
             >
               Learn more
@@ -106,7 +106,7 @@ function PremiumFeatures() {
               </span>
             )
           }
-          body="The name your Fathom notetaker will go by when it joins meetings."
+          body="The name your Cue notetaker will go by when it joins meetings."
           control={
             editing ? (
               <ActionButton onClick={save}>Save</ActionButton>
@@ -127,7 +127,7 @@ function PremiumFeatures() {
           icon={<Sparkles className="h-6 w-6" />}
           title="Auto-Generate Action Items"
           badge={<Badge>Recommended</Badge>}
-          body="Fathom AI will automatically extract any action items discussed on your meetings"
+          body="Cue AI will automatically extract any action items discussed on your meetings"
           control={
             <Toggle
               label="Auto-generate action items"
@@ -173,7 +173,7 @@ function PremiumFeatures() {
 const APPS = [
   { name: "Claude", body: "Ask anything about your meetings", mark: "✳", bg: "#1a1512", fg: "#d97757" },
   { name: "ChatGPT", body: "Ask anything about your meetings", mark: "◍", bg: "#ffffff", fg: "#000000" },
-  { name: "Zapier", body: "Automate sending Fathom content to almost any app", mark: "✳", bg: "#ffffff", fg: "#ff4f00" },
+  { name: "Zapier", body: "Automate sending Cue content to almost any app", mark: "✳", bg: "#ffffff", fg: "#ff4f00" },
   { name: "Slack", body: "Automatically send highlights to Slack in real-time.", mark: "◉", bg: "#ffffff", fg: "#611f69" },
   {
     name: "Salesforce",
@@ -255,7 +255,7 @@ function ApiAccess() {
           title="API Access"
           body={
             <>
-              Generate an API key or build an OAuth App to securely integrate Fathom with your
+              Generate an API key or build an OAuth App to securely integrate Cue with your
               tools and systems. <span className="underline underline-offset-2">View Docs</span>
             </>
           }
@@ -270,10 +270,10 @@ function ApiAccess() {
         <SettingCard
           icon={<Plug className="h-6 w-6" />}
           title="MCP Server"
-          body="Connect Fathom to external tools using an MCP server for real-time context, actions, and secure integrations."
+          body="Connect Cue to external tools using an MCP server for real-time context, actions, and secure integrations."
           control={
             <ActionButton
-              onClick={() => notWired("MCP server", "Setup lives on Fathom's own site.")}
+              onClick={() => notWired("MCP server", "Setup lives on Cue's own site.")}
             >
               Set Up <ExternalLink className="h-4 w-4" />
             </ActionButton>
@@ -301,7 +301,7 @@ function Options() {
           icon={<MailCheck className="h-6 w-6" />}
           title="Auto Request Recording Consent"
           badge={<Badge>Recommended</Badge>}
-          body="Fathom collects recording consent from attendees of external calls in advance so you don't have to."
+          body="Cue collects recording consent from attendees of external calls in advance so you don't have to."
           control={
             <Toggle
               label="Auto request recording consent"
@@ -335,10 +335,10 @@ function Options() {
         />
         <SettingCard
           icon={<Sparkles className="h-6 w-6" />}
-          title="Use my anonymized data to improve Fathom's AI for everyone"
+          title="Use my anonymized data to improve Cue's AI for everyone"
           body={
             <>
-              Help make Fathom&apos;s proprietary AI models better for all users.{" "}
+              Help make Cue&apos;s proprietary AI models better for all users.{" "}
               <span className="underline underline-offset-2">Learn More</span>
             </>
           }
@@ -355,21 +355,21 @@ function Options() {
   );
 }
 
-/* ------------------------------------------------------------ fathom apps */
+/* ------------------------------------------------------------ cue apps */
 
-function FathomApps() {
+function CueApps() {
   return (
     <>
-      <SectionLabel>Fathom apps</SectionLabel>
+      <SectionLabel>Cue apps</SectionLabel>
       <div className="space-y-3">
         <SettingCard
           icon={<span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-[18px] text-brand">▶</span>}
           title="Desktop App"
           badge={<Badge>Recommended</Badge>}
-          body="Use Fathom on any platform"
+          body="Use Cue on any platform"
           control={
             <ActionButton
-              onClick={() => notWired("Desktop app", "The installer lives on Fathom's own site.")}
+              onClick={() => notWired("Desktop app", "The installer lives on Cue's own site.")}
             >
               Configure <Settings2 className="h-4 w-4" />
             </ActionButton>
@@ -417,7 +417,7 @@ const SPARE_COLORS = ["#b57df0", "#f07ba5", "#4fd1c5", "#e8743b"];
 function HighlightOptions() {
   const [rows, setRows] = useState(DEFAULT_HIGHLIGHTS);
 
-  /* The first row is Fathom's own and has no handle or bin in the product,
+  /* The first row is Cue's own and has no handle or bin in the product,
      so it cannot be moved or removed here either. */
   const move = (i: number, dir: -1 | 1) => {
     const j = i + dir;
@@ -529,7 +529,7 @@ export function SettingsExtras() {
       <Integrations />
       <ApiAccess />
       <Options />
-      <FathomApps />
+      <CueApps />
       <HighlightOptions />
       <DeleteAccount />
     </>

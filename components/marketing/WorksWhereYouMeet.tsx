@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { FathomMark } from "@/components/brand/FathomMark";
+import { CueMark } from "@/components/brand/CueMark";
 import { Starfield } from "./Starfield";
 
 /**
@@ -228,7 +228,7 @@ export function WorksWhereYouMeet() {
               transform: "translate(-50%,-50%)",
             }}
           >
-            <FathomMark className="h-[clamp(28px,4vw,52px)] w-[clamp(34px,5vw,64px)] text-[#5eb0f5]" />
+            <CueMark className="h-[clamp(28px,4vw,52px)] w-[clamp(34px,5vw,64px)] text-[#5eb0f5]" />
           </span>
 
           {/* Pills */}
@@ -264,7 +264,7 @@ export function WorksWhereYouMeet() {
         </div>
 
         <h3 className="mt-14 text-center text-[clamp(26px,3vw,38px)] leading-[1.25] font-light text-fg">
-          Fathom adapts to
+          Cue adapts to
           <br />
           your workflow, not
           <br />

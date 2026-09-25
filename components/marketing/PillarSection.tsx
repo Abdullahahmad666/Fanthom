@@ -30,7 +30,7 @@ const PILLARS: Pillar[] = [
     id: "momentum",
     title: "Momentum",
     eyebrow: "Eliminate overhead & maximize productivity",
-    body: "'Ask Fathom' anything about your meetings – a place to search everything, and get customizable AI summaries tailored to your team's workflow and priorities so you spend less time searching and more time doing.",
+    body: "'Ask Cue' anything about your meetings – a place to search everything, and get customizable AI summaries tailored to your team's workflow and priorities so you spend less time searching and more time doing.",
     accent: "#EDEFA6",
     cta: "linear-gradient(90deg,#f5f7bf,#edefa6)",
     rings: ["#D87E33", "#B55D0A", "#EAB569"],
@@ -274,7 +274,7 @@ function EaseCard() {
       <p className="text-[14px] tracking-[0.06em] text-fg-muted uppercase">
         Personalizing your account
       </p>
-      <h3 className="mt-3 text-[22px] text-fg">How are you planning to use Fathom?</h3>
+      <h3 className="mt-3 text-[22px] text-fg">How are you planning to use Cue?</h3>
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         {[

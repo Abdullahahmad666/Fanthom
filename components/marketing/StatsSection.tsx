@@ -32,7 +32,7 @@ function subscribeReducedMotion(onChange: () => void) {
 const STATS = [
   {
     value: "95% of users",
-    body: "say Fathom helps them stay fully present in meetings",
+    body: "say Cue helps them stay fully present in meetings",
     circle: "#D94A08",
     column: "rgba(217,74,8,0.16)",
   },
@@ -54,7 +54,7 @@ const STATS = [
 const ROW_H = (STATS.length - 1) * STEP + DIAMETER + TAIL;
 
 /**
- * "Fathom teams work smarter".
+ * "Cue teams work smarter".
  *
  * Scroll-driven, and reversible because everything is derived from scroll
  * position rather than fired as a one-shot animation.
@@ -123,7 +123,7 @@ export function StatsSection() {
   return (
     <section className="overflow-hidden bg-[#f7f5f5] px-10 pt-28 pb-6 text-neutral-900">
       <h2 className="text-center text-[clamp(34px,5vw,62px)] leading-tight font-light">
-        Fathom teams
+        Cue teams
         <br />
         work smarter
       </h2>

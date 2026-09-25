@@ -8,7 +8,7 @@ const PANELS = {
   teams: {
     heading: "Shared visibility. Smarter execution.",
     body: [
-      "Fathom gives teams a shared source of truth across every customer conversation, internal sync, and strategy call – so decisions are visible, follow-through is consistent, and nothing gets lost between meetings.",
+      "Cue gives teams a shared source of truth across every customer conversation, internal sync, and strategy call – so decisions are visible, follow-through is consistent, and nothing gets lost between meetings.",
       "Search conversations, spot patterns, and keep work moving without the manual work.",
     ],
     features: [
@@ -21,7 +21,7 @@ const PANELS = {
   individuals: {
     heading: "Stay present. Remember everything.",
     body: [
-      "Stop splitting your attention between the conversation and your notes. Fathom writes them for you, and has them ready before you have left the call.",
+      "Stop splitting your attention between the conversation and your notes. Cue writes them for you, and has them ready before you have left the call.",
       "Every commitment you make comes back with a timestamp, so nothing quietly falls off your list.",
     ],
     features: [
@@ -50,7 +50,7 @@ export function TeamTabs() {
               tab === id ? "text-[#f2f0a0]" : "text-fg hover:text-fg-muted"
             }`}
           >
-            Fathom for {id}
+            Cue for {id}
             {tab === id && (
               <span className="absolute inset-x-0 -bottom-px h-0.5 bg-[#f2f0a0]" />
             )}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { FathomWordmark } from "@/components/brand/FathomMark";
+import { CueWordmark } from "@/components/brand/CueMark";
 
 /**
  * Every signup/onboarding step shares one frame: a thin cyan progress bar
@@ -33,8 +33,8 @@ export function OnboardingShell({
       </div>
 
       <div className="flex justify-center pt-8">
-        <Link href="/" aria-label="Fathom">
-          <FathomWordmark />
+        <Link href="/" aria-label="Cue">
+          <CueWordmark />
         </Link>
       </div>
 

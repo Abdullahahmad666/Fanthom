@@ -275,7 +275,7 @@ export function MeetingProvider({
 
   /**
    * Player keyboard control. Skipped while typing, so the transcript search
-   * and Ask Fathom composer keep their space bar.
+   * and Ask Cue composer keep their space bar.
    */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
