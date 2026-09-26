@@ -24,21 +24,26 @@ function getClip(meeting: Meeting, id: string | undefined) {
 
 /** Per-meeting title, so a shared link reads as the meeting not the app. */
 export async function generateMetadata({ params, searchParams }: PageProps<"/calls/[id]">) {
+  /* Someone's private meeting record. Every branch below carries this. */
+  const hidden = { robots: { index: false, follow: false } } as const;
+
   const { id } = await params;
   const meeting = await getMeetingBySlug(id);
-  if (!meeting) return { title: "Meeting" };
+  if (!meeting) return { title: "Meeting", ...hidden };
 
   const clip = getClip(meeting, one((await searchParams).clip));
   if (clip) {
     return {
       title: `${clip.note} · clip`,
       description: `A ${HIGHLIGHT_META[clip.kind].label.toLowerCase()} from ${meeting.title}.`,
+      ...hidden,
     };
   }
 
   return {
     title: meeting.title,
     description: `Recap, transcript and action items from ${meeting.title}.`,
+    ...hidden,
   };
 }
 

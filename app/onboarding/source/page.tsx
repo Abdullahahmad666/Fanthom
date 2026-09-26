@@ -1,9 +1,13 @@
 import { redirect } from "next/navigation";
-import { getProfile } from "@/backend/src/services/onboarding";
+import { getProfile } from "@/backend/src/services/profile";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { SourceStep } from "@/components/onboarding/SourceStep";
 
-export const metadata = { title: "Where your meetings happen" };
+export const metadata = {
+  title: "Where your meetings happen",
+  /* Behind the sign-in gate. */
+  robots: { index: false, follow: false },
+};
 
 /**
  * Step 2.

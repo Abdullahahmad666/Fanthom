@@ -49,7 +49,7 @@ export function CueSiteHeader() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-[14px] text-muted transition-colors hover:text-text"
+              className="tap-row text-[14px] text-muted transition-colors hover:text-text"
             >
               {l.label}
             </Link>
@@ -60,7 +60,7 @@ export function CueSiteHeader() {
           <ThemeToggle compact />
           <Link
             href="/login"
-            className="hidden text-[14px] text-muted transition-colors hover:text-text sm:block"
+            className="tap-row hidden text-[14px] text-muted transition-colors hover:text-text sm:inline-flex"
           >
             Sign in
           </Link>

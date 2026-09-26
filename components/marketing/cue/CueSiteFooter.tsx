@@ -20,6 +20,8 @@ const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] =
       { href: "/pricing", label: "Pricing" },
       { href: "/login", label: "Sign in" },
       { href: "/signup", label: "Create an account" },
+      { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
     ],
   },
   {
@@ -53,7 +55,7 @@ export function CueSiteFooter() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-[14px] text-muted transition-colors hover:text-text"
+                    className="tap-row text-[14px] text-muted transition-colors hover:text-text"
                   >
                     {l.label}
                   </Link>

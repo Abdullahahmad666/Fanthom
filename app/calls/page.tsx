@@ -3,6 +3,9 @@ import { CallList } from "@/components/calls/CallList";
 import { listMeetingsFull } from "@/backend/src/repositories/meetings";
 
 export const metadata = {
+  /* Behind the sign-in gate: per-account, and a crawler only ever sees
+     the login redirect. */
+  robots: { index: false, follow: false },
   title: "My Calls",
   description: "Every recorded call, grouped by day, searchable across transcripts.",
 };

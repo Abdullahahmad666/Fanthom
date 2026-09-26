@@ -41,8 +41,8 @@ export function FirstTranscriptStep() {
     /* Mark the flow done before leaving, so it is not offered again. Failure
        is silent: worst case someone sees step 1 once more. */
     try {
-      await fetch("/api/onboarding", {
-        method: "POST",
+      await fetch("/api/profile", {
+        method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ onboarded_at: new Date().toISOString() }),
       });

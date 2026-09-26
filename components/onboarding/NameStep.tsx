@@ -28,8 +28,8 @@ export function NameStep({ initial }: { initial: string }) {
     setWarn(null);
 
     try {
-      const res = await fetch("/api/onboarding", {
-        method: "POST",
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ full_name: value }),
       });

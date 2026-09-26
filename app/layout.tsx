@@ -47,8 +47,25 @@ export const metadata: Metadata = {
     title: "Cue — meeting notes with receipts",
     description: DESCRIPTION,
   },
-  robots: { index: false, follow: false },
+  alternates: { canonical: "/" },
+  /*
+   * The public pages are meant to be found. This used to be a blanket
+   * index:false, which made every piece of SEO work on the site inert --
+   * sitemap, structured data and canonicals included.
+   *
+   * Everything behind sign-in opts out individually (see `noIndex` below) and
+   * is disallowed in robots.ts as well, because those URLs are per-account and
+   * a crawler can only ever reach the login redirect.
+   */
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
 };
+
+/** Metadata for a page that lives behind the sign-in gate. */
+export const noIndex = { robots: { index: false, follow: false } } as const;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

@@ -1,10 +1,14 @@
 import { redirect } from "next/navigation";
-import { getProfile } from "@/backend/src/services/onboarding";
+import { getProfile } from "@/backend/src/services/profile";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { FirstTranscriptStep } from "@/components/onboarding/FirstTranscriptStep";
 import { findSource } from "@/lib/sources";
 
-export const metadata = { title: "Your first transcript" };
+export const metadata = {
+  title: "Your first transcript",
+  /* Behind the sign-in gate. */
+  robots: { index: false, follow: false },
+};
 
 /**
  * Step 3, and the last one.

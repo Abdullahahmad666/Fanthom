@@ -259,8 +259,35 @@ body {
   transition: filter var(--cue-fast) var(--cue-ease);
 }
 
+/*
+ * A cue you can press needs a target you can hit.
+ *
+ * The chip is deliberately small -- it sits beside a line of text and must not
+ * shout over it -- but at 19px tall it failed WCAG 2.5.8's 24px minimum, which
+ * on a phone means a timestamp you keep missing. The visual size is unchanged;
+ * the pseudo-element extends the hit area above and below it instead.
+ */
 @utility cue-chip-interactive {
   cursor: pointer;
+  position: relative;
+}
+
+.cue-chip-interactive::after {
+  content: "";
+  position: absolute;
+  inset: -4px -2px;
+  /* Nothing to see: this exists only to be pressed. */
+}
+
+/*
+ * A tappable line of text in a list -- footer links, nav items -- gets height
+ * from padding rather than from font size, so the row stays visually light
+ * while the target clears 24px.
+ */
+@utility tap-row {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
 }
 
 /* Long-form reading: the transcript and the summary both want a measure. */

@@ -24,8 +24,8 @@ export function SourceStep({ initial }: { initial: SourceId | null }) {
     /* Best effort: a preference that fails to save is not worth stopping the
        flow over, and the import screen falls back to showing every path. */
     try {
-      await fetch("/api/onboarding", {
-        method: "POST",
+      await fetch("/api/profile", {
+        method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ transcript_source: picked }),
       });

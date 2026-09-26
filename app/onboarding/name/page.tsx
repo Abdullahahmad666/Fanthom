@@ -1,9 +1,13 @@
 import { redirect } from "next/navigation";
-import { getProfile } from "@/backend/src/services/onboarding";
+import { getProfile } from "@/backend/src/services/profile";
 import { OnboardingShell } from "@/components/onboarding/OnboardingShell";
 import { NameStep } from "@/components/onboarding/NameStep";
 
-export const metadata = { title: "Welcome to Cue" };
+export const metadata = {
+  title: "Welcome to Cue",
+  /* Behind the sign-in gate. */
+  robots: { index: false, follow: false },
+};
 
 /**
  * Step 1 of the rebuilt flow.
