@@ -20,7 +20,7 @@ export function CueClosing() {
       />
 
       <Reveal className="relative mx-auto max-w-[680px] text-center">
-        <h2 className="font-display text-[clamp(32px,4.6vw,54px)] leading-[1.08] tracking-[-0.02em] text-text">
+        <h2 className="write-on font-display text-[clamp(32px,4.6vw,54px)] leading-[1.08] tracking-[-0.02em] text-text">
           Bring one meeting.
           <br />
           Check every line.

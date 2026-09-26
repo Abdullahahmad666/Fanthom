@@ -32,7 +32,7 @@ export function Faq() {
           <p className="section-label">Questions</p>
           <h2
             id="faq-heading"
-            className="font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text"
+            className="write-on font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text"
           >
             The things people ask first.
           </h2>

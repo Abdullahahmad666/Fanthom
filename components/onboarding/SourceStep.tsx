@@ -47,7 +47,7 @@ export function SourceStep({ initial }: { initial: SourceId | null }) {
               type="button"
               onClick={() => setPicked(s.id)}
               aria-pressed={on}
-              className={`press relative rounded-xl border p-5 text-left transition-colors ${
+              className={`card-cue press relative rounded-xl border p-5 text-left ${
                 on
                   ? "border-accent bg-accentsoft"
                   : "border-line bg-surface hover:border-line-strong"

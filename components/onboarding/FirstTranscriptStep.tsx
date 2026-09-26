@@ -106,7 +106,7 @@ export function FirstTranscriptStep() {
           type="button"
           onClick={loadSample}
           disabled={busy}
-          className="press flex flex-col items-start rounded-xl border border-line bg-surface p-6 text-left transition-colors hover:border-line-strong disabled:opacity-60"
+          className="card-cue press flex flex-col items-start rounded-xl border border-line bg-surface p-6 text-left disabled:opacity-60"
         >
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-mark-soft text-mark">
             {busy ? (

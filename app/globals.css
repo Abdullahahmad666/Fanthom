@@ -367,10 +367,19 @@ body {
      they rest where they started instead of at the end of one cycle. */
   .marquee-track,
   .skeleton,
+  .card-cue::after,
+  /* Critically, this one resets rather than freezing: a heading caught
+     mid-wipe is a heading you cannot read. */
+  .write-on,
   /* Parallax is depth, not content. Fast-forwarded it would leave the card
      resting 14px off its natural position for no reason. */
   .parallax-hero {
     animation: none !important;
+  }
+
+  .write-on {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
   }
 
   /* The reading-progress line would otherwise snap to full width and sit there
@@ -622,6 +631,113 @@ body {
 @keyframes cue-progress {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
+}
+
+/*
+ * How a card answers the pointer.
+ *
+ * A cue light coming on. The strip that sweeps across the top edge is the same
+ * amber the timestamps use, which is the one colour in this palette reserved
+ * for provenance -- so a card lighting up reads as "there is something here to
+ * play" rather than as decoration borrowed from a template.
+ *
+ * The lift is 3px, and it uses `translate` rather than `transform`. These
+ * cards also carry the scroll-linked reveal, which animates `transform` -- and
+ * an animation beats a plain declaration in the cascade, so a hover written as
+ * `transform: translateY()` was silently discarded. Measured: the strip lit up
+ * and the card never moved. The independent transform properties compose with
+ * `transform` instead of replacing it, so the two can coexist.
+ *
+ * Bigger than 3px reads as a button about to leave the page, and across a row
+ * of cards it turns a glance into a wave.
+ *
+ * Deliberately behind a hover media query: on a touch screen :hover sticks
+ * after a tap, so the card you last touched stays lit until you touch another,
+ * which looks like a selection nobody made.
+ */
+@utility card-cue {
+  position: relative;
+  transition:
+    translate var(--cue-fast) var(--cue-ease),
+    border-color var(--cue-fast) var(--cue-ease),
+    box-shadow var(--cue-fast) var(--cue-ease);
+}
+
+.card-cue::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cue-mark), transparent);
+  transform: scaleX(0);
+  transform-origin: 50% 0;
+  transition: transform var(--cue-slow) var(--cue-ease);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .card-cue:hover {
+    translate: 0 -3px;
+    border-color: var(--cue-line-strong);
+    box-shadow: 0 14px 30px -16px rgb(0 0 0 / 0.4);
+  }
+
+  .card-cue:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Keyboard users get the same signal. */
+.card-cue:focus-within::after {
+  transform: scaleX(1);
+}
+
+/*
+ * Text that writes itself as you scroll to it.
+ *
+ * A mask, not a typewriter. The usual character-by-character approach needs
+ * JavaScript, reflows the line on every tick, and hands a crawler a heading
+ * that is empty at first paint. This reveals text that is already there, by
+ * moving a mask across it -- so the markup is complete, the layout never
+ * shifts, and the whole thing is a single compositor-friendly property.
+ *
+ * The soft edge on the gradient is what makes it read as ink arriving rather
+ * than a bar sliding: the last few pixels fade in instead of appearing at full
+ * strength.
+ *
+ * Tied to scroll position, so it is drawn at the speed the reader is moving.
+ * Stop scrolling and the pen stops with you.
+ */
+@keyframes cue-write {
+  from {
+    mask-size: 0% 100%;
+    -webkit-mask-size: 0% 100%;
+  }
+  to {
+    mask-size: 140% 100%;
+    -webkit-mask-size: 140% 100%;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .write-on {
+    mask-image: linear-gradient(90deg, #000 78%, rgba(0, 0, 0, 0.35) 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 78%, rgba(0, 0, 0, 0.35) 92%, transparent 100%);
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    animation: cue-write linear both;
+    animation-timeline: view();
+    /*
+     * Measured in `cover`, not `entry`. An `entry` range is scaled to the
+     * element's own height, and a one-line heading is about 60px tall -- so
+     * the wipe finished within 60px of scrolling, roughly 500px below the fold,
+     * where nobody was looking. `cover` is scaled to the viewport, so this runs
+     * from just-appeared to about halfway up the screen: visible the whole way,
+     * and settled before you reach the paragraph under it.
+     */
+    animation-range: cover 8% cover 42%;
+  }
 }
 
 /*

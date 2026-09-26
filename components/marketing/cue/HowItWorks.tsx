@@ -34,7 +34,7 @@ export function HowItWorks() {
       <div className="mx-auto max-w-[1240px]">
         <Reveal className="reveal-lead">
           <p className="section-label">How it works</p>
-          <h2 className="font-display mt-3 max-w-[16ch] text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
+          <h2 className="write-on font-display mt-3 max-w-[16ch] text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
             Three steps, and none of them invent anything.
           </h2>
         </Reveal>
@@ -45,7 +45,7 @@ export function HowItWorks() {
               key={s.title}
               as="li"
               delay={i * 110}
-              className="flex flex-col bg-surface p-7"
+              className="card-cue flex flex-col bg-surface p-7"
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accentsoft text-accent">

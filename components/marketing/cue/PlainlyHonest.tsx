@@ -33,7 +33,7 @@ export function PlainlyHonest() {
       <div className="mx-auto max-w-[1240px]">
         <Reveal className="reveal-lead max-w-[52ch]">
           <p className="section-label">Plainly</p>
-          <h2 className="font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
+          <h2 className="write-on font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
             What it does, and what it will not pretend to do.
           </h2>
         </Reveal>

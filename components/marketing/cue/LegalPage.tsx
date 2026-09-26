@@ -37,7 +37,7 @@ export async function LegalPage({
 
       <main className="mx-auto w-full max-w-[720px] px-6 pt-16 pb-24 sm:px-8">
         <p className="section-label">Legal</p>
-        <h1 className="font-display mt-3 text-[clamp(32px,4.4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
+        <h1 className="write-on font-display mt-3 text-[clamp(32px,4.4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
           {title}
         </h1>
         <p className="mt-3 text-[13px] text-faint">Last updated {date}</p>

@@ -51,7 +51,7 @@ export function CallCard({
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-lg bg-raised transition-colors hover:bg-[#2f2f34] focus-within:outline-2 focus-within:outline-brand">
+    <div className="card-cue group relative overflow-hidden rounded-lg bg-raised focus-within:outline-2 focus-within:outline-brand">
       <VideoPoster
         participants={meeting.participants}
         poster={meeting.poster}

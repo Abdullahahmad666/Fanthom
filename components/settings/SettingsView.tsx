@@ -64,7 +64,7 @@ function Section({
   delay?: number;
 }) {
   return (
-    <Reveal as="section" delay={delay} className="rounded-xl border border-line bg-surface p-6">
+    <Reveal as="section" delay={delay} className="card-cue rounded-xl border border-line bg-surface p-6">
       <h2 className="text-[16px] font-semibold text-text">{title}</h2>
       <p className="measure mt-1.5 text-[13.5px] leading-relaxed text-muted">{description}</p>
       <div className="mt-5">{children}</div>

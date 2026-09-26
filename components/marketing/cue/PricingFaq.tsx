@@ -31,7 +31,7 @@ export function PricingFaq() {
     <section className="px-6 pb-24 sm:px-10">
       <div className="mx-auto max-w-[820px]">
         <Reveal>
-          <h2 className="font-display text-[clamp(26px,3.4vw,40px)] leading-tight tracking-[-0.02em] text-text">
+          <h2 className="write-on font-display text-[clamp(26px,3.4vw,40px)] leading-tight tracking-[-0.02em] text-text">
             Questions worth asking.
           </h2>
         </Reveal>

@@ -21,7 +21,7 @@ export function WorksWhereYouMeet() {
       <div className="mx-auto max-w-[1240px]">
         <Reveal className="reveal-lead max-w-[52ch]">
           <p className="section-label">Sources</p>
-          <h2 className="font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
+          <h2 className="write-on font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
             Works wherever you already meet.
           </h2>
           <p className="mt-5 text-[16px] leading-relaxed text-muted">
@@ -34,7 +34,7 @@ export function WorksWhereYouMeet() {
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
           {SOURCES.map((s, i) => (
-            <Reveal key={s.name} delay={i * 80} className="bg-surface p-6">
+            <Reveal key={s.name} delay={i * 80} className="card-cue bg-surface p-6">
               <span
                 aria-hidden
                 className="block h-1.5 w-9 rounded-full"

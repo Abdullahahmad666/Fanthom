@@ -82,7 +82,7 @@ export function PlaylistsView() {
                     /* Capped so a long playlist does not keep animating after
                        you have already started reading it. */
                     delay={Math.min(i, 8) * 45}
-                    className="group relative overflow-hidden rounded-lg bg-raised"
+                    className="card-cue group relative overflow-hidden rounded-lg bg-raised"
                   >
                     <Link
                       href={`/calls/${item.meetingId}?t=${Math.round(item.tSec)}`}

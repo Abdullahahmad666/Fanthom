@@ -90,7 +90,7 @@ export function MomentSearch() {
       <div className="mx-auto max-w-[1240px]">
         <Reveal className="reveal-lead max-w-[46ch]">
           <p className="section-label">Search</p>
-          <h2 className="font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
+          <h2 className="write-on font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
             Find the sentence, not the meeting.
           </h2>
           <p className="mt-5 text-[16px] leading-relaxed text-muted">

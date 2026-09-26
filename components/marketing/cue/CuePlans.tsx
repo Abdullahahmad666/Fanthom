@@ -90,7 +90,7 @@ export function CuePlans() {
       <div className="mx-auto max-w-[1240px]">
         <Reveal className="text-center">
           <p className="section-label">Pricing</p>
-          <h1 className="font-display mx-auto mt-3 max-w-[18ch] text-[clamp(34px,4.8vw,58px)] leading-[1.08] tracking-[-0.02em] text-text">
+          <h1 className="write-on font-display mx-auto mt-3 max-w-[18ch] text-[clamp(34px,4.8vw,58px)] leading-[1.08] tracking-[-0.02em] text-text">
             Pay for the meetings, not the promises.
           </h1>
           <p className="mx-auto mt-5 max-w-[56ch] text-[16px] leading-relaxed text-muted">
@@ -151,7 +151,7 @@ function PlanCard({ plan, annual }: { plan: Plan; annual: boolean }) {
 
   return (
     <article
-      className={`flex flex-1 flex-col rounded-xl border bg-surface px-7 pt-7 pb-8 ${
+      className={`card-cue flex flex-1 flex-col rounded-xl border bg-surface px-7 pt-7 pb-8 ${
         plan.featured ? "border-accent" : "border-line"
       }`}
     >
