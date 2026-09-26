@@ -106,6 +106,21 @@
 :root {
   --topbar-h: 60px;
   --tabnav-h: 46px;
+
+  /*
+   * The meeting page's measure, and the width of the Ask rail beside it.
+   *
+   * These went the same way as the two above: referenced by the layout,
+   * dropped when this file was rewritten, and silently resolving to nothing --
+   * so `max-w-[var(--detail-max)]` became `max-width: none` and the meeting
+   * page stretched to whatever the window was. A transcript set to the full
+   * width of a 27-inch monitor is a transcript nobody finishes a paragraph of.
+   *
+   * 1120px is the original value, recovered from the commit that introduced
+   * them rather than guessed at.
+   */
+  --detail-max: 1120px;
+  --rail-w: 400px;
 }
 
 :root[data-theme="light"] {

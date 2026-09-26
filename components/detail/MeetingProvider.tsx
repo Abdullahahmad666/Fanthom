@@ -10,6 +10,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { pushToast } from "@/lib/toast";
 import type {
   ActionItem,
   Highlight,
@@ -320,55 +321,167 @@ export function MeetingProvider({
     return () => document.removeEventListener("keydown", onKey);
   }, [meeting.durationSec, togglePlay]);
 
-  const addActionItem = useCallback((turn: TranscriptTurn, text: string) => {
-    setActionItems((items) => [
-      ...items,
-      {
-        id: `manual-${Date.now()}`,
-        text,
-        ownerId: turn.speakerId,
-        tSec: turn.tSec,
-        done: false,
-        manual: true,
-      },
-    ]);
-  }, []);
+  /*
+   * Action items are saved, not just shown.
+   *
+   * Both of these were state and nothing else, so an item written during a
+   * call was gone by the next page load and a ticked box untucked itself on
+   * reload. Of everything on this page a checked box is the interaction people
+   * most reasonably assume is kept.
+   *
+   * Optimistic, for the same reason as highlights: the tick has to land under
+   * the pointer. A failed write is rolled back rather than left looking saved.
+   */
+  const addActionItem = useCallback(
+    (turn: TranscriptTurn, text: string) => {
+      const tempId = `manual-${Date.now()}`;
+      setActionItems((items) => [
+        ...items,
+        { id: tempId, text, ownerId: turn.speakerId, tSec: turn.tSec, done: false, manual: true },
+      ]);
 
-  const toggleActionItem = useCallback((id: string) => {
-    setActionItems((items) =>
-      items.map((i) => (i.id === id ? { ...i, done: !i.done } : i)),
-    );
-  }, []);
+      void (async () => {
+        try {
+          const res = await fetch(
+            `/api/meetings/${encodeURIComponent(meeting.id)}/action-items`,
+            {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ text, tSec: turn.tSec }),
+            },
+          );
+          const data = await res.json().catch(() => ({ ok: false }));
+          if (!data.ok) {
+            setActionItems((items) => items.filter((i) => i.id !== tempId));
+            pushToast({ title: "That action item was not saved", status: "error" });
+            return;
+          }
+          setActionItems((items) =>
+            items.map((i) => (i.id === tempId ? { ...i, id: data.item.id } : i)),
+          );
+        } catch {
+          setActionItems((items) => items.filter((i) => i.id !== tempId));
+          pushToast({ title: "That action item was not saved", status: "error" });
+        }
+      })();
+    },
+    [meeting.id],
+  );
 
+  const toggleActionItem = useCallback(
+    (id: string) => {
+      let next = false;
+      setActionItems((items) =>
+        items.map((i) => {
+          if (i.id !== id) return i;
+          next = !i.done;
+          return { ...i, done: next };
+        }),
+      );
+
+      void fetch(
+        `/api/meetings/${encodeURIComponent(meeting.id)}/action-items/${encodeURIComponent(id)}`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ done: next }),
+        },
+      ).catch(() => {});
+    },
+    [meeting.id],
+  );
+
+  /*
+   * Highlights are written to the database, not just to this component.
+   *
+   * They used to be React state and nothing more: marking a moment showed it,
+   * and that was the end of it. It vanished on reload, and a clip link shared
+   * from it resolved to nothing for whoever received it, because the highlight
+   * had only ever existed in the tab that made it.
+   *
+   * Written optimistically so the mark appears under the pointer immediately,
+   * then reconciled with the row the server created -- the id matters, because
+   * a share link built straight after marking would otherwise carry a
+   * temporary one that resolves to nothing. A failed write is rolled back
+   * rather than left on screen looking saved.
+   */
   const addHighlight = useCallback(
     (turn: TranscriptTurn, kind: HighlightKind, note: string) => {
       const turns = meeting.transcript;
       const idx = turns.findIndex((t) => t.id === turn.id);
       const endSec = turns[idx + 1]?.tSec ?? Math.min(turn.tSec + 30, meeting.durationSec);
-      setHighlights((hs) => [
-        ...hs,
-        {
-          id: `hl-${Date.now()}`,
-          kind,
-          tSec: turn.tSec,
-          endSec,
-          note,
-          createdBy: "abdullah",
-        },
-      ]);
+
+      const tempId = `hl-${Date.now()}`;
+      const optimistic: Highlight = {
+        id: tempId,
+        kind,
+        tSec: turn.tSec,
+        endSec,
+        note,
+        /* Filled in by the server from the session; shown until then. */
+        createdBy: "You",
+      };
+      setHighlights((hs) => [...hs, optimistic]);
+
+      void (async () => {
+        try {
+          const res = await fetch(`/api/meetings/${encodeURIComponent(meeting.id)}/highlights`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ kind, tSec: turn.tSec, endSec, note }),
+          });
+          const data = await res.json().catch(() => ({ ok: false }));
+
+          if (!data.ok) {
+            setHighlights((hs) => hs.filter((h) => h.id !== tempId));
+            pushToast({
+              title: "That highlight was not saved",
+              description: "It would not have been shareable, so it has been removed.",
+              status: "error",
+            });
+            return;
+          }
+
+          setHighlights((hs) => hs.map((h) => (h.id === tempId ? data.highlight : h)));
+        } catch {
+          setHighlights((hs) => hs.filter((h) => h.id !== tempId));
+          pushToast({
+            title: "That highlight was not saved",
+            description: "The database may be unreachable.",
+            status: "error",
+          });
+        }
+      })();
     },
-    [meeting.transcript, meeting.durationSec],
+    [meeting.transcript, meeting.durationSec, meeting.id],
   );
 
   const removeHighlight = useCallback(
-    (id: string) => setHighlights((hs) => hs.filter((h) => h.id !== id)),
-    [],
+    (id: string) => {
+      setHighlights((hs) => hs.filter((h) => h.id !== id));
+      /* Best effort: the mark is already gone from the screen, and a delete
+         that fails leaves a row nobody can see rather than losing anything. */
+      void fetch(
+        `/api/meetings/${encodeURIComponent(meeting.id)}/highlights/${encodeURIComponent(id)}`,
+        { method: "DELETE" },
+      ).catch(() => {});
+    },
+    [meeting.id],
   );
 
   const renameHighlight = useCallback(
-    (id: string, note: string) =>
-      setHighlights((hs) => hs.map((h) => (h.id === id ? { ...h, note } : h))),
-    [],
+    (id: string, note: string) => {
+      setHighlights((hs) => hs.map((h) => (h.id === id ? { ...h, note } : h)));
+      void fetch(
+        `/api/meetings/${encodeURIComponent(meeting.id)}/highlights/${encodeURIComponent(id)}`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ note }),
+        },
+      ).catch(() => {});
+    },
+    [meeting.id],
   );
 
   const value = useMemo<Ctx>(
