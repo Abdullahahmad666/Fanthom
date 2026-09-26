@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Info, Maximize2, MicOff, Pause, Play, Volume2 } from "lucide-react";
+import { ArrowRight, FileText, Info, Maximize2, Pause, Play, Volume2 } from "lucide-react";
 import { PlayerMenu } from "@/components/detail/PlayerMenu";
 import { PLAYBACK_RATES } from "@/components/detail/MeetingProvider";
 import { VideoPoster } from "@/components/ui/VideoPoster";
@@ -82,7 +82,6 @@ export function ClipView({ meeting, clip }: { meeting: Meeting; clip: Highlight 
   };
 
   const meta = HIGHLIGHT_META[clip.kind];
-  const owner = meeting.participants[0];
   const pct = (elapsed / length) * 100;
 
   return (
@@ -137,13 +136,13 @@ export function ClipView({ meeting, clip }: { meeting: Meeting; clip: Highlight 
 
           <div className="absolute right-3 bottom-14 hidden w-[150px] rounded-md bg-black/80 px-2 py-1.5 sm:block">
             <div className="flex items-start justify-between">
-              <span className="text-[9px] leading-tight text-fg-muted">
-                Recording and taking notes
-              </span>
-              <MicOff className="h-3 w-3 shrink-0 text-fg-muted" />
+            <span className="text-[9px] leading-tight text-fg-muted">
+              Imported transcript
+            </span>
+              <FileText className="h-3 w-3 shrink-0 text-fg-muted" />
             </div>
             <span className="mt-2 block truncate text-[9px] text-fg-muted">
-              {owner?.name}&apos;s Cue Notetaker
+              Nothing joined this call
             </span>
           </div>
 

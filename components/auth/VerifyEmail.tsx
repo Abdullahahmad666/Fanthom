@@ -108,8 +108,12 @@ export function VerifyEmail({
       description: "Your account is ready.",
       status: "success",
     });
+
+    /* Same two races as sign-up: wait for the session to be persisted before
+       navigating, and refresh a tick later so it cannot cancel the push. */
+    await supabase.auth.getSession();
     router.push(next);
-    router.refresh();
+    setTimeout(() => router.refresh(), 0);
   };
 
   const resend = async () => {

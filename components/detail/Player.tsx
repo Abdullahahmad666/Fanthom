@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import {
-  Expand, Info, Maximize, MicOff, Pause, PictureInPicture2, Play, Volume2,
+  Expand, FileText, Info, Maximize, Pause, PictureInPicture2, Play, Volume2,
 } from "lucide-react";
 import { PLAYBACK_RATES, useMeeting, type PlayerSize } from "./MeetingProvider";
 import { PlayerMenu } from "./PlayerMenu";
@@ -126,16 +126,25 @@ export function Player() {
           )}
         </button>
 
-        {/* Notetaker PiP tile. */}
-        <div className="absolute right-3 bottom-14 hidden w-[150px] rounded-md bg-black/80 px-2 py-1.5 sm:block">
-          <div className="flex items-start justify-between">
+        {/*
+          Where the reference product showed its bot sitting in the call, Cue
+          shows where the transcript came from.
+
+          A tile reading "Recording and taking notes — <name>'s Cue Notetaker"
+          was left over from the clone, and it contradicted the one claim the
+          whole product is built on: nothing joins your meeting. Anyone who
+          read the landing page and then opened a meeting found a notetaker
+          bot looking back at them.
+        */}
+        <div className="absolute right-3 bottom-14 hidden w-[170px] rounded-md bg-black/80 px-2 py-1.5 sm:block">
+          <div className="flex items-start justify-between gap-1">
             <span className="text-[9px] leading-tight text-fg-muted">
-              Recording and taking notes
+              Imported transcript
             </span>
-            <MicOff className="h-3 w-3 shrink-0 text-fg-muted" />
+            <FileText className="h-3 w-3 shrink-0 text-fg-muted" />
           </div>
           <span className="mt-2 block truncate text-[9px] text-fg-muted">
-            {owner?.name}&apos;s Cue Notetaker
+            Nothing joined this call
           </span>
         </div>
 

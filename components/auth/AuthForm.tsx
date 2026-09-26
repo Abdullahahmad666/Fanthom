@@ -56,6 +56,15 @@ function humanise(message: string, mode: Mode): string {
    * every user. Saying "too many attempts" to somebody on their first one
    * sends them off to wait for something that will not change.
    */
+  /*
+   * The mailer failed outright, which is different from being throttled.
+   * Supabase creates the account and then sends; when the send throws, it
+   * rolls the account back -- so this reads as "sign-up failed" when what
+   * actually failed was SMTP. Nobody can act on "unexpected_failure".
+   */
+  if (m.includes("error sending") || m.includes("unexpected_failure")) {
+    return "The account could not be created because the confirmation email would not send. That is a mail setting in Supabase — fix SMTP, or turn off \"Confirm email\" to sign up without one.";
+  }
   if (m.includes("email rate limit") || m.includes("over_email_send_rate_limit")) {
     return "The mail sender has hit its limit, so no email went out. This is a project setting rather than anything you did — configure SMTP in Supabase, or wait an hour.";
   }
@@ -90,6 +99,32 @@ function humanise(message: string, mode: Mode): string {
 function callbackUrl(next: string) {
   const origin = window.location.origin;
   return `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
+}
+
+/**
+ * Leaves for the app once the session is genuinely on the client.
+ *
+ * Two races made this land back on the form it started from. `signUp` resolves
+ * before supabase-js has finished persisting the session, so the very next
+ * request can reach middleware with no cookie and be sent to /login. And
+ * calling `refresh()` in the same tick as `push()` can cancel the navigation
+ * that was just started, leaving the page exactly where it was -- which is the
+ * symptom: a 200 with an access token, and an address bar still reading
+ * /signup.
+ *
+ * Waiting for getSession() settles the first. Refreshing only after the push
+ * has been handed off settles the second.
+ */
+async function enter(
+  supabase: NonNullable<ReturnType<typeof createClient>>,
+  router: ReturnType<typeof useRouter>,
+  to: string,
+) {
+  await supabase.auth.getSession();
+  router.push(to);
+  /* A tick later, so the server components re-render against the new cookie
+     without racing the navigation itself. */
+  setTimeout(() => router.refresh(), 0);
 }
 
 type Mode = "signup" | "signin";
@@ -156,32 +191,75 @@ function AuthFormInner({ mode = "signup" }: { mode?: Mode }) {
 
     setBusy("email");
 
+    const address = email.trim();
+
     const result = signup
       ? await supabase.auth.signUp({
-          email: email.trim(),
+          email: address,
           password,
           options: { emailRedirectTo: callbackUrl(next) },
         })
-      : await supabase.auth.signInWithPassword({ email: email.trim(), password });
+      : await supabase.auth.signInWithPassword({ email: address, password });
 
     if (result.error) {
+      /*
+       * The mailer refusing is not the same as the sign-up refusing.
+       *
+       * Supabase creates the account and then tries to send the confirmation;
+       * when the send is what failed, the account can already exist and the
+       * person is left staring at an error for something that worked. So try
+       * the credentials they just chose -- if confirmation is off, or the row
+       * is already usable, that signs them straight in.
+       *
+       * If it does not work the original message stands, because inventing a
+       * different one would only move the confusion.
+       */
+      const mailerFailed = /email rate limit|over_email_send_rate_limit|error sending/i.test(
+        result.error.message,
+      );
+
+      if (signup && mailerFailed) {
+        const retry = await supabase.auth.signInWithPassword({ email: address, password });
+        if (!retry.error && retry.data.session) {
+          pushToast({
+            title: "Account created",
+            description: "The confirmation email could not be sent, but your account is ready.",
+            status: "success",
+            duration: 6000,
+          });
+          await enter(supabase, router, next);
+          return;
+        }
+      }
+
       setError(humanise(result.error.message, mode));
       setBusy(null);
       return;
     }
 
-    /* Sign-up with email confirmation on returns a user but no session. Saying
-       "welcome" and pushing into the app would be a lie -- nothing is signed
-       in yet -- so the screen hands over to the code entry instead, which
-       finishes the job without depending on a redirect URL being allowlisted. */
-    if (signup && !result.data.session) {
+    /* Confirmation is off, so Supabase handed back a session: the account is
+       real and usable right now, and there is nothing to verify. */
+    if (signup && result.data.session) {
+      pushToast({
+        title: "Account created",
+        description: `Signed in as ${address}.`,
+        status: "success",
+      });
+      await enter(supabase, router, next);
+      return;
+    }
+
+    /* Confirmation is on: a user came back but no session. Saying "welcome"
+       and pushing into the app would be a lie -- nothing is signed in yet --
+       so the screen hands over to the code entry, which finishes the job
+       without depending on a redirect URL being allowlisted. */
+    if (signup) {
       setCheckInbox(true);
       setBusy(null);
       return;
     }
 
-    router.push(next);
-    router.refresh();
+    await enter(supabase, router, next);
   };
 
   const withGoogle = async () => {
