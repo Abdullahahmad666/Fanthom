@@ -14,8 +14,8 @@ const FAQ = [
     a: "It is parsed in your browser first, so you see what Cue found before anything is stored. If you save it, the text and the notes go into a Postgres row scoped to your account.",
   },
   {
-    q: "Why does the pricing page say nothing is billed?",
-    a: "Because nothing is. This is a portfolio build with a real database and a real API behind it, but no company, no payment processor and no customers. The plans describe how it would be priced.",
+    q: "What does Cue cost?",
+    a: "Cue is free while it is in early access. The plans show how it will be priced when billing arrives, and every feature is marked available now or coming soon.",
   },
 ];
 

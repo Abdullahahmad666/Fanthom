@@ -1,5 +1,5 @@
 import { ListLayout } from "@/components/layout/ListLayout";
-import { NotInPrototype } from "@/components/ui/NotInPrototype";
+import { ComingSoon } from "@/components/ui/ComingSoon";
 
 export const metadata = {
   /* Behind the sign-in gate: per-account, and a crawler only ever sees
@@ -12,7 +12,10 @@ export const metadata = {
 export default function Page() {
   return (
     <ListLayout rail={false}>
-      <NotInPrototype title="Alerts" />
+      <ComingSoon
+        title="Alerts"
+        detail="Tell Cue a word or a topic and it will flag every meeting where it comes up, with the moment it was said."
+      />
     </ListLayout>
   );
 }

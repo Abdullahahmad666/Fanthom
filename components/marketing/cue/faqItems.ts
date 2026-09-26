@@ -37,10 +37,10 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Can I use Cue with my team?",
-    a: "Not yet. Shared libraries, per-meeting permissions and SSO are on the pricing page marked as planned rather than built. Cue is currently a single-person tool and says so.",
+    a: "Not yet. Shared libraries, per-meeting permissions and SSO are coming soon — they are marked that way on the pricing page. Cue is a single-person tool today.",
   },
   {
     q: "What does it cost?",
-    a: "Nothing. Cue is a portfolio build with a real database behind it, but no company and no payment processor. The plans on the pricing page describe how it would be priced, and every row there is marked built or planned.",
+    a: "Nothing — Cue is free while it is in early access. The pricing page shows how it will be priced later, with every feature marked available now or coming soon.",
   },
 ];

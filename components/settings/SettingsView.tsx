@@ -129,7 +129,7 @@ function ProfileSection({ profile }: { profile: Profile }) {
           className="mt-1.5 h-[44px] w-full cursor-not-allowed rounded-lg border border-line bg-sunken px-3.5 text-[14px] text-muted"
         />
         <p className="mt-1.5 text-[12px] text-faint">
-          Changing your email is not part of this build.
+          Changing your email is coming soon.
         </p>
 
         <div className="mt-5 flex items-center gap-3">

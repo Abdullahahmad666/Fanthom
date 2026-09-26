@@ -7,7 +7,7 @@ import { CueClosing } from "@/components/marketing/cue/CueClosing";
 export const metadata = {
   title: "Pricing — Cue",
   description:
-    "What Cue would charge for, and which of it exists today. Nothing is billed: this is a portfolio build with a real database behind it.",
+    "Cue is free while in early access. Every feature is marked available now or coming soon.",
 };
 
 /**

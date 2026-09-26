@@ -204,8 +204,6 @@ export function BookDemoModal({ onClose }: { onClose: () => void }) {
                       Check out all of Cue&apos;s plans and features at{" "}
                       <a
                         href="/pricing"
-                        target="_blank"
-                        rel="noreferrer"
                         className="underline underline-offset-2"
                       >
                         See plans

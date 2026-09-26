@@ -5,9 +5,9 @@ import { pushToast, updateToast } from "@/lib/toast";
 /**
  * "Start 14-Day Trial", shared by the Team Calls and Deals upsells.
  *
- * Billing is out of scope, so the button says so rather than pretending. It
- * still runs the loading -> resolved toast, because a dead button on the one
- * CTA of the page reads as a broken page.
+ * Billing is not built yet, so the button says when it will be rather than
+ * pretending. It still runs the loading -> resolved toast, because a dead
+ * button on the one CTA of a page reads as a broken page.
  */
 export function TrialButton({ className }: { className?: string }) {
   const start = () => {
@@ -18,7 +18,7 @@ export function TrialButton({ className }: { className?: string }) {
     setTimeout(() => {
       updateToast(id, {
         title: "Team Edition",
-        description: "Billing is out of scope for this prototype — the tier is shown, not sold.",
+        description: "Paid plans are coming soon. Everything on the Free tier works today.",
         status: "success",
         duration: 5000,
       });

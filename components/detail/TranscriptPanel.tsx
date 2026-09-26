@@ -67,7 +67,7 @@ function AddMenu({ turn }: { turn: TranscriptTurn }) {
 
           <div className="border-y border-line py-1">
             <span
-              title="Comments are not part of this prototype"
+              title="Comments — coming soon"
               className="flex w-full cursor-not-allowed items-center gap-3 px-4 py-3 text-[13px] font-bold tracking-wide text-fg/35 uppercase"
             >
               <MessageSquare className="h-5 w-5" /> Comment
@@ -131,7 +131,7 @@ function RowMenu() {
           {items.map(({ icon: Icon, label }) => (
             <span
               key={label}
-              title="Transcript editing is not part of this prototype"
+              title="Transcript editing — coming soon"
               className="flex w-full cursor-not-allowed items-start gap-3 px-4 py-2.5 text-[13px] font-semibold text-fg/40"
             >
               <Icon className="mt-0.5 h-4 w-4 shrink-0" />

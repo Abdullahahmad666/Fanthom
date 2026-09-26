@@ -4,26 +4,26 @@ import { CueWordmark } from "@/components/brand/CueMark";
 /**
  * The footer.
  *
- * Four columns of links to pages that do not exist is a sitemap for a company
- * rather than a footer for a product, so this lists what is actually here and
- * says plainly what the build is. The line about the prototype is not an
- * apology -- it is the same commitment the rest of the page makes, applied to
- * the page itself.
+ * Only links that earn their place. Sign in and Create an account are not here
+ * -- both sit in the header on every page, and a footer that repeats the
+ * header is padding pretending to be a sitemap.
+ *
+ * What is left is what a footer is actually for: the parts of the page someone
+ * scrolled past and wants to get back to, the product they are heading into,
+ * and the legal pages that have nowhere else to live.
  */
 const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] = [
-  /* Split by what a signed-out visitor can actually open. Everything under
-     "In the app" redirects to sign-in first, which is fine when the column
-     says so and misleading when it does not. */
   {
-    heading: "Public",
+    heading: "Explore",
     links: [
+      { href: "/#how-it-works", label: "How it works" },
+      { href: "/#sources", label: "Sources" },
+      { href: "/#faq", label: "FAQ" },
       { href: "/pricing", label: "Pricing" },
-      { href: "/login", label: "Sign in" },
-      { href: "/signup", label: "Create an account" },
-      { href: "/privacy", label: "Privacy" },
-      { href: "/terms", label: "Terms" },
     ],
   },
+  /* These need a session. The heading says so, rather than leaving someone to
+     discover it by being bounced to the login screen. */
   {
     heading: "In the app",
     links: [
@@ -33,12 +33,19 @@ const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] =
       { href: "/settings", label: "Settings" },
     ],
   },
+  {
+    heading: "Legal",
+    links: [
+      { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
+    ],
+  },
 ];
 
 export function CueSiteFooter() {
   return (
     <footer className="border-t border-line px-6 py-14 sm:px-10">
-      <div className="mx-auto grid max-w-[1240px] gap-10 sm:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-[1240px] gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div>
           <CueWordmark size={19} />
           <p className="measure mt-4 text-[14px] leading-relaxed text-muted">
@@ -69,10 +76,7 @@ export function CueSiteFooter() {
       <div className="mx-auto mt-12 flex max-w-[1240px] flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-6 text-[13px] text-faint">
         <span>© {new Date().getFullYear()} Cue</span>
         <span aria-hidden>·</span>
-        <span>
-          A portfolio build. The database and API are real; there is no company
-          behind it.
-        </span>
+        <span>A demonstration of transcript-first meeting notes.</span>
       </div>
     </footer>
   );

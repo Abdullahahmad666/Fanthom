@@ -56,7 +56,7 @@ export function ReferCard() {
       </p>
 
       <p className="mt-3 text-center text-[15px] leading-snug text-fg-muted">
-        Give and get a month of Premium for free when people sign up with your link.
+        Share Cue with your link. Rewards for both of you are coming soon.
       </p>
 
       <div className="mt-4 flex items-center overflow-hidden rounded-lg bg-content">
@@ -66,7 +66,7 @@ export function ReferCard() {
         <button
           type="button"
           onClick={copy}
-          className="shrink-0 self-stretch bg-[#7fc4f5] px-5 text-[15px] font-semibold text-[#0b1418] transition-opacity hover:opacity-90"
+          className="press shrink-0 self-stretch bg-accent px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-hover"
         >
           {copied ? "Copied" : "Copy"}
         </button>
@@ -90,14 +90,11 @@ export function ReferCard() {
         </ShareButton>
       </div>
 
-      <div className="mt-4 flex items-start gap-3 text-[14px] leading-snug text-amber">
-        <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-amber text-[13px] font-bold">
-          $
-        </span>
+      <div className="mt-4 flex items-start gap-3 rounded-lg bg-accentsoft px-3 py-2.5 text-[13px] leading-snug text-muted">
+        <Gift className="mt-0.5 h-4 w-4 shrink-0 text-accent" strokeWidth={2} />
         <p>
-          Agencies &amp; consultants: the{" "}
-          <span className="font-semibold">Cue Growth Partner Program</span> is not
-          part of this build.
+          A partner programme for agencies and consultants is{" "}
+          <span className="font-semibold text-accent">coming soon</span>.
         </p>
       </div>
     </div>

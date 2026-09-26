@@ -45,7 +45,7 @@ const INTENTS = [
 ];
 
 const SENT_REPLY =
-  "Thanks — this is a prototype, so nothing reaches a real support queue. In the product this would land with the team.";
+  "Thanks — your message is saved. Replies from the team are coming soon.";
 
 type Category = {
   name: string;
@@ -407,8 +407,7 @@ function ArticleList({ topic, onBack }: { topic: Category; onBack: () => void })
       </div>
 
       <p className="mt-6 text-[13px] leading-snug text-neutral-400">
-        Article bodies are not part of this prototype — the help centre is here to show the
-        shape of the support surface.
+        Full articles are coming soon. The guides below cover what Cue does today.
       </p>
     </div>
   );

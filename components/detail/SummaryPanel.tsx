@@ -77,7 +77,7 @@ export function SummaryPanel() {
                       title={
                         usable
                           ? undefined
-                          : "This template needs classification the prototype has no model for, so it is listed but not generated."
+                          : "Coming soon — this template needs classification Cue does not do yet."
                       }
                       onClick={() => {
                         setTemplate(t.id);
@@ -193,8 +193,8 @@ export function SummaryPanel() {
       {language !== "auto" && language !== "en" && untranslated > 0 && (
         <p className="mb-5 rounded-lg bg-amberbg px-4 py-3 text-[13px] leading-snug text-amber">
           Translated as far as the built-in dictionary reaches. {untranslated} line
-          {untranslated === 1 ? "" : "s"} stayed in English — machine translation is out of
-          scope for this prototype, so nothing here is machine-guessed.
+          {untranslated === 1 ? "" : "s"} stayed in English — full translation is coming
+          soon, and Cue will not guess in the meantime.
         </p>
       )}
 

@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
-  BookOpen, CircleHelp, Code2, Download, Gift, LifeBuoy, LogOut,
-  RotateCcw, Search, Settings, Star, Video,
+  CircleHelp, FileText, FileUp, Gift, LifeBuoy, LogOut,
+  RotateCcw, Search, Settings, Shield, Star,
 } from "lucide-react";
 import { CueWordmark } from "@/components/brand/CueMark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -79,28 +79,26 @@ const GUEST_LABEL = "Signed out — running on sample data";
 /**
  * The account menu, on the avatar.
  *
- * Three groups and a footer naming the signed-in address -- the product hangs
- * all of this off the avatar, not off Help & Feedback.
+ * Every row goes somewhere. It used to hold eleven, of which seven did nothing
+ * but raise a toast saying the destination was elsewhere -- Start Test Call,
+ * Download App, Developers, System Status and the rest, all of them features of
+ * the product this was cloned from rather than of this one. A menu where most
+ * items are apologies is worse than a short menu.
  *
- * "Replay onboarding" is ours, not Cue's. It sits here because it is the
- * only way back into the signup flow once you are past it, which a reviewer
- * walking the build will want.
+ * What survived is what exists: Settings, import, the FAQ on the landing page,
+ * the two legal pages, a way back into onboarding, and sign out.
  */
 const ACCOUNT_GROUPS: MenuRow[][] = [
   [
-    { label: "Start Test Call", Icon: Video, note: "Starts a recorded test meeting in the real product." },
-    { label: "Tutorial", Icon: BookOpen },
-    { label: "FAQs", Icon: CircleHelp },
-    { label: "Developers", Icon: Code2 },
+    { label: "Settings", Icon: Settings, href: "/settings" },
+    { label: "Import a transcript", Icon: FileUp, href: "/import" },
+    { label: "Questions", Icon: CircleHelp, href: "/#faq" },
   ],
   [
-    { label: "Privacy Policy" },
-    { label: "Terms of Service" },
-    { label: "Security & Compliance" },
-    { label: "System Status" },
+    { label: "Privacy Policy", Icon: Shield, href: "/privacy" },
+    { label: "Terms of Service", Icon: FileText, href: "/terms" },
   ],
   [
-    { label: "Download App", Icon: Download, note: "Ships the desktop recorder in the real product." },
     { label: "Replay onboarding", Icon: RotateCcw, href: "/onboarding/name" },
     /* This used to navigate to "/" and leave the session entirely intact,
        which was only ever invisible because nobody could sign in. */
@@ -369,12 +367,9 @@ function MenuGroups({ groups, close }: { groups: MenuRow[][]; close: () => void 
       router.push(href);
       return;
     }
-    pushToast({
-      title: label,
-      description: note ?? "Leaves for Cue's own site in the real product.",
-      status: "info",
-      duration: 3500,
-    });
+    /* Reached only if a row is added without an href -- which the types now
+       make deliberate rather than accidental. */
+    pushToast({ title: label, description: note, status: "info", duration: 3500 });
   };
 
   return (

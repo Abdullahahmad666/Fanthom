@@ -66,8 +66,15 @@ export function AuthShell({
           </p>
 
           <p className="mt-6 text-center text-[12px] leading-relaxed text-faint">
-            By using Cue you agree to the Terms of Service and Privacy Policy —
-            neither of which exists yet, because this is a portfolio build.
+            By continuing you agree to our{" "}
+            <Link href="/terms" className="underline underline-offset-2 hover:text-muted">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-muted">
+              Privacy Policy
+            </Link>
+            .
           </p>
         </div>
 

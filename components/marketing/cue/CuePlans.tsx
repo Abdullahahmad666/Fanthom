@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Check, Hammer } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 
 /**
@@ -13,10 +13,10 @@ import { Reveal } from "@/components/ui/Reveal";
  * Pricing that describes another product's feature set is the least useful
  * page a product can ship, so these are Cue's own.
  *
- * Every row is marked for whether it is built or planned, and the marks are
- * accurate. A pricing page is where a product is most tempted to describe
- * itself in the future tense; saying which half is which costs nothing and is
- * the only version of this page worth showing.
+ * Every row is marked available now or coming soon, and the marks are accurate.
+ * A pricing page is where a product is most tempted to describe itself in the
+ * future tense; saying which half is which costs nothing and is the only
+ * version of this page worth showing.
  */
 
 type Row = { label: string; built: boolean };
@@ -35,7 +35,7 @@ type Plan = {
 const PLANS: Plan[] = [
   {
     name: "Free",
-    blurb: "Everything the product currently does.",
+    blurb: "Everything Cue does today.",
     monthly: 0,
     annual: 0,
     cta: "Start importing",
@@ -94,8 +94,8 @@ export function CuePlans() {
             Pay for the meetings, not the promises.
           </h1>
           <p className="mx-auto mt-5 max-w-[56ch] text-[16px] leading-relaxed text-muted">
-            Nothing is billed — Cue is a portfolio build. These are the plans it
-            would ship with, and every row says whether it exists today.
+            Free while Cue is in early access. Every row below says whether it is
+            available now or coming soon — no row is a guess.
           </p>
         </Reveal>
 
@@ -134,11 +134,11 @@ export function CuePlans() {
         <Reveal className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-faint">
           <span className="flex items-center gap-2">
             <Check className="h-4 w-4 text-positive" strokeWidth={2.5} />
-            Built and working today
+            Available now
           </span>
           <span className="flex items-center gap-2">
-            <Hammer className="h-4 w-4 text-faint" strokeWidth={2} />
-            Planned, not yet built
+            <Clock className="h-4 w-4 text-faint" strokeWidth={2} />
+            Coming soon
           </span>
         </Reveal>
       </div>
@@ -195,7 +195,7 @@ function PlanCard({ plan, annual }: { plan: Plan; annual: boolean }) {
             {r.built ? (
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-positive" strokeWidth={2.5} />
             ) : (
-              <Hammer className="mt-0.5 h-4 w-4 shrink-0 text-faint" strokeWidth={2} />
+              <Clock className="mt-0.5 h-4 w-4 shrink-0 text-faint" strokeWidth={2} />
             )}
             <span className={r.built ? "text-muted" : "text-faint"}>{r.label}</span>
           </li>

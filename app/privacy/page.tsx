@@ -27,10 +27,10 @@ export default function PrivacyPage() {
       updated="2026-09-26"
       lede={
         <>
-          Cue is a portfolio build, not a company. There is no analytics, no
-          advertising, no tracking pixel and nobody to sell anything to. This
-          page describes what the code actually does — you can check every line
-          of it against the repository.
+          Cue is in early access. There is no analytics, no advertising and no
+          tracking pixel anywhere in it, and your data is never sold or shared.
+          This page describes what the code actually does, not what a template
+          says it might.
         </>
       }
     >
@@ -125,8 +125,9 @@ export default function PrivacyPage() {
 
       <h2>Contact</h2>
       <p>
-        This is a portfolio project, so there is no privacy team. Questions
-        belong with whoever sent you the link to this build.
+        Cue is in early access and does not yet have a dedicated privacy
+        contact — that is coming soon. In the meantime, questions belong with
+        whoever gave you access.
       </p>
     </LegalPage>
   );

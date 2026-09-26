@@ -40,14 +40,15 @@ export function DealsUpsell() {
 
               <p className="mt-5 text-[14px] text-fg-muted">
                 View features &amp; pricing at{" "}
-                <a
+                {/* Internal route: navigates in place. target="_blank" was a
+                    leftover from when this pointed at another company's site,
+                    and it stranded people in a second tab. */}
+                <Link
                   href="/pricing"
-                  target="_blank"
-                  rel="noreferrer"
                   className="text-fg underline underline-offset-2 hover:text-brand"
                 >
                   See plans
-                </a>
+                </Link>
               </p>
             </div>
           </div>

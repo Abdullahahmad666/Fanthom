@@ -47,7 +47,7 @@ export function StreakCard() {
       </p>
 
       <p className="mt-6 text-center text-[13px] leading-snug text-black/45">
-        No purchase necessary. Void where prohibited. Ends 07/31/2026. Full terms are not part of this build.
+        No purchase necessary. Void where prohibited. Ends 07/31/2026. Full terms coming soon.
         .
       </p>
     </div>

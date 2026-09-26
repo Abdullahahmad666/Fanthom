@@ -121,7 +121,7 @@ function Body() {
         </div>
 
         <p className="px-1 pt-3 text-[12px] text-fg-dim">
-          Recording capture is stubbed in this prototype — playback runs on a
+          Recording capture is coming soon — playback runs on a
           simulated clock, and {actionItems.length} action item
           {actionItems.length === 1 ? "" : "s"} and {highlights.length} annotation
           {highlights.length === 1 ? "" : "s"} are live state you can change.
