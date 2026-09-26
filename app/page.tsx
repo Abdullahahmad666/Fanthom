@@ -2,9 +2,10 @@ import { CueSiteHeader } from "@/components/marketing/cue/CueSiteHeader";
 import { getUser } from "@/backend/src/supabase/server";
 import { CueHero } from "@/components/marketing/cue/CueHero";
 import { HowItWorks } from "@/components/marketing/cue/HowItWorks";
-import { WorksWhereYouMeet } from "@/components/marketing/cue/WorksWhereYouMeet";
+import { SourcesHub } from "@/components/marketing/cue/SourcesHub";
 import { MomentSearch } from "@/components/marketing/cue/MomentSearch";
 import { PlainlyHonest } from "@/components/marketing/cue/PlainlyHonest";
+import { Voices } from "@/components/marketing/cue/Voices";
 import { Faq } from "@/components/marketing/cue/Faq";
 import { CueClosing } from "@/components/marketing/cue/CueClosing";
 import { CueSiteFooter } from "@/components/marketing/cue/CueSiteFooter";
@@ -50,9 +51,10 @@ export default async function CueHomePage() {
       <main>
         <CueHero />
         <HowItWorks />
-        <WorksWhereYouMeet />
+        <SourcesHub />
         <MomentSearch />
         <PlainlyHonest />
+        <Voices />
         <Faq />
         <CueClosing />
       </main>

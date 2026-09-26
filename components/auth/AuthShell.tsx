@@ -73,11 +73,11 @@ export function AuthShell({
 {!hideSwap && (
           <p className="mt-6 text-center text-[12px] leading-relaxed text-faint">
             By continuing you agree to our{" "}
-            <Link href="/terms" className="underline underline-offset-2 hover:text-muted">
+            <Link href="/terms" className="tap-row underline underline-offset-2 hover:text-muted">
               Terms
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="underline underline-offset-2 hover:text-muted">
+            <Link href="/privacy" className="tap-row underline underline-offset-2 hover:text-muted">
               Privacy Policy
             </Link>
             .

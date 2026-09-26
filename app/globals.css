@@ -368,6 +368,8 @@ body {
   .marquee-track,
   .skeleton,
   .card-cue::after,
+  .cue-slide-in,
+  .wire-pulse,
   /* Critically, this one resets rather than freezing: a heading caught
      mid-wipe is a heading you cannot read. */
   .write-on,
@@ -377,9 +379,17 @@ body {
     animation: none !important;
   }
 
-  .write-on {
+  /* Drawn, not frozen part-way: an unfinished diagram is a broken one. */
+  .wire {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .write-on,
+  /* Same reasoning: a quote frozen part-typed is a quote you cannot read. */
+  .type-line {
     mask-image: none !important;
     -webkit-mask-image: none !important;
+    animation: none !important;
   }
 
   /* The reading-progress line would otherwise snap to full width and sit there
@@ -631,6 +641,137 @@ body {
 @keyframes cue-progress {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
+}
+
+/*
+ * The wires in the sources diagram.
+ *
+ * Every line carries `pathLength="1"`, so a dash offset of 1 is "undrawn" and
+ * 0 is "drawn" no matter how long the line actually is. Without it the two
+ * short diagonals would fill faster than the long ones and the diagram would
+ * read as a race rather than as one picture assembling.
+ *
+ * Drawing is tied to scroll, so the diagram builds as you arrive at it.
+ */
+@keyframes cue-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+.wire {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+/*
+ * The wires draw on a timer, started when the diagram comes into view.
+ *
+ * This is the one piece of motion on the page that is not scroll-linked, and
+ * the reason is measured rather than stylistic. A view timeline needs the
+ * animated element to generate a box it can follow, and an SVG <line> does
+ * not: with `animation-timeline: view()` every wire sat fully drawn at every
+ * scroll position, and naming the timeline on the container did not help --
+ * the ViewTimeline attached but reported a frozen progress of 0.733 no matter
+ * where the page was.
+ *
+ * A diagram assembling itself is also one of the few things that reads better
+ * on its own clock than on the reader's thumb: it is a single event with a
+ * beginning and an end, not a state that should reverse when you scroll back.
+ *
+ * The stagger is per-wire so the four arrive in sequence rather than as one
+ * flash, and `pathLength="1"` keeps the two short diagonals filling at the
+ * same rate as the two long ones.
+ */
+.wire-field .wire {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  /* Present enough to read as a connection at a glance, quiet enough that the
+     cards stay the thing you look at. */
+  opacity: 0.9;
+}
+
+.wire-field.is-drawn .wire {
+  animation: cue-draw 900ms var(--cue-ease) both;
+}
+
+/* The per-wire delay is set inline, where the index is actually known. */
+
+/*
+ * The pulse that runs a wire while its source is hovered.
+ *
+ * A short dash chasing a long gap, looped. It travels source -> hub because
+ * that is the direction the file travels, and it is the one place on this page
+ * where a loop is right: it runs only while you are pointing at something, so
+ * it cannot become ambient movement nobody asked for.
+ */
+@keyframes cue-surge {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+.wire-pulse {
+  stroke-dasharray: 0.14 0.86;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  transition: opacity var(--cue-fast) var(--cue-ease);
+}
+
+.wire-pulse.is-live {
+  opacity: 1;
+  animation: cue-surge 1.15s linear infinite;
+}
+
+/*
+ * A quote that types itself out, and the card that carries it in.
+ *
+ * The typing is a mask again rather than a character-by-character loop. The
+ * text is complete in the DOM from the first frame -- a screen reader gets the
+ * whole sentence, and the line never reflows as it "types", which is what
+ * makes a real typewriter effect so jittery on a wrapped paragraph.
+ *
+ * `steps()` is what separates this from the scroll-driven headings: a linear
+ * wipe reads as a sweep, while stepping the mask in discrete jumps reads as
+ * characters landing. Forty steps over a couple of seconds is close enough to
+ * a fast typist.
+ *
+ * This one is on a clock rather than on scroll, because it belongs to a card
+ * that advances on a timer -- it has to be in step with that, not with the
+ * reader's thumb.
+ */
+@keyframes cue-type {
+  from {
+    mask-size: 0% 100%;
+    -webkit-mask-size: 0% 100%;
+  }
+  to {
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+  }
+}
+
+.type-line {
+  display: inline-block;
+  mask-image: linear-gradient(90deg, #000 0 100%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0 100%);
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  animation: cue-type 2.1s steps(40, end) both;
+}
+
+/* The card itself arrives from the right as the row advances. */
+@keyframes cue-slide-in {
+  from {
+    opacity: 0;
+    translate: 28px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.cue-slide-in {
+  animation: cue-slide-in var(--cue-slow) var(--cue-ease) both;
 }
 
 /*
