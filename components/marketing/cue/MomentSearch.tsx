@@ -86,7 +86,7 @@ export function MomentSearch() {
   const current = QUERIES[active];
 
   return (
-    <section className="relative px-6 py-24 sm:px-10">
+    <section id="search" className="scroll-mt-24 relative px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1240px]">
         <Reveal className="max-w-[46ch]">
           <p className="section-label">Search</p>

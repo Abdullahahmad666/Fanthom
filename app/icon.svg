@@ -1,8 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0B0B0D"/>
-  <g transform="translate(14 17)">
-    <path d="M2 2h20.5L14 13.5H2V2Z" fill="#02BEFF"/>
-    <path d="M9 17h16.5L18 27H9v-10Z" fill="#02BEFF" opacity="0.85"/>
-    <path d="M25 2h8.5l-8 11.5h-8.2L25 2Z" fill="#02BEFF" opacity="0.6"/>
+  <!-- The Cue mark: a cue light. A filled moment, and two arcs travelling out
+       of it. Replaces the cloned product's blades, which survived the rename
+       in the one place nobody looks at twice. -->
+  <rect width="64" height="64" rx="14" fill="#121013"/>
+  <g transform="translate(6 6)" fill="none">
+    <circle cx="22" cy="32" r="10" fill="#e8b44c"/>
+    <path d="M40 19a18 18 0 0 1 0 26" stroke="#e8b44c" stroke-width="6" stroke-linecap="round"/>
+    <path d="M51 8a30 30 0 0 1 0 48" stroke="#e8b44c" stroke-width="6" stroke-linecap="round" opacity="0.45"/>
   </g>
 </svg>

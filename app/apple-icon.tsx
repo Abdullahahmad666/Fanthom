@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-/** iOS home-screen icon. Generated so it never drifts from the brand mark. */
+/** iOS home-screen icon. The Cue mark, on Cue's own near-black. */
 export default async function AppleIcon() {
   return new ImageResponse(
     (
@@ -14,13 +14,13 @@ export default async function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0B0B0D",
+          background: "#121013",
         }}
       >
-        <svg width="104" height="86" viewBox="0 0 32 26">
-          <path d="M2 2h18.5L13 12.2H2V2Z" fill="#02BEFF" />
-          <path d="M8.5 15.2h15.2L17 24H8.5v-8.8Z" fill="#02BEFF" opacity="0.85" />
-          <path d="M22.5 2H30l-7.2 10.2h-7.4L22.5 2Z" fill="#02BEFF" opacity="0.6" />
+        <svg width="108" height="108" viewBox="0 0 32 32">
+          <circle cx="11" cy="16" r="5" fill="#e8b44c" />
+          <path d="M20 9.5a9 9 0 0 1 0 13" stroke="#e8b44c" strokeWidth="3" strokeLinecap="round" fill="none" />
+          <path d="M25.5 5.5a15 15 0 0 1 0 21" stroke="#e8b44c" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.45" />
         </svg>
       </div>
     ),

@@ -17,7 +17,7 @@ import { SOURCES } from "@/lib/sources";
 
 export function WorksWhereYouMeet() {
   return (
-    <section className="px-6 py-24 sm:px-10">
+    <section id="sources" className="scroll-mt-24 px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1240px]">
         <Reveal className="max-w-[52ch]">
           <p className="section-label">Sources</p>

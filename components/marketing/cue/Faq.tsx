@@ -26,7 +26,7 @@ export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="px-6 py-24 sm:px-10" aria-labelledby="faq-heading">
+    <section id="faq" className="scroll-mt-24 px-6 py-24 sm:px-10" aria-labelledby="faq-heading">
       <div className="mx-auto max-w-[820px]">
         <Reveal>
           <p className="section-label">Questions</p>

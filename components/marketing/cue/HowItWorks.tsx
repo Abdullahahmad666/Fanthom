@@ -30,7 +30,7 @@ const STEPS = [
  */
 export function HowItWorks() {
   return (
-    <section className="relative px-6 py-24 sm:px-10">
+    <section id="how-it-works" className="scroll-mt-24 relative px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1240px]">
         <Reveal>
           <p className="section-label">How it works</p>

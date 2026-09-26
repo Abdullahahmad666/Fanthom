@@ -498,6 +498,76 @@ body {
   animation: cue-reveal var(--cue-slow) var(--cue-ease) both;
 }
 
+/*
+ * Scroll-linked motion.
+ *
+ * The version this replaces was a trigger, not an animation: an observer
+ * fired once and a 420ms transition ran on its own clock. With two dozen of
+ * them on a page the result is a sequence of pops that has nothing to do with
+ * how fast you are scrolling -- it reads as flicker, because the page is
+ * moving at one speed and its contents at another.
+ *
+ * A view timeline ties progress to the element's position in the viewport, so
+ * the content rises as you scroll toward it and settles exactly as it lands.
+ * Scroll back up and it plays backwards. Nothing has its own clock, so there
+ * is nothing to fall out of step with.
+ *
+ * Safe on both sides of the support boundary. Where view timelines exist, CSS
+ * drives everything and no JavaScript is involved, so `both` can hold the
+ * element at opacity 0 without risk. Where they do not, this block never
+ * applies, the element is visible from the first paint, and the observer in
+ * Reveal only ever adds motion -- it can never hide content that would
+ * otherwise be readable.
+ */
+@keyframes cue-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: cue-rise linear both;
+    animation-timeline: view();
+    /* Starts as the element enters and finishes well before the middle of the
+       screen, so it is settled by the time it is being read rather than still
+       arriving under the reader's eye. */
+    animation-range: entry 0% cover 25%;
+  }
+
+  /* Already applied by the observer path; must not double up. */
+  .reveal.revealed {
+    animation: cue-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 25%;
+  }
+}
+
+/*
+ * How far down the page you are.
+ *
+ * Also scroll-linked, and the one piece of chrome that earns a fixed position:
+ * on a long marketing page the scrollbar is the only progress signal, and on a
+ * trackpad it is hidden until you move.
+ */
+@keyframes cue-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    animation: cue-progress linear both;
+    animation-timeline: scroll(root block);
+    transform-origin: 0 50%;
+  }
+}
+
 /* Something that arrives on top of the page rather than in the flow of it.
    It scales from very slightly small, which reads as coming toward you --
    the opposite of the reveal, which settles into a place it already had. */

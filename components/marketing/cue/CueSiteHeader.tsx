@@ -2,29 +2,38 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { CueWordmark } from "@/components/brand/CueMark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { useAccount } from "@/lib/account";
 
 /**
  * The marketing header.
  *
- * The one it replaces carried five dropdown menus -- Solutions, Integrations,
- * Resources and the rest -- almost all of which opened onto pages that do not
- * exist in this build. A nav that mostly lies about what is behind it is worse
- * than a short one, so this lists only real destinations.
+ * It carries the page's own sections plus pricing. The version before this had
+ * a single link, because everything else pointed into the app and the app is
+ * behind sign-in -- so those items only ever produced a login redirect. The
+ * answer was not to delete the nav but to point it at the parts of the page
+ * that do exist, which is also what a reader of a long landing page wants: a
+ * way back to the section they half-remember.
  *
- * It gains a border on scroll rather than swapping to a different colour and a
- * different CTA shape: the bar should separate itself from the content moving
- * under it, not restyle itself.
+ * It reflects who is signed in. Offering "Sign in" and "Get started" to
+ * somebody who already has a session is how you end up clicking Sign in and
+ * arriving in the app: the middleware sends a signed-in visitor away from
+ * /login, correctly, and the header was the thing telling them to go there.
  */
-/* Only public destinations. "Product" and "Import" both pointed into the app,
-   which is behind auth -- so for a signed-out visitor they were two nav items
-   that did nothing but redirect to the login page. Signing in is already the
-   right-hand side of this bar. */
-const LINKS = [{ href: "/pricing", label: "Pricing" }];
+
+const SECTIONS = [
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/#sources", label: "Sources" },
+  { href: "/#faq", label: "FAQ" },
+  { href: "/pricing", label: "Pricing" },
+];
 
 export function CueSiteHeader() {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const account = useAccount();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -39,13 +48,19 @@ export function CueSiteHeader() {
         scrolled ? "border-b border-line bg-bg/85 backdrop-blur-md" : "border-b border-transparent"
       }`}
     >
+      {/* Reading progress, tied to scroll position rather than to a timer. */}
+      <span
+        aria-hidden
+        className="scroll-progress absolute inset-x-0 bottom-0 h-px origin-left bg-accent"
+      />
+
       <div className="mx-auto flex h-[68px] max-w-[1240px] items-center gap-8 px-6 sm:px-10">
         <Link href="/" aria-label="Cue home" className="shrink-0">
           <CueWordmark size={19} />
         </Link>
 
-        <nav className="hidden items-center gap-7 sm:flex">
-          {LINKS.map((l) => (
+        <nav aria-label="Primary" className="hidden items-center gap-7 md:flex">
+          {SECTIONS.map((l) => (
             <Link
               key={l.href}
               href={l.href}
@@ -56,22 +71,81 @@ export function CueSiteHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-3">
-          <ThemeToggle compact />
-          <Link
-            href="/login"
-            className="tap-row hidden text-[14px] text-muted transition-colors hover:text-text sm:inline-flex"
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <span className="hidden sm:block">
+            <ThemeToggle compact />
+          </span>
+
+          {account ? (
+            <Link
+              href="/calls"
+              className="press inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[14px] font-semibold whitespace-nowrap text-on-accent transition-colors hover:bg-accent-hover sm:px-4"
+            >
+              <span className="hidden sm:inline">Go to my meetings</span>
+              <span className="sm:hidden">My meetings</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="tap-row hidden text-[14px] text-muted transition-colors hover:text-text sm:inline-flex"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="press rounded-lg bg-accent px-3.5 py-2 text-[14px] font-semibold whitespace-nowrap text-on-accent transition-colors hover:bg-accent-hover sm:px-4"
+              >
+                Get started
+              </Link>
+            </>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="site-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            className="press -mr-2 rounded-lg p-2 text-muted transition-colors hover:text-text md:hidden"
           >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="press rounded-lg bg-accent px-4 py-2 text-[14px] font-semibold text-on-accent transition-colors hover:bg-accent-hover"
-          >
-            Get started
-          </Link>
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+
+      {open && (
+        <nav
+          id="site-menu"
+          aria-label="Sections"
+          className="border-t border-line bg-bg px-6 pb-4 md:hidden"
+        >
+          {SECTIONS.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="flex min-h-[46px] items-center border-b border-line text-[15px] text-muted last:border-0"
+            >
+              {l.label}
+            </Link>
+          ))}
+          {!account && (
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="flex min-h-[46px] items-center border-b border-line text-[15px] text-muted sm:hidden"
+            >
+              Sign in
+            </Link>
+          )}
+          <div className="flex min-h-[52px] items-center gap-3 sm:hidden">
+            <span className="text-[15px] text-muted">Theme</span>
+            <ThemeToggle compact />
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

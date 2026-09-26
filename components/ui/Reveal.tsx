@@ -3,27 +3,32 @@
 import { useEffect, useRef, type ElementType, type ReactNode } from "react";
 
 /**
- * Reveals its children once, when they first come into view.
+ * Content that arrives as you scroll to it.
  *
- * Scroll-driven rather than on-mount, because a list of forty meetings that
- * all animate at once on load is a flash, not an arrival -- and anything
- * below the fold would have finished animating before you ever saw it.
+ * Two mechanisms, and which one runs is decided by the browser rather than by
+ * this component:
  *
- * It fires once and then stops observing. Re-animating on every pass turns a
- * page you are scrolling through into a page that keeps interrupting you,
- * which is the failure mode of most scroll animation.
+ *   - Where CSS view timelines exist, the `.reveal` class is all that is
+ *     needed. Progress is tied to the element's position in the viewport, so
+ *     it rises as you scroll toward it, settles as it lands, and plays
+ *     backwards if you scroll up. No JavaScript runs at all.
  *
- * The class is added rather than state being set, so this costs one DOM write
- * per element and no re-render. `prefers-reduced-motion` is honoured by the
- * global rule that collapses every duration, and the element is visible from
- * the start either way -- it can never trap content at opacity zero.
+ *   - Where they do not, the observer below adds `.revealed` once, which runs
+ *     the old time-based animation. The element is visible from the first
+ *     paint either way, so a failure here can never trap content at opacity
+ *     zero -- it can only mean the content did not animate.
+ *
+ * The observer is skipped entirely when view timelines are supported, which is
+ * why `delay` no longer applies there: a stagger is a property of a trigger,
+ * and there is no trigger any more. Scroll position already separates the
+ * items, because you reach them one after another.
  */
 export function Reveal({
   children,
   as: Tag = "div",
   delay = 0,
   className = "",
-  /** How much of the element must be showing before it counts as seen. */
+  /** How much of the element must show before it counts as seen (fallback only). */
   threshold = 0.12,
 }: {
   children: ReactNode;
@@ -38,7 +43,12 @@ export function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    /* No observer support, or already on screen at load: show it and stop. */
+    /* The CSS is already handling this one. Touching it here would restart the
+       animation on its own clock, which is the exact jitter this replaced. */
+    const cssDriven =
+      typeof CSS !== "undefined" && CSS.supports?.("animation-timeline: view()");
+    if (cssDriven) return;
+
     if (typeof IntersectionObserver === "undefined") {
       el.classList.add("revealed");
       return;
@@ -59,18 +69,18 @@ export function Reveal({
   }, [delay, threshold]);
 
   return (
-    <Tag ref={ref} className={className}>
+    <Tag ref={ref} className={`reveal ${className}`}>
       {children}
     </Tag>
   );
 }
 
 /**
- * A list whose children arrive one after another.
+ * A list whose items arrive one after another.
  *
- * The stagger is capped: past about ten items the tail is still animating
- * long after you have started reading, so everything beyond the cap arrives
- * with the last staggered item rather than continuing to count.
+ * Kept for the fallback path, where a stagger is still the only way to stop a
+ * grid landing as one block. Where motion is scroll-linked the delays are
+ * ignored, and scroll position does the separating instead.
  */
 export function RevealList({
   children,
