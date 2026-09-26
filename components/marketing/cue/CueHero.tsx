@@ -72,7 +72,9 @@ export function CueHero() {
           </p>
         </div>
 
-        <ReceiptCard />
+        <div className="parallax-hero">
+          <ReceiptCard />
+        </div>
       </div>
     </section>
   );

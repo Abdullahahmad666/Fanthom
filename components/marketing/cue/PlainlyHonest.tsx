@@ -31,7 +31,7 @@ export function PlainlyHonest() {
   return (
     <section className="relative px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1240px]">
-        <Reveal className="max-w-[52ch]">
+        <Reveal className="reveal-lead max-w-[52ch]">
           <p className="section-label">Plainly</p>
           <h2 className="font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
             What it does, and what it will not pretend to do.

@@ -32,7 +32,7 @@ export function HowItWorks() {
   return (
     <section id="how-it-works" className="scroll-mt-24 relative px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1240px]">
-        <Reveal>
+        <Reveal className="reveal-lead">
           <p className="section-label">How it works</p>
           <h2 className="font-display mt-3 max-w-[16ch] text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
             Three steps, and none of them invent anything.

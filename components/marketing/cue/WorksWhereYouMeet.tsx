@@ -19,7 +19,7 @@ export function WorksWhereYouMeet() {
   return (
     <section id="sources" className="scroll-mt-24 px-6 py-24 sm:px-10">
       <div className="mx-auto max-w-[1240px]">
-        <Reveal className="max-w-[52ch]">
+        <Reveal className="reveal-lead max-w-[52ch]">
           <p className="section-label">Sources</p>
           <h2 className="font-display mt-3 text-[clamp(30px,4vw,48px)] leading-[1.1] tracking-[-0.02em] text-text">
             Works wherever you already meet.

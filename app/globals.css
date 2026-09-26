@@ -188,6 +188,17 @@
 
 html {
   background: var(--cue-bg);
+  /*
+   * Jumping to a section loses the reader: they arrive somewhere with no sense
+   * of how far they travelled or what they passed. Scrolling there keeps the
+   * page continuous, which is the whole point of anchoring the nav to sections
+   * rather than to separate pages.
+   *
+   * The reduced-motion block below overrides this to `auto`, which matters
+   * more here than anywhere else on the site -- a long smooth scroll is a
+   * common migraine trigger.
+   */
+  scroll-behavior: smooth;
 }
 
 body {
@@ -290,6 +301,37 @@ body {
   min-height: 28px;
 }
 
+/*
+ * The FAQ panels open by sliding rather than appearing.
+ *
+ * <details> has no animatable state of its own -- closed content is not
+ * rendered, so there is nothing for a transition to act on. `::details-content`
+ * is the hook that changes that, and `interpolate-size` is what makes a
+ * transition to `auto` height legal.
+ *
+ * Both are recent, and both degrade to exactly the old behaviour: the panel
+ * still opens, just instantly. That is the right way round for a progressive
+ * enhancement -- the content is never the thing at risk.
+ */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    block-size var(--cue-slow) var(--cue-ease),
+    opacity var(--cue-slow) var(--cue-ease),
+    content-visibility var(--cue-slow) allow-discrete;
+}
+
+.faq-item[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
 /* Long-form reading: the transcript and the summary both want a measure. */
 @utility measure {
   max-width: 68ch;
@@ -305,6 +347,18 @@ body {
        marquee and the skeleton shimmer into a strobe for exactly the people
        the rule exists to protect. */
     animation-iteration-count: 1 !important;
+    /*
+     * And without this, none of the above reaches a scroll-driven animation.
+     * A view() or scroll() timeline has no duration -- it is driven by where
+     * the page is, not by a clock -- so collapsing the duration does nothing
+     * to it. Measured after the switch to scroll-linked motion: fifteen
+     * animations still running with reduce set.
+     *
+     * Handing them back the document timeline puts them under the 0.01ms rule
+     * above, so each jumps straight to its end state: content visible, nothing
+     * moving.
+     */
+    animation-timeline: auto !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
@@ -312,8 +366,18 @@ body {
   /* Purely decorative loops are switched off rather than fast-forwarded, so
      they rest where they started instead of at the end of one cycle. */
   .marquee-track,
-  .skeleton {
+  .skeleton,
+  /* Parallax is depth, not content. Fast-forwarded it would leave the card
+     resting 14px off its natural position for no reason. */
+  .parallax-hero {
     animation: none !important;
+  }
+
+  /* The reading-progress line would otherwise snap to full width and sit there
+     as a permanent rule under the header, which is a decoration nobody asked
+     for rather than an indicator. */
+  .scroll-progress {
+    display: none !important;
   }
 }
 
@@ -558,6 +622,59 @@ body {
 @keyframes cue-progress {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
+}
+
+/*
+ * Depth, tied to scroll position.
+ *
+ * The card drifts against the page as it passes, which is what makes the two
+ * read as being at different distances rather than printed on the same sheet.
+ * The travel is 28px over a whole viewport -- at that size it is felt and not
+ * watched, which is the difference between depth and a moving background.
+ */
+@keyframes cue-drift {
+  from { transform: translateY(-14px); }
+  to { transform: translateY(14px); }
+}
+
+@supports (animation-timeline: view()) {
+  /*
+   * The hero card is already on screen when the page loads, so a view()
+   * timeline is the wrong tool: its range starts where the element enters the
+   * viewport, which for this one is before scrolling begins. Measured, it sat
+   * at the midpoint and never moved. Tying it to the document's own scroll
+   * instead gives it somewhere to travel from the first pixel.
+   */
+  .parallax-hero {
+    animation: cue-drift linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 100vh;
+    will-change: transform;
+  }
+
+  /* A section heading settles a moment before the body it introduces, so the
+     eye lands on the title first. Same timeline, a shorter range.
+
+     Written as `.reveal.reveal-lead` on purpose: these elements also carry
+     `.reveal`, and with equal specificity the winner would be decided by which
+     rule happens to come last in the file -- which is not something the next
+     person editing this should have to know. */
+  .reveal.reveal-lead {
+    animation: cue-lead linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 18%;
+  }
+}
+
+@keyframes cue-lead {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @supports (animation-timeline: scroll()) {

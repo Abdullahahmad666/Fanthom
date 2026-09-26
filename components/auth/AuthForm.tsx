@@ -17,10 +17,11 @@ import { pushToast, updateToast } from "@/lib/toast";
  * matters more than it sounds -- before this, every route into the app fell
  * through to a guest and the whole product ran on fixtures.
  *
- * Google is kept as a second option because the OAuth flow is built and asks
- * for calendar scopes up front. It stays behind NEXT_PUBLIC_ENABLE_GOOGLE_AUTH
- * because Google blocks unverified apps for anyone who is not an added test
- * user, which would strand a reviewer on Google's own domain.
+ * Google is kept as a second option. It asks for identity only -- no calendar,
+ * no offline access -- so the consent screen is the short one. It stays behind
+ * NEXT_PUBLIC_ENABLE_GOOGLE_AUTH because Google blocks unverified apps for
+ * anyone who is not an added test user, which would strand a visitor on
+ * Google's own domain where nothing here can recover.
  *
  * Microsoft and SSO are gone. Neither was ever wired to a provider -- both
  * fell straight through to the offline path -- so they were three buttons
@@ -174,8 +175,12 @@ function AuthFormInner({ mode = "signup" }: { mode?: Mode }) {
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
+        /* Identity only -- see GOOGLE_SCOPES. No access_type or prompt either:
+           offline access exists to get a refresh token for calling an API in
+           the background, and there is no API to call. `prompt: "consent"`
+           forced the consent screen on every single sign-in, which turns a
+           returning user's one tap into a form. */
         scopes: GOOGLE_SCOPES,
-        queryParams: { access_type: "offline", prompt: "consent" },
       },
     });
 
