@@ -3,10 +3,11 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useState } from "react";
-import { AlertCircle, Eye, EyeOff, Loader2, MailCheck } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { createClient } from "@/backend/src/supabase/client";
 import { GOOGLE_SCOPES, isGoogleAuthEnabled, isSupabaseConfigured } from "@/backend/src/env";
 import { pushToast, updateToast } from "@/lib/toast";
+import { VerifyEmail } from "./VerifyEmail";
 
 /**
  * Sign in and sign up.
@@ -45,6 +46,18 @@ function humanise(message: string, mode: Mode): string {
   }
   if (m.includes("password should be") || m.includes("password must")) {
     return "Pick a password of at least 8 characters.";
+  }
+  /*
+   * Two different things arrive here as "rate limit", and telling them apart
+   * matters because only one of them is the person's fault.
+   *
+   * `over_email_send_rate_limit` is the project's email quota, not theirs --
+   * Supabase's built-in sender allows a handful of messages an hour across
+   * every user. Saying "too many attempts" to somebody on their first one
+   * sends them off to wait for something that will not change.
+   */
+  if (m.includes("email rate limit") || m.includes("over_email_send_rate_limit")) {
+    return "The mail sender has hit its limit, so no email went out. This is a project setting rather than anything you did — configure SMTP in Supabase, or wait an hour.";
   }
   if (m.includes("rate limit") || m.includes("too many")) {
     return "Too many attempts. Wait a minute and try again.";
@@ -159,7 +172,8 @@ function AuthFormInner({ mode = "signup" }: { mode?: Mode }) {
 
     /* Sign-up with email confirmation on returns a user but no session. Saying
        "welcome" and pushing into the app would be a lie -- nothing is signed
-       in yet -- so the screen says to go and check the inbox instead. */
+       in yet -- so the screen hands over to the code entry instead, which
+       finishes the job without depending on a redirect URL being allowlisted. */
     if (signup && !result.data.session) {
       setCheckInbox(true);
       setBusy(null);
@@ -220,23 +234,14 @@ function AuthFormInner({ mode = "signup" }: { mode?: Mode }) {
 
   if (checkInbox) {
     return (
-      <div className="mt-8 text-center">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accentsoft">
-          <MailCheck className="h-6 w-6 text-accent" />
-        </span>
-        <h2 className="mt-5 text-[17px] font-semibold text-text">Confirm your email</h2>
-        <p className="measure mx-auto mt-2 text-[14px] leading-relaxed text-muted">
-          We sent a link to <span className="text-text">{email}</span>. Open it and
-          you will land back here signed in.
-        </p>
-        <button
-          type="button"
-          onClick={() => setCheckInbox(false)}
-          className="press mt-6 text-[14px] font-medium text-accent underline underline-offset-2"
-        >
-          Use a different email
-        </button>
-      </div>
+      <VerifyEmail
+        email={email.trim()}
+        next={next}
+        onUseDifferentEmail={() => {
+          setCheckInbox(false);
+          setPassword("");
+        }}
+      />
     );
   }
 
