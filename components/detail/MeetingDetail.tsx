@@ -7,6 +7,7 @@ import { Player } from "./Player";
 import { SummaryPanel } from "./SummaryPanel";
 import { TranscriptPanel } from "./TranscriptPanel";
 import { AskCuePanel } from "./AskCuePanel";
+import { DeleteMeeting } from "./DeleteMeeting";
 import { RightRail } from "./RightRail";
 import type { Meeting } from "@/lib/types";
 
@@ -68,7 +69,7 @@ function TabAction() {
 }
 
 function Body() {
-  const { tab, setTab, actionItems, highlights, playerSize } = useMeeting();
+  const { meeting, tab, setTab, actionItems, highlights, playerSize } = useMeeting();
 
   const counts: Partial<Record<DetailTab, number>> = {
     transcript: highlights.length,
@@ -110,8 +111,9 @@ function Body() {
                 )}
               </button>
             ))}
-            <div className="ml-auto pb-2">
+            <div className="ml-auto flex items-center gap-2 pb-2">
               <TabAction />
+              <DeleteMeeting slug={meeting.id} title={meeting.title} />
             </div>
           </div>
 

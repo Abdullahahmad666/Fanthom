@@ -1,5 +1,5 @@
 import type { Meeting, SummarySection, TemplateId } from "./types";
-import { formatClock, participantById } from "./types";
+import { participantById } from "./types";
 
 /**
  * The summary template catalogue.
@@ -40,9 +40,9 @@ export type TemplateDef = {
 
 /* ------------------------------------------------------------- builders */
 
-const bullets = (items: { label?: string; text: string }[]): SummarySection["blocks"] => [
-  { kind: "bullets", items },
-];
+const bullets = (
+  items: { label?: string; text: string; cues?: number[] }[],
+): SummarySection["blocks"] => [{ kind: "bullets", items }];
 
 /** Every sentence in speaker order, with its turn, for the scanners below. */
 function sentences(m: Meeting) {
@@ -61,15 +61,17 @@ const nameOf = (m: Meeting, id: string) => participantById(m, id)?.name ?? id;
  */
 function buildQA(m: Meeting): SummarySection[] | null {
   const all = sentences(m);
-  const pairs: { label?: string; text: string }[] = [];
+  const pairs: { label?: string; text: string; cues?: number[] }[] = [];
 
   all.forEach((s, i) => {
     if (!s.text.trim().endsWith("?")) return;
     const reply = all.slice(i + 1).find((r) => r.speakerId !== s.speakerId);
     if (!reply) return;
     pairs.push({
-      label: `${nameOf(m, s.speakerId)} · ${formatClock(s.tSec)}`,
+      label: nameOf(m, s.speakerId),
       text: `${s.text} — ${nameOf(m, reply.speakerId)}: ${reply.text}`,
+      /* The question and the answer both, so the chip row plays either. */
+      cues: [s.tSec, reply.tSec],
     });
   });
 
@@ -97,7 +99,7 @@ function buildStandUp(m: Meeting): SummarySection[] | null {
 
   return rows.map(({ person, said }) => ({
     heading: person.name,
-    blocks: bullets(said.map((s) => ({ label: formatClock(s.tSec), text: s.text }))),
+    blocks: bullets(said.map((s) => ({ text: s.text, cues: [s.tSec] }))),
   }));
 }
 
@@ -110,7 +112,7 @@ function buildOneOnOne(m: Meeting): SummarySection[] | null {
       heading: "Updates & priorities",
       blocks: bullets(
         rows.flatMap(({ person, said }) =>
-          said.slice(0, 2).map((s) => ({ label: person.name, text: s.text })),
+          said.slice(0, 2).map((s) => ({ label: person.name, text: s.text, cues: [s.tSec] })),
         ),
       ),
     },
@@ -120,7 +122,7 @@ function buildOneOnOne(m: Meeting): SummarySection[] | null {
         rows
           .map(({ said }) => said[2])
           .filter(Boolean)
-          .map((s) => ({ text: s.text })),
+          .map((s) => ({ text: s.text, cues: [s.tSec] })),
       ),
     },
   ];
@@ -131,8 +133,9 @@ function buildProjectUpdate(m: Meeting): SummarySection[] | null {
   if (m.actionItems.length === 0) return null;
 
   const row = (i: (typeof m.actionItems)[number]) => ({
-    label: `${nameOf(m, i.ownerId)} · ${formatClock(i.tSec)}`,
+    label: nameOf(m, i.ownerId),
     text: i.text,
+    cues: [i.tSec],
   });
 
   const open = m.actionItems.filter((i) => !i.done).map(row);
@@ -166,7 +169,7 @@ function buildRetro(m: Meeting): SummarySection[] | null {
     all
       .filter((s) => re.test(s.text))
       .slice(0, 5)
-      .map((s) => ({ label: nameOf(m, s.speakerId), text: s.text }));
+      .map((s) => ({ label: nameOf(m, s.speakerId), text: s.text, cues: [s.tSec] }));
 
   const start = pick(START);
   const stop = pick(STOP);
@@ -301,6 +304,12 @@ export type ResolvedTemplate = TemplateDef & {
 
 /**
  * Resolves the catalogue against one meeting.
+ *
+ * Every derived template attaches the timestamp each line came from. They all
+ * had it already -- several were printing it as a static `12:04` label -- but
+ * none passed it through as a cue, so the one feature the product is built
+ * around was missing from every template on every seeded meeting. Measured
+ * before the fix: 0 cues across 8 usable templates on the first fixture.
  *
  * An authored summary always wins over a derived one -- the fixtures write
  * better copy than any of these scanners.

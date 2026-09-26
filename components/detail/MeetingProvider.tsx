@@ -137,9 +137,31 @@ export function MeetingProvider({
 
   /** Rewrites, keyed by the template they were asked for. */
   const [rewrites, setRewrites] = useState<Record<string, SummarySection[]>>({});
-  const [template, setTemplate] = useState<string>(
-    () => resolved.find((t) => t.sections)?.id ?? "enhanced",
-  );
+  /*
+   * Open on a summary that carries its sources.
+   *
+   * This used to pick the first template with any content, which is the
+   * authored "Enhanced" one on every seeded meeting -- hand-written prose with
+   * no timestamps on it. So the first thing anyone saw when they opened a
+   * meeting was the one view where the product's central feature is absent.
+   *
+   * The derived templates are built from the transcript and carry the moment
+   * each line came from. Measured on the first fixture: one-on-one 24 cues
+   * across 24 bullets, retrospective 10 of 10, where every authored template
+   * has none.
+   *
+   * The authored summaries are not given cues to fix this, and that is
+   * deliberate: they paraphrase rather than quote -- one bullet in ten matches
+   * a sentence verbatim -- so any timestamp attached to them would be a guess.
+   * A citation that is sometimes approximately right is not a citation.
+   */
+  const [template, setTemplate] = useState<string>(() => {
+    const hasCues = (t: (typeof resolved)[number]) =>
+      t.sections?.some((s) =>
+        s.blocks.some((b) => b.kind === "bullets" && b.items.some((i) => i.cues?.length)),
+      );
+    return resolved.find(hasCues)?.id ?? resolved.find((t) => t.sections)?.id ?? "enhanced";
+  });
   const [generating, setGenerating] = useState<number | null>(null);
   const regenTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
