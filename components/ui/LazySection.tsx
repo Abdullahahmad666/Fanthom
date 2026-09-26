@@ -22,10 +22,14 @@ export function LazySection({
   children,
   minHeight,
   rootMargin = "500px",
+  id,
 }: {
   children: ReactNode;
   minHeight: number;
   rootMargin?: string;
+  /** Anchor target. Lives on the wrapper, which exists before the section
+      does, so an in-page link works while the chunk is still loading. */
+  id?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState(false);
@@ -71,7 +75,7 @@ export function LazySection({
    * section takes across the widths it was measured at, so it never pads.
    */
   return (
-    <div ref={ref} style={{ minHeight }}>
+    <div ref={ref} id={id} style={{ minHeight }}>
       {show ? children : null}
     </div>
   );

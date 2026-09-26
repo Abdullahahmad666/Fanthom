@@ -3,69 +3,105 @@ import type { ReactNode } from "react";
 import { CueWordmark } from "@/components/brand/CueMark";
 
 /**
- * Every signup/onboarding step shares one frame: a thin cyan progress bar
- * pinned to the very top, a centred wordmark, a muted uppercase eyebrow, a
- * headline, the step's content, then the account footer.
+ * The frame every onboarding step shares.
+ *
+ * Steps are counted rather than shown as a percentage bar. "85%" is a number
+ * with no unit -- it does not say how much is left, only that someone chose
+ * 85 -- whereas "Step 2 of 3" is a promise the flow can be held to, and this
+ * flow is short enough to make that promise.
+ *
+ * The signed-in address is passed in rather than hard-coded. It used to read
+ * one developer's Gmail on everyone's screen, which was harmless while nobody
+ * could actually sign in and is not any more.
  */
 export function OnboardingShell({
-  progress,
+  step,
+  total = 3,
   eyebrow,
   title,
+  lede,
   children,
-  footer = true,
+  email,
   note,
 }: {
-  /** 0–100. Drawn as the cyan bar across the top of the viewport. */
-  progress: number;
+  step: number;
+  total?: number;
   eyebrow: string;
-  title?: ReactNode;
+  title: ReactNode;
+  lede?: ReactNode;
   children: ReactNode;
-  footer?: boolean;
+  /** The signed-in address, when there is a session. */
+  email?: string | null;
   note?: ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-canvas">
-      <div className="h-[6px] w-full bg-transparent">
-        <div
-          className="h-full bg-brand transition-[width] duration-500"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      <div className="flex justify-center pt-8">
+    <div className="flex min-h-screen flex-col bg-bg">
+      <header className="mx-auto flex w-full max-w-[760px] items-center gap-4 px-6 pt-8">
         <Link href="/" aria-label="Cue">
-          <CueWordmark />
+          <CueWordmark size={19} />
         </Link>
+        <span className="ml-auto text-[12px] tracking-[0.08em] text-faint uppercase">
+          Step {step} of {total}
+        </span>
+      </header>
+
+      {/* Segments rather than a fill: each one is a step you can count, and
+          the step you are on is the one that is lit. */}
+      <div className="mx-auto mt-4 flex w-full max-w-[760px] gap-1.5 px-6">
+        {Array.from({ length: total }, (_, i) => (
+          <span
+            key={i}
+            className={`h-1 flex-1 rounded-full transition-colors duration-500 ${
+              i < step ? "bg-accent" : "bg-line"
+            }`}
+          />
+        ))}
       </div>
 
-      <main className="flex flex-1 flex-col items-center justify-center px-6 py-16">
-        <p className="mb-5 text-center text-[15px] tracking-[0.06em] text-fg-muted uppercase">
-          {eyebrow}
-        </p>
-        {title && (
-          <h1 className="mb-12 max-w-[760px] text-center text-[26px] leading-snug font-bold text-fg">
-            {title}
-          </h1>
+      <main className="mx-auto flex w-full max-w-[760px] flex-1 flex-col px-6 pt-16 pb-12">
+        <p className="section-label">{eyebrow}</p>
+        <h1 className="font-display mt-3 text-[clamp(28px,4vw,40px)] leading-[1.1] tracking-[-0.02em] text-text">
+          {title}
+        </h1>
+        {lede && (
+          <p className="measure mt-4 text-[15.5px] leading-relaxed text-muted">{lede}</p>
         )}
-        {children}
+
+        <div className="mt-10">{children}</div>
       </main>
 
       {note && (
-        <p className="flex items-center justify-center gap-3 px-6 pb-6 text-center text-[14px] text-fg-muted">
-          {note}
-        </p>
+        <p className="mx-auto w-full max-w-[760px] px-6 pb-4 text-[13px] text-faint">{note}</p>
       )}
 
-      {footer && (
-        <p className="pb-8 text-center text-[14px] text-fg-muted">
-          <span className="mr-1.5 inline-block h-4 w-4 rounded-full bg-fg-dim align-[-2px]" />
-          Signing up as{" "}
-          <span className="text-fg">abdullahahmad5618@gmail.com</span>. Wrong account?{" "}
-          <Link href="/" className="text-fg underline underline-offset-2">
-            Sign out
-          </Link>
-        </p>
-      )}
+      {/* A div rather than a p: the signed-in branch contains a form, and a
+          form inside a paragraph is invalid HTML -- the browser closes the p
+          early and the hydrated tree stops matching the server's. */}
+      <div className="mx-auto w-full max-w-[760px] px-6 pb-10 text-[13px] text-faint">
+        {email ? (
+          <>
+            Signed in as <span className="text-muted">{email}</span>.{" "}
+            {/* A form, not a link: the signout route is POST-only on purpose,
+                so that a stray GET -- a prefetch, an <img src>, a crawler --
+                cannot end someone's session for them. */}
+            <form action="/auth/signout" method="post" className="inline">
+              <button
+                type="submit"
+                className="text-muted underline underline-offset-2 hover:text-text"
+              >
+                Sign out
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            Continuing as a guest — nothing here is saved to an account.{" "}
+            <Link href="/signup" className="text-muted underline underline-offset-2">
+              Create one
+            </Link>
+          </>
+        )}
+      </div>
     </div>
   );
 }

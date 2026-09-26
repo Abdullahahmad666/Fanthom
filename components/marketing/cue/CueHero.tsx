@@ -53,13 +53,17 @@ export function CueHero() {
               <FileUp className="h-[18px] w-[18px]" />
               Import a transcript
             </Link>
-            <Link
-              href="/calls"
+            {/* Points down the page rather than at /calls. The app is behind
+                auth now, so that link promised a finished meeting and
+                delivered a login wall -- and the page can answer the question
+                itself. */}
+            <a
+              href="#how-it-works"
               className="press inline-flex items-center gap-2 rounded-lg border border-line px-6 py-3.5 text-[15px] font-semibold text-text transition-colors hover:border-line-strong"
             >
-              See a finished meeting
+              See how it works
               <ArrowRight className="h-[18px] w-[18px]" />
-            </Link>
+            </a>
           </div>
 
           <p className="mt-5 text-[13px] text-faint">

@@ -37,7 +37,7 @@ const CueClosing = dynamic(() => import("./CueClosing").then((m) => m.CueClosing
 export function DeferredCueSections() {
   return (
     <>
-      <LazySection minHeight={710}>
+      <LazySection id="how-it-works" minHeight={710}>
         <HowItWorks />
       </LazySection>
       <LazySection minHeight={610}>

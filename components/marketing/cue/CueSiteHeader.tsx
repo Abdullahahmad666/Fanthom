@@ -17,11 +17,11 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
  * different CTA shape: the bar should separate itself from the content moving
  * under it, not restyle itself.
  */
-const LINKS = [
-  { href: "/pricing", label: "Pricing" },
-  { href: "/import", label: "Import" },
-  { href: "/calls", label: "Product" },
-];
+/* Only public destinations. "Product" and "Import" both pointed into the app,
+   which is behind auth -- so for a signed-out visitor they were two nav items
+   that did nothing but redirect to the login page. Signing in is already the
+   right-hand side of this bar. */
+const LINKS = [{ href: "/pricing", label: "Pricing" }];
 
 export function CueSiteHeader() {
   const [scrolled, setScrolled] = useState(false);

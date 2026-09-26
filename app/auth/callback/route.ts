@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/backend/src/supabase/server";
 
-const NEXT_STEP = "/signup/questionnaire";
+const NEXT_STEP = "/onboarding/name";
 
 /**
  * OAuth landing point.

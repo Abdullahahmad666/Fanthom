@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/ui/Reveal";
+import { SOURCES } from "@/lib/sources";
 
 /**
  * Where the transcripts come from.
@@ -10,34 +11,9 @@ import { Reveal } from "@/components/ui/Reveal";
  * pitch: there is nothing to connect, and nothing to approve.
  *
  * Each card names the exact menu path, because "export your transcript" is
- * the step where people actually get stuck.
+ * the step where people actually get stuck. The list is shared with the
+ * onboarding step that asks the same question, so the two cannot drift.
  */
-const SOURCES = [
-  {
-    name: "Zoom",
-    file: ".vtt",
-    path: "Recordings → the meeting → Audio transcript",
-    tint: "#2D8CFF",
-  },
-  {
-    name: "Google Meet",
-    file: ".txt",
-    path: "Drive → Meet Recordings → the transcript file",
-    tint: "#00AC47",
-  },
-  {
-    name: "Microsoft Teams",
-    file: ".vtt",
-    path: "Chat → Recordings → Download transcript",
-    tint: "#5B5FC7",
-  },
-  {
-    name: "Anything else",
-    file: ".srt / .txt",
-    path: "A plain “Name: what they said” log parses too",
-    tint: "var(--cue-mark)",
-  },
-];
 
 export function WorksWhereYouMeet() {
   return (

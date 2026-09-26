@@ -9,18 +9,22 @@ const CARDS = [
     href: "/calls/q3-launch-readiness",
     art: "linear-gradient(135deg,#1e3a8a 0%,#7c1d6f 55%,#b91c1c 100%)",
   },
+  /* These pointed at two onboarding steps that no longer exist, and at two
+     ideas that were never Cue's: a test call it cannot record, and a webinar
+     nobody is running. They now point at the two things a new account
+     actually wants next. */
   {
     kind: "call" as const,
-    label: "Start Test Call",
+    label: "Import a transcript",
     Icon: Play,
-    href: "/onboarding/connect",
+    href: "/import",
     art: "linear-gradient(135deg,#d6cfc4 0%,#8d8478 60%,#3f3a33 100%)",
   },
   {
     kind: "webinar" as const,
-    label: "Attend Tips & Tricks Webinar",
+    label: "How Cue reads a meeting",
     Icon: Presentation,
-    href: "/onboarding/done",
+    href: "/",
     art: "linear-gradient(135deg,#0c4a6e 0%,#1e40af 55%,#0f172a 100%)",
   },
 ];

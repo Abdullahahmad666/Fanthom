@@ -2,10 +2,28 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 /**
- * Refreshes the Supabase session on every request, so Server Components always
- * read a valid user. Skipped entirely when Supabase is not configured, which
- * keeps the fixture-only deployment working.
+ * Session refresh, and the gate in front of the app.
+ *
+ * Two jobs. It keeps the Supabase session fresh so Server Components always
+ * read a valid user, and it decides who is allowed past /calls.
+ *
+ * The gate is conditional on Supabase being configured at all. With no
+ * credentials there is no such thing as being signed in, and gating would
+ * lock every route in a deployment that is meant to run on sample data -- so
+ * that build stays open and the product runs signed-out, exactly as before.
+ * Once there is a database, signed-out means signed-out.
  */
+
+/** Everything that requires a session, once there is a database to have one in. */
+const PRIVATE = ["/calls", "/playlists", "/settings", "/import", "/onboarding", "/deals", "/alerts", "/team"];
+
+/** Signed-in users have no business on these, so they bounce to the app. */
+const AUTH_ONLY = ["/login", "/signup"];
+
+function matches(pathname: string, prefixes: string[]) {
+  return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
 export async function middleware(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -24,7 +42,29 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname, search } = request.nextUrl;
+
+  if (!user && matches(pathname, PRIVATE)) {
+    /* Carry where they were going, so signing in finishes the journey they
+       started rather than dumping them on a generic landing page. */
+    const to = request.nextUrl.clone();
+    to.pathname = "/login";
+    to.search = "";
+    to.searchParams.set("next", `${pathname}${search}`);
+    return NextResponse.redirect(to);
+  }
+
+  if (user && matches(pathname, AUTH_ONLY)) {
+    const to = request.nextUrl.clone();
+    to.pathname = "/calls";
+    to.search = "";
+    return NextResponse.redirect(to);
+  }
+
   return response;
 }
 

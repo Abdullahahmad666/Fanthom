@@ -1,5 +1,5 @@
 import { AuthShell } from "@/components/auth/AuthShell";
-import { SignInButtons } from "@/components/auth/SignInButtons";
+import { AuthForm } from "@/components/auth/AuthForm";
 
 export const metadata = { title: "Sign in to Cue" };
 
@@ -11,7 +11,7 @@ export default function LoginPage() {
       swapLabel="Sign up"
       swapHref="/signup"
     >
-      <SignInButtons mode="signin" />
+      <AuthForm mode="signin" />
     </AuthShell>
   );
 }

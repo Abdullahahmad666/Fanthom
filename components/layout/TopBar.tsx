@@ -14,6 +14,7 @@ import { ReferCard } from "./ReferCard";
 import { StreakCard, STREAK_POINTS } from "./StreakCard";
 import { SupportWidget } from "./SupportWidget";
 import { pushToast } from "@/lib/toast";
+import { useAccount } from "@/lib/account";
 
 type TopBarProps = {
   /** Controlled search text. Omit for an uncontrolled field. */
@@ -61,9 +62,19 @@ const PANEL = {
   },
 } as const;
 
-type MenuRow = { label: string; Icon?: typeof Gift; href?: string; note?: string };
+type MenuRow = {
+  label: string;
+  Icon?: typeof Gift;
+  href?: string;
+  note?: string;
+  /** Ends the session rather than navigating. */
+  signout?: boolean;
+};
 
-const ACCOUNT_EMAIL = "abdullahahmad5618@gmail.com";
+/* Shown until the session has been read, and in deployments with no database
+   where there is no session to read. It is labelled as a demo rather than
+   dressed up as a real address. */
+const GUEST_LABEL = "Signed out — running on sample data";
 
 /**
  * The account menu, on the avatar.
@@ -90,8 +101,10 @@ const ACCOUNT_GROUPS: MenuRow[][] = [
   ],
   [
     { label: "Download App", Icon: Download, note: "Ships the desktop recorder in the real product." },
-    { label: "Replay onboarding", Icon: RotateCcw, href: "/signup" },
-    { label: "Logout", Icon: LogOut, href: "/" },
+    { label: "Replay onboarding", Icon: RotateCcw, href: "/onboarding/name" },
+    /* This used to navigate to "/" and leave the session entirely intact,
+       which was only ever invisible because nobody could sign in. */
+    { label: "Logout", Icon: LogOut, signout: true },
   ],
 ];
 
@@ -109,6 +122,7 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
   const [local, setLocal] = useState("");
   const [supportOpen, setSupportOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const account = useAccount();
 
   const value = onList ? (query ?? "") : local;
 
@@ -299,18 +313,22 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
               onClick={toggle}
               aria-label="Account"
               aria-expanded={open}
-              className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-avatar text-[13px] font-semibold text-fg"
+              className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-avatar text-[13px] font-semibold text-white"
             >
-              A
+              {(account?.name ?? account?.email ?? "?").charAt(0).toUpperCase()}
             </button>
           )}
         >
           {(close) => (
             <>
               <MenuGroups groups={ACCOUNT_GROUPS} close={close} />
-              <div className="border-t border-white/10 px-5 py-3">
-                <p className="text-[13px] text-fg-dim">Logged in as</p>
-                <p className="truncate text-[13px] text-fg-muted">{ACCOUNT_EMAIL}</p>
+              <div className="border-t border-line px-5 py-3">
+                <p className="text-[13px] text-faint">
+                  {account ? "Signed in as" : "No account"}
+                </p>
+                <p className="truncate text-[13px] text-muted">
+                  {account?.email ?? GUEST_LABEL}
+                </p>
               </div>
             </>
           )}
@@ -332,8 +350,21 @@ export function TopBar({ query, onQueryChange }: TopBarProps) {
 function MenuGroups({ groups, close }: { groups: MenuRow[][]; close: () => void }) {
   const router = useRouter();
 
-  const run = ({ label, href, note }: MenuRow) => {
+  const run = ({ label, href, note, signout }: MenuRow) => {
     close();
+
+    if (signout) {
+      /* Submitted rather than fetched, so the browser follows the redirect and
+         lands on a freshly rendered page with the session cookie already
+         cleared. The route only answers POST. */
+      const form = document.createElement("form");
+      form.method = "post";
+      form.action = "/auth/signout";
+      document.body.appendChild(form);
+      form.submit();
+      return;
+    }
+
     if (href) {
       router.push(href);
       return;

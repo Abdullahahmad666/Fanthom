@@ -11,20 +11,23 @@ import { CueWordmark } from "@/components/brand/CueMark";
  * the page itself.
  */
 const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] = [
+  /* Split by what a signed-out visitor can actually open. Everything under
+     "In the app" redirects to sign-in first, which is fine when the column
+     says so and misleading when it does not. */
   {
-    heading: "Product",
+    heading: "Public",
+    links: [
+      { href: "/pricing", label: "Pricing" },
+      { href: "/login", label: "Sign in" },
+      { href: "/signup", label: "Create an account" },
+    ],
+  },
+  {
+    heading: "In the app",
     links: [
       { href: "/calls", label: "My calls" },
       { href: "/import", label: "Import a transcript" },
       { href: "/playlists", label: "Playlists" },
-      { href: "/pricing", label: "Pricing" },
-    ],
-  },
-  {
-    heading: "Account",
-    links: [
-      { href: "/login", label: "Sign in" },
-      { href: "/signup", label: "Create an account" },
       { href: "/settings", label: "Settings" },
     ],
   },

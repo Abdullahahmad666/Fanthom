@@ -39,11 +39,14 @@ export function CueClosing() {
             <FileUp className="h-[18px] w-[18px]" />
             Import a transcript
           </Link>
+          {/* /calls is behind auth, so "look around" meant "sign in first".
+              Pricing is public and says what is built, which is the honest
+              second option from here. */}
           <Link
-            href="/calls"
+            href="/pricing"
             className="press inline-flex items-center gap-2 rounded-lg border border-line px-7 py-3.5 text-[15px] font-semibold text-text transition-colors hover:border-line-strong"
           >
-            Look around first
+            See what is built
             <ArrowRight className="h-[18px] w-[18px]" />
           </Link>
         </div>
