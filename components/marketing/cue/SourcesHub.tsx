@@ -14,10 +14,9 @@ import { SOURCES } from "@/lib/sources";
  * is connected, nothing is authorised, and the picture says so -- the lines run
  * inward only, because that is the whole direction of travel.
  *
- * The wires draw as you scroll to them, using `pathLength="1"` so the dash
- * maths is the same for every line regardless of its real length -- the two
- * short diagonals and the two long ones fill at the same rate, which is what
- * makes them read as one diagram assembling rather than four lines racing.
+ * The wires draw as the diagram comes into view, each one from its source
+ * toward the hub, staggered so the four arrive in sequence rather than as one
+ * flash. Each carries its own length as a custom property; see `lengthTo`.
  *
  * Hovering a source sends a pulse down its wire toward the hub. That is the
  * claim restated as a gesture: this file, into Cue.
@@ -36,6 +35,52 @@ const FIELD_H = 52;
 const pct = (y: number) => `${(y / FIELD_H) * 100}%`;
 
 const HUB = { x: 50, y: 26 };
+
+/**
+ * Each wire's length, in viewBox units.
+ *
+ * `pathLength="1"` looked like it would make this unnecessary -- set the dash
+ * in normalised units and every line behaves identically regardless of how
+ * long it really is. It does not work for dash values set from CSS: measured,
+ * `stroke-dasharray: 0.05 0.95` computed to `0.05px, 0.95px` against a path
+ * 40.71 units long, so the pattern repeated forty times and the "packet" was a
+ * row of forty dots. The base wire had the same problem, which is why its draw
+ * animation moved the number without ever looking like drawing.
+ *
+ * Real lengths, in the units the path is actually in, and the dash maths is
+ * honest again.
+ */
+const lengthTo = (p: { x: number; y: number }) => Math.hypot(HUB.x - p.x, HUB.y - p.y);
+
+/**
+ * A dash pattern of exactly one mark per wire.
+ *
+ * Built here rather than with `calc()` in the stylesheet: measured, a gap
+ * written as `calc(var(--len) - 2)` computed to the literal string
+ * `calc(38.7063px)` and Chrome did not apply it to stroke-dasharray, falling
+ * back to a single value -- which means dash and gap are equal, and the wire
+ * becomes a row of evenly spaced dots instead of one travelling packet.
+ */
+const oneMark = (p: { x: number; y: number }, mark: number) => {
+  const len = lengthTo(p);
+  return { dash: `${mark} ${Math.max(0, len - mark)}`, len };
+};
+
+/**
+ * Stroke widths are in viewBox units, not pixels, and none of these lines uses
+ * `vectorEffect="non-scaling-stroke"`.
+ *
+ * That attribute keeps a stroke crisp by measuring it in device pixels -- but
+ * it measures the dash pattern there too, while the path length stays in user
+ * units. The viewBox is about 12x smaller than the rendered box, so a pattern
+ * built to fit the path exactly repeated a dozen times and one travelling
+ * packet came out as a row of dots. Measured: dasharray computed correctly to
+ * `2px, 38.7063px` on a 40.71-unit path and still rendered as twelve marks.
+ *
+ * In user units the numbers are small, but the dash maths and the geometry are
+ * finally in the same space.
+ */
+const W = { wire: 0.1, flow: 0.34, pulse: 0.3 };
 const POS = [
   { x: 14, y: 7 },
   { x: 86, y: 7 },
@@ -118,12 +163,34 @@ export function SourcesHub() {
                   y1={p.y}
                   x2={HUB.x}
                   y2={HUB.y}
-                  pathLength={1}
                   className="wire"
-                  style={{ animationDelay: `${i * 130}ms` }}
+                  style={
+                    {
+                      "--len": lengthTo(p),
+                      animationDelay: `${i * 130}ms`,
+                    } as React.CSSProperties
+                  }
                   stroke="var(--cue-line-strong)"
-                  strokeWidth={1.25}
-                  vectorEffect="non-scaling-stroke"
+                  strokeWidth={W.wire}
+                />
+                {/* The ambient packet. Always travelling, offset per wire so
+                    the four never move in step. */}
+                <line
+                  x1={p.x}
+                  y1={p.y}
+                  x2={HUB.x}
+                  y2={HUB.y}
+                  className="wire-flow"
+                  strokeDasharray={oneMark(p, 3.2).dash}
+                  style={
+                    {
+                      "--len": lengthTo(p),
+                      animationDelay: `${i * 850}ms`,
+                    } as React.CSSProperties
+                  }
+                  stroke="var(--cue-mark)"
+                  strokeWidth={W.flow}
+                  strokeLinecap="round"
                 />
                 {/* The pulse. Sits on top of the wire and only runs while its
                     source is hovered. */}
@@ -132,12 +199,12 @@ export function SourcesHub() {
                   y1={p.y}
                   x2={HUB.x}
                   y2={HUB.y}
-                  pathLength={1}
                   className={active === i ? "wire-pulse is-live" : "wire-pulse"}
+                  strokeDasharray={oneMark(p, 7).dash}
+                  style={{ "--len": lengthTo(p) } as React.CSSProperties}
                   stroke={SOURCES[i].tint}
-                  strokeWidth={3}
+                  strokeWidth={W.pulse}
                   strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
                 />
               </g>
             ))}
@@ -152,7 +219,7 @@ export function SourcesHub() {
               data-hub
               className={`flex h-24 w-24 items-center justify-center rounded-full border bg-surface transition-[box-shadow,border-color] duration-500 ${
                 active !== null
-                  ? "border-mark shadow-[0_0_0_10px_var(--cue-mark-soft)]"
+                  ? "is-lit border-mark shadow-[0_0_0_10px_var(--cue-mark-soft)]"
                   : "border-line"
               }`}
             >

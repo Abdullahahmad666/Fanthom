@@ -370,6 +370,7 @@ body {
   .card-cue::after,
   .cue-slide-in,
   .wire-pulse,
+  .wire-flow,
   /* Critically, this one resets rather than freezing: a heading caught
      mid-wipe is a heading you cannot read. */
   .write-on,
@@ -381,7 +382,18 @@ body {
 
   /* Drawn, not frozen part-way: an unfinished diagram is a broken one. */
   .wire {
+    stroke-dasharray: none !important;
     stroke-dashoffset: 0 !important;
+  }
+
+  /* The ambient flow and the hub's breathing are decoration on a loop, which
+     is the single clearest case for switching something off outright. */
+  .wire-flow {
+    opacity: 0 !important;
+  }
+
+  [data-hub] {
+    animation: none !important;
   }
 
   .write-on,
@@ -680,7 +692,7 @@ body {
  * Drawing is tied to scroll, so the diagram builds as you arrive at it.
  */
 @keyframes cue-draw {
-  from { stroke-dashoffset: 1; }
+  from { stroke-dashoffset: var(--len); }
   to { stroke-dashoffset: 0; }
 }
 
@@ -708,9 +720,10 @@ body {
  * flash, and `pathLength="1"` keeps the two short diagonals filling at the
  * same rate as the two long ones.
  */
+/* `--len` is the line's real length in viewBox units, set inline per wire. */
 .wire-field .wire {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
   /* Present enough to read as a connection at a glance, quiet enough that the
      cards stay the thing you look at. */
   opacity: 0.9;
@@ -723,6 +736,69 @@ body {
 /* The per-wire delay is set inline, where the index is actually known. */
 
 /*
+ * The ambient flow: something is always arriving.
+ *
+ * A short dash travelling each wire toward the hub, on a loop. Without it the
+ * diagram is only alive while the pointer is on it, and it spends most of its
+ * time being scrolled past or read -- which is precisely when a picture about
+ * things arriving should look like things are arriving.
+ *
+ * Three decisions keep it from becoming wallpaper:
+ *
+ *  - It is slow. 3.4s end to end is slower than the eye tracks by default, so
+ *    it registers as movement without pulling attention off the text.
+ *  - It is faint, and it uses the provenance amber rather than each source's
+ *    own colour. Four brand colours pulsing at once is a fairground; one quiet
+ *    colour says "this is all going to the same place", which is the claim.
+ *  - The four are offset so they never travel in step. Synchronised packets
+ *    read as a progress bar -- something measuring, waiting to finish -- and
+ *    this is not measuring anything.
+ *
+ * Gated on `.is-drawn`, so it begins only after the wires have finished
+ * drawing. Starting mid-draw makes both animations look like one glitch.
+ */
+@keyframes cue-flow {
+  from { stroke-dashoffset: var(--len); }
+  to { stroke-dashoffset: 0; }
+}
+
+.wire-flow {
+  /* The dash pattern is set inline per wire -- calc() is not honoured here.
+     Only the offset lives in CSS, because the animation drives it. */
+  stroke-dashoffset: var(--len);
+  opacity: 0;
+  transition: opacity var(--cue-slow) var(--cue-ease);
+}
+
+.wire-field.is-drawn .wire-flow {
+  opacity: 0.7;
+  animation: cue-flow 3.4s linear infinite;
+}
+
+/*
+ * The hub answers it.
+ *
+ * A ring that breathes rather than a flash on arrival: matching the ring to
+ * four packets landing at four different times would mean four rings, and the
+ * hub would strobe. One slow pulse reads as the thing being alive, which is
+ * all it needs to say.
+ */
+@keyframes cue-hub-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 0 8px var(--cue-mark-soft); }
+}
+
+[data-hub] {
+  animation: cue-hub-breathe 3.4s var(--cue-ease) infinite;
+}
+
+/* While a source is hovered the hub is lit by that instead, and two things
+   driving one box-shadow would fight. */
+[data-hub].is-lit {
+  animation: none;
+}
+
+/*
  * The pulse that runs a wire while its source is hovered.
  *
  * A short dash chasing a long gap, looped. It travels source -> hub because
@@ -731,13 +807,14 @@ body {
  * it cannot become ambient movement nobody asked for.
  */
 @keyframes cue-surge {
-  from { stroke-dashoffset: 1; }
+  from { stroke-dashoffset: var(--len); }
   to { stroke-dashoffset: 0; }
 }
 
 .wire-pulse {
-  stroke-dasharray: 0.14 0.86;
-  stroke-dashoffset: 1;
+  /* Pattern set inline; longer than the ambient packet so a hover reads as a
+     surge rather than as the same dot going faster. */
+  stroke-dashoffset: var(--len);
   opacity: 0;
   transition: opacity var(--cue-fast) var(--cue-ease);
 }
