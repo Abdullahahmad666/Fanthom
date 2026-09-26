@@ -8,17 +8,21 @@ import { createServerClient } from "@supabase/ssr";
  * read a valid user, and it decides who is allowed past /calls.
  *
  * The gate is conditional on Supabase being configured at all. With no
- * credentials there is no such thing as being signed in, and gating would
- * lock every route in a deployment that is meant to run on sample data -- so
- * that build stays open and the product runs signed-out, exactly as before.
- * Once there is a database, signed-out means signed-out.
+ * credentials there is no such thing as being signed in, and gating would lock
+ * every route in a deployment meant to run on sample data -- so that build
+ * stays open. Once there is a database, signed-out means signed-out.
+ *
+ * It deliberately does NOT redirect a signed-in visitor away from /login and
+ * /signup any more. It used to, straight to /calls, without a word -- which is
+ * what made clicking "Sign in" look like it went somewhere random, because the
+ * page it landed on is empty for a new account. Those two pages now recognise
+ * the session themselves and say so, which is an explanation rather than a
+ * jump. Redirecting is the kind of thing middleware should only do when there
+ * is nothing worth saying.
  */
 
 /** Everything that requires a session, once there is a database to have one in. */
 const PRIVATE = ["/calls", "/playlists", "/settings", "/import", "/onboarding", "/deals", "/alerts", "/team"];
-
-/** Signed-in users have no business on these, so they bounce to the app. */
-const AUTH_ONLY = ["/login", "/signup"];
 
 function matches(pathname: string, prefixes: string[]) {
   return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -55,13 +59,6 @@ export async function middleware(request: NextRequest) {
     to.pathname = "/login";
     to.search = "";
     to.searchParams.set("next", `${pathname}${search}`);
-    return NextResponse.redirect(to);
-  }
-
-  if (user && matches(pathname, AUTH_ONLY)) {
-    const to = request.nextUrl.clone();
-    to.pathname = "/calls";
-    to.search = "";
     return NextResponse.redirect(to);
   }
 

@@ -28,6 +28,7 @@ export function AuthShell({
   swapLabel,
   swapHref,
   children,
+  hideSwap = false,
 }: {
   title: string;
   /** "New to Cue?" / "Already have a Cue account?" */
@@ -35,6 +36,8 @@ export function AuthShell({
   swapLabel: string;
   swapHref: string;
   children: ReactNode;
+  /** Suppressed when already signed in: there is nothing to swap to. */
+  hideSwap?: boolean;
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-bg">
@@ -55,6 +58,7 @@ export function AuthShell({
 
           {children}
 
+{!hideSwap && (
           <p className="mt-8 text-center text-[14px] text-muted">
             {swapPrompt}{" "}
             <Link
@@ -64,7 +68,9 @@ export function AuthShell({
               {swapLabel}
             </Link>
           </p>
+          )}
 
+{!hideSwap && (
           <p className="mt-6 text-center text-[12px] leading-relaxed text-faint">
             By continuing you agree to our{" "}
             <Link href="/terms" className="underline underline-offset-2 hover:text-muted">
@@ -76,6 +82,7 @@ export function AuthShell({
             </Link>
             .
           </p>
+          )}
         </div>
 
         <WhatYouGet />

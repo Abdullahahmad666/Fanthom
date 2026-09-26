@@ -1,4 +1,5 @@
 import { CueSiteHeader } from "@/components/marketing/cue/CueSiteHeader";
+import { getUser } from "@/backend/src/supabase/server";
 import { CueSiteFooter } from "@/components/marketing/cue/CueSiteFooter";
 import { CuePlans } from "@/components/marketing/cue/CuePlans";
 import { PricingFaq } from "@/components/marketing/cue/PricingFaq";
@@ -22,10 +23,12 @@ export const metadata = {
  * product is most tempted to write in the future tense, and saying which half
  * is which is the same commitment the rest of the site makes.
  */
-export default function PricingPage() {
+export default async function PricingPage() {
+  const user = await getUser();
+
   return (
     <div className="min-h-screen bg-bg">
-      <CueSiteHeader />
+      <CueSiteHeader initialAccount={user?.email ? { email: user.email, name: null } : null} />
       <CuePlans />
       <PricingFaq />
       <CueClosing />

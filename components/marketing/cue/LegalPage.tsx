@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { CueSiteHeader } from "./CueSiteHeader";
+import { getUser } from "@/backend/src/supabase/server";
 import { CueSiteFooter } from "./CueSiteFooter";
 
 /**
@@ -10,7 +11,7 @@ import { CueSiteFooter } from "./CueSiteFooter";
  * than scanned. The heading scale is flatter for the same reason: a legal
  * document with a hero is a document nobody trusts.
  */
-export function LegalPage({
+export async function LegalPage({
   title,
   updated,
   lede,
@@ -28,9 +29,11 @@ export function LegalPage({
     year: "numeric",
   });
 
+  const user = await getUser();
+
   return (
     <div className="min-h-screen bg-bg">
-      <CueSiteHeader />
+      <CueSiteHeader initialAccount={user?.email ? { email: user.email, name: null } : null} />
 
       <main className="mx-auto w-full max-w-[720px] px-6 pt-16 pb-24 sm:px-8">
         <p className="section-label">Legal</p>

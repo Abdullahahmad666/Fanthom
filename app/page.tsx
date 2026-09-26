@@ -1,4 +1,5 @@
 import { CueSiteHeader } from "@/components/marketing/cue/CueSiteHeader";
+import { getUser } from "@/backend/src/supabase/server";
 import { CueHero } from "@/components/marketing/cue/CueHero";
 import { HowItWorks } from "@/components/marketing/cue/HowItWorks";
 import { WorksWhereYouMeet } from "@/components/marketing/cue/WorksWhereYouMeet";
@@ -39,11 +40,13 @@ export const metadata = {
  * the items inside them -- an outline a screen reader can navigate and a
  * crawler can read as structure rather than styling.
  */
-export default function CueHomePage() {
+export default async function CueHomePage() {
+  const user = await getUser();
+
   return (
     <div className="min-h-screen bg-bg">
       <StructuredData />
-      <CueSiteHeader />
+      <CueSiteHeader initialAccount={user?.email ? { email: user.email, name: null } : null} />
       <main>
         <CueHero />
         <HowItWorks />

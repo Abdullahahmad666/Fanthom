@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { CueWordmark } from "@/components/brand/CueMark";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { useAccount } from "@/lib/account";
+import { useAccount, type Account } from "@/lib/account";
 
 /**
  * The marketing header.
@@ -17,10 +17,14 @@ import { useAccount } from "@/lib/account";
  * that do exist, which is also what a reader of a long landing page wants: a
  * way back to the section they half-remember.
  *
- * It reflects who is signed in. Offering "Sign in" and "Get started" to
- * somebody who already has a session is how you end up clicking Sign in and
- * arriving in the app: the middleware sends a signed-in visitor away from
- * /login, correctly, and the header was the thing telling them to go there.
+ * It reflects who is signed in, and it knows before the first paint.
+ *
+ * Reading that in the browser takes a round trip, and for the length of it the
+ * bar said "Sign in" to people who were already signed in. Clicking during that
+ * window went to /login, which correctly bounced them into the app -- so the
+ * bug looked like auth routing and was really this bar being a second behind.
+ * The page passes down what the server already knew, so the first render is
+ * right and there is no window to click through.
  */
 
 const SECTIONS = [
@@ -30,10 +34,10 @@ const SECTIONS = [
   { href: "/pricing", label: "Pricing" },
 ];
 
-export function CueSiteHeader() {
+export function CueSiteHeader({ initialAccount }: { initialAccount?: Account }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const account = useAccount();
+  const account = useAccount(initialAccount);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
