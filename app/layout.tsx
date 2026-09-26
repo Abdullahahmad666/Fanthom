@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/Toaster";
+import { CleanAuthUrl } from "@/components/auth/CleanAuthUrl";
 import { THEME_SCRIPT } from "@/components/ui/ThemeToggle";
 import { SITE_URL } from "@/lib/siteUrl";
 
@@ -91,6 +92,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full" suppressHydrationWarning>
         {children}
         <Toaster />
+        {/* Strips one-time codes, tokens and provider errors out of the
+            address bar as soon as they have been read. */}
+        <CleanAuthUrl />
       </body>
     </html>
   );

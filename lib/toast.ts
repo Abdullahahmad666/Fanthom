@@ -49,11 +49,40 @@ function scheduleDismiss(id: string, duration: number) {
   );
 }
 
+/**
+ * Stops the clock on a toast, and starts it again.
+ *
+ * A message that disappears while you are still reading it is a message you
+ * did not receive, and the most common reason for lingering on one is that you
+ * moved the pointer onto it. `remaining` is recomputed rather than reused, so
+ * a toast that was hovered at two seconds gets the rest of its life back, not
+ * a fresh full one.
+ */
+const deadlines = new Map<string, { at: number; duration: number }>();
+
+export function holdToast(id: string) {
+  const timer = timers.get(id);
+  if (timer === undefined) return;
+  clearTimeout(timer);
+  timers.delete(id);
+}
+
+export function releaseToast(id: string) {
+  const d = deadlines.get(id);
+  if (!d || timers.has(id)) return;
+  const left = Math.max(600, d.at - Date.now());
+  scheduleDismiss(id, left);
+}
+
 export function pushToast(t: Omit<Toast, "id">): string {
   const id = `t-${Date.now()}-${Math.round(Math.random() * 1e6)}`;
   toasts.push({ ...t, id });
   emit();
-  if (t.status !== "loading") scheduleDismiss(id, t.duration ?? 4000);
+  if (t.status !== "loading") {
+    const duration = t.duration ?? 4000;
+    deadlines.set(id, { at: Date.now() + duration, duration });
+    scheduleDismiss(id, duration);
+  }
   return id;
 }
 

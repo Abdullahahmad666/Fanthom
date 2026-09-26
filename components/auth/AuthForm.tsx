@@ -57,6 +57,28 @@ function humanise(message: string, mode: Mode): string {
     : `Could not sign in: ${message}`;
 }
 
+/**
+ * Where the provider should send the browser back to.
+ *
+ * Built from the live origin rather than from NEXT_PUBLIC_SITE_URL, so it is
+ * right on localhost, on a preview deployment and in production without anyone
+ * remembering to change a variable.
+ *
+ * `next` is encoded because it is a path that may carry a query of its own --
+ * unencoded, its `?` would terminate this one and the rest would be read as
+ * parameters of the callback.
+ *
+ * Worth knowing when this appears not to work: Supabase only honours a
+ * redirect it recognises. If the origin is not in the project's Redirect URLs
+ * allowlist it silently substitutes the dashboard's Site URL, and the browser
+ * lands on whatever that happens to be -- often an older deployment. Nothing
+ * in this file can detect that, because by then the page is somebody else's.
+ */
+function callbackUrl(next: string) {
+  const origin = window.location.origin;
+  return `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
+}
+
 type Mode = "signup" | "signin";
 
 /**
@@ -125,7 +147,7 @@ function AuthFormInner({ mode = "signup" }: { mode?: Mode }) {
       ? await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=${next}` },
+          options: { emailRedirectTo: callbackUrl(next) },
         })
       : await supabase.auth.signInWithPassword({ email: email.trim(), password });
 
@@ -170,11 +192,17 @@ function AuthFormInner({ mode = "signup" }: { mode?: Mode }) {
       return;
     }
 
+    if (process.env.NODE_ENV !== "production") {
+      console.info(
+        `[auth] asking the provider to return to ${callbackUrl(next)} — this exact origin must be listed under Supabase → Authentication → URL Configuration → Redirect URLs, or Supabase will substitute the dashboard's Site URL instead.`,
+      );
+    }
+
     setBusy("google");
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
+        redirectTo: callbackUrl(next),
         /* Identity only -- see GOOGLE_SCOPES. No access_type or prompt either:
            offline access exists to get a refresh token for calling an API in
            the background, and there is no API to call. `prompt: "consent"`

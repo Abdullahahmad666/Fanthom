@@ -10,6 +10,7 @@ import { extractNotes } from "@/lib/transcript/extract";
 import { formatClock, formatDuration } from "@/lib/types";
 import { Cue } from "@/components/ui/Cue";
 import { Reveal } from "@/components/ui/Reveal";
+import { pushToast } from "@/lib/toast";
 
 /**
  * Transcript import.
@@ -102,6 +103,12 @@ export function ImportView() {
         setSaving(false);
         return;
       }
+      pushToast({
+        title: "Transcript imported",
+        description: `${title.trim() || preview.filename} is ready, with every line carrying its timestamp.`,
+        status: "success",
+        duration: 5000,
+      });
       /* Straight into the meeting: the point of importing is to read it. */
       router.push(`/calls/${data.slug}`);
     } catch (e) {

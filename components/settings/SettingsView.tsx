@@ -6,6 +6,7 @@ import { AlertCircle, Check, Loader2, LogOut, Trash2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Reveal } from "@/components/ui/Reveal";
 import { SOURCES, type SourceId } from "@/lib/sources";
+import { pushToast } from "@/lib/toast";
 
 /**
  * Settings, rebuilt around what Cue does.
@@ -93,7 +94,13 @@ function ProfileSection({ profile }: { profile: Profile }) {
     e.preventDefault();
     if (!name.trim() || !dirty) return;
     setState("saving");
-    setState((await patchProfile({ full_name: name.trim() })) ? "saved" : "error");
+    const ok = await patchProfile({ full_name: name.trim() });
+    setState(ok ? "saved" : "error");
+    pushToast(
+      ok
+        ? { title: "Name saved", description: `You will appear as ${name.trim()}.`, status: "success" }
+        : { title: "Could not save your name", description: "Check your connection and try again.", status: "error" },
+    );
   };
 
   return (
@@ -156,7 +163,14 @@ function SourceSection({ profile }: { profile: Profile }) {
     if (!profile) return;
     setPicked(id);
     setState("saving");
-    setState((await patchProfile({ transcript_source: id })) ? "saved" : "error");
+    const ok = await patchProfile({ transcript_source: id });
+    setState(ok ? "saved" : "error");
+    const name = SOURCES.find((s) => s.id === id)?.name ?? "that tool";
+    pushToast(
+      ok
+        ? { title: "Saved", description: `Import will show you the ${name} export steps.`, status: "success" }
+        : { title: "Could not save that", description: "Check your connection and try again.", status: "error" },
+    );
   };
 
   return (
@@ -232,6 +246,12 @@ function DataSection({ signedIn }: { signedIn: boolean }) {
       const res = await fetch("/api/profile", { method: "DELETE" });
       const data = await res.json();
       if (data.ok) {
+        pushToast({
+          title: "Your data was deleted",
+          description: data.note ?? "Everything on this account has been removed.",
+          status: "success",
+          duration: 7000,
+        });
         /* The session cookie was cleared in the response to that request, so
            refresh() makes the server re-read it and the gate takes effect. */
         router.replace("/");

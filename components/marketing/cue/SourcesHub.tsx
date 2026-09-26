@@ -166,16 +166,33 @@ export function SourcesHub() {
           {POS.map((p, i) => {
             const s = SOURCES[i];
             return (
-              <button
+              /*
+               * Two elements, and they must stay two.
+               *
+               * The positioning uses `-translate-x-1/2 -translate-y-1/2`, which
+               * Tailwind v4 compiles to the `translate` property -- the same one
+               * card-cue's hover lift uses. On one element the hover overwrote
+               * the centring, so the card jumped half its own width away from
+               * the pointer, which ended the hover, which snapped it back, which
+               * started it again: a flicker that only stopped if you found the
+               * spot where both states overlap.
+               *
+               * The wrapper owns the position and the button owns the hover, so
+               * neither can clobber the other.
+               */
+              <div
                 key={s.id}
+                className="absolute w-[248px] -translate-x-1/2 -translate-y-1/2"
+                style={{ left: `${p.x}%`, top: pct(p.y) }}
+              >
+              <button
                 type="button"
                 onMouseEnter={() => setActive(i)}
                 onMouseLeave={() => setActive(null)}
                 onFocus={() => setActive(i)}
                 onBlur={() => setActive(null)}
                 aria-label={`${s.name}: ${s.path}`}
-                className="card-cue absolute w-[248px] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-line bg-surface p-4 text-left"
-                style={{ left: `${p.x}%`, top: pct(p.y) }}
+                className="card-cue w-full rounded-xl border border-line bg-surface p-4 text-left"
               >
                 <span className="flex items-center gap-2.5">
                   <span
@@ -192,6 +209,7 @@ export function SourcesHub() {
                   {s.path}
                 </span>
               </button>
+              </div>
             );
           })}
         </Reveal>

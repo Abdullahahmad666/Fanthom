@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertCircle, ArrowRight, FileUp, Loader2, Sparkles } from "lucide-react";
 import { DEMO_TURNS } from "@/components/marketing/cue/demo";
+import { pushToast } from "@/lib/toast";
 
 /**
  * The end of onboarding, which is the start of the product.
@@ -74,6 +75,12 @@ export function FirstTranscriptStep() {
         return;
       }
 
+      pushToast({
+        title: "Sample meeting added",
+        description: "A real 41-minute transcript, imported into your account.",
+        status: "success",
+        duration: 5000,
+      });
       await finish(`/calls/${data.slug}`);
     } catch {
       setError("The sample could not be saved — the database may not be reachable.");

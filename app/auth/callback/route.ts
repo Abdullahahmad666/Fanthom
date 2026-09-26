@@ -23,7 +23,20 @@ function keepGoing(origin: string, why: string) {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const origin = url.origin;
-  const next = url.searchParams.get("next") ?? NEXT_STEP;
+  /*
+   * Only a same-site path is followed.
+   *
+   * `new URL(next, origin)` resolves an absolute URL to itself, so an
+   * unvalidated `?next=https://elsewhere` would hand the browser to another
+   * domain immediately after authenticating -- a real login page on the real
+   * domain that lands you somewhere else, which is exactly the shape phishing
+   * wants. A leading `//` is the same trick with the scheme left off.
+   */
+  const requested = url.searchParams.get("next");
+  const next =
+    requested && requested.startsWith("/") && !requested.startsWith("//")
+      ? requested
+      : NEXT_STEP;
 
   // Google/Supabase report a refused or unverified consent here.
   const providerError =

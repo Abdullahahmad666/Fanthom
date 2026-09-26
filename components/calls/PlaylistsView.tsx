@@ -10,6 +10,7 @@ import {
 } from "@/lib/playlists";
 import { posterFor } from "@/lib/poster";
 import { Reveal } from "@/components/ui/Reveal";
+import { pushToast } from "@/lib/toast";
 import { formatClock, HIGHLIGHT_META, type HighlightKind } from "@/lib/types";
 
 /**
@@ -66,7 +67,14 @@ export function PlaylistsView() {
               </span>
               <button
                 type="button"
-                onClick={() => deletePlaylist(p.id)}
+                onClick={() => {
+                  deletePlaylist(p.id);
+                  pushToast({
+                    title: "Playlist deleted",
+                    description: `"${p.name}" and its highlights were removed.`,
+                    status: "success",
+                  });
+                }}
                 className="ml-auto text-[13px] text-fg-dim transition-colors hover:text-red-400"
               >
                 Delete playlist
@@ -119,7 +127,10 @@ export function PlaylistsView() {
 
                     <button
                       type="button"
-                      onClick={() => removeFromPlaylist(p.id, item.id)}
+                      onClick={() => {
+                        removeFromPlaylist(p.id, item.id);
+                        pushToast({ title: "Removed from playlist", status: "success" });
+                      }}
                       aria-label="Remove from playlist"
                       className="absolute top-2 right-2 rounded-full bg-black/65 p-1.5 text-fg-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-400 focus-visible:opacity-100"
                     >

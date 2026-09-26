@@ -472,9 +472,35 @@ body {
 }
 
 /* Toast entry, and the indeterminate sweep used before progress is known. */
+/*
+ * A toast arrives from the corner it lives in.
+ *
+ * It slides up and in from the right rather than just fading: on a page that
+ * is otherwise still, a fade reads as something that was always there and you
+ * only just noticed, while a short travel says it has just happened.
+ */
 @keyframes toast-in {
-  from { opacity: 0; transform: translateY(10px) scale(0.98); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateX(18px) translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * The bar that runs out while a toast is on screen.
+ *
+ * It is the reason the toast leaves, made visible. Without it a message that
+ * vanishes mid-read is a message the reader thinks they imagined; with it they
+ * can see how long they have and, since hovering pauses it, that they can stop
+ * the clock.
+ */
+@keyframes toast-life {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
 }
 
 @keyframes toast-indeterminate {
@@ -788,6 +814,13 @@ body {
  * `transform: translateY()` was silently discarded. Measured: the strip lit up
  * and the card never moved. The independent transform properties compose with
  * `transform` instead of replacing it, so the two can coexist.
+ *
+ * The trap that swaps in: Tailwind v4 compiles `-translate-x-1/2` to
+ * `translate: var(--tw-translate-x) var(--tw-translate-y)`, so this rule
+ * overwrites any Tailwind translate utility on the same element outright. Put
+ * it on a card that is centred that way and the card leaps half its own width
+ * away from the pointer on hover, which ends the hover, which snaps it back --
+ * a flicker loop. Keep positioning on a wrapper and this on the card.
  *
  * Bigger than 3px reads as a button about to leave the page, and across a row
  * of cards it turns a glance into a wave.
