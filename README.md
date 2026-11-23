@@ -3,8 +3,7 @@
 A functional rebuild of Fathom's meeting experience, built from screenshots of the live
 product as a one-day assignment.
 
-**Live:** _add deployed URL here_
-**Walkthrough:** _add Loom URL here_
+**Live:** https://fantom-five.vercel.app
 
 ---
 
@@ -122,3 +121,7 @@ docs/UI-SPEC.md       measured UI specification
 In rough priority order: a virtualised transcript (the hour-long call renders ~70 turns
 eagerly and would not hold at 500), real comment threads, Playlists, and a proper mobile
 pass on the detail page — it stacks and is usable, but it was not designed phone-first.
+
+---
+
+**Built by [Abdullah Ahmad](https://abdullah-ahmad-portfolio.vercel.app)**, Full Stack Software Engineer in Lahore, Pakistan · [GitHub](https://github.com/Abdullahahmad666) · [LinkedIn](https://www.linkedin.com/in/abdullah-ahmad-a00913259/)
